@@ -1,6 +1,5 @@
 import MainLayout from "../components/MainLayout";
-
-const axios = require('axios');
+import axios from 'axios';
 
 export default function Home({users}) {
     return (
