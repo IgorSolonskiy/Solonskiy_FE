@@ -43,6 +43,8 @@ export default function Home({posts}) {
         setVisibilityForm(!visibilityForm);
     }
 
+    const reversePostsList = postList.slice().reverse();
+
 
     return (
         <MainLayout>
@@ -52,7 +54,7 @@ export default function Home({posts}) {
                 <input type="submit" value="Tweet" className="form-posts__btn"/>
             </form>
             <ul className="posts">
-                {postList.map(({text, created_at, id}) => (
+                {reversePostsList.map(({text, created_at, id}) => (
                     <li key={id} className="posts__item">
                         <div className="posts__user">
                             <span className="posts__name">User name</span>
