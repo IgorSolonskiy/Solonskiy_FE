@@ -1,45 +1,38 @@
 import {useState} from 'react';
 import {useRouter} from "next/router";
 
+import {changePost, getPosts} from '../../gateway/postsGateway';
+
 import MainLayout from "../../components/layout/MainLayout";
-import Posts from "../../components/posts/Posts";
 import Form from "../../components/forms/Form";
-
-import {changePost, deletePost, getPost} from "../../gateway/postsGateway";
-
+import List from "../../components/list/List";
+import Posts from '../../components/post/Post';
 
 export default function Post({posts}) {
-    const [text, setText] = useState('');
     const [postsList, setPostList] = useState(posts);
     const router = useRouter();
 
-    const handleChange = (e) => setText(e.target.value);
-
-    const handleClick = async id => {
-        await deletePost(id);
-        router.push('/')
+    const handleDeleteClick = () => {
+        router.push('/');
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleEditSubmit = async (postDescription) => {
+        const editPost = {
+            content: postDescription,
+            name: 'User-Login'
+        };
+        const post = await  changePost(`posts/${postsList.id}`,editPost );
 
-        if (!text) return null;
-
-        const [postItem] = postsList;
-
-        await changePost(postItem.id, text);
-        setText('');
-        setPostList(await getPost(postItem.id));
+        setPostList(post);
     }
-
     return (
         <MainLayout>
-            <Form onChange={handleChange} onSubmit={handleSubmit} text={text}/>
-            <Posts onClick={handleClick} posts={postsList}/>
+            <Form onSubmit={handleEditSubmit}/>
+            <List>{[postsList].map(post=><Posts key={post.id} {...post}  onDelete={handleDeleteClick} />) }</List>
         </MainLayout>)
 }
 
 Post.getInitialProps = async (ctx) => {
-    const postData = await getPost(ctx.query.id);
-    return {posts: postData}
+    const posts = await getPosts(`posts/${ctx.query.id}`);
+    return {posts};
 };

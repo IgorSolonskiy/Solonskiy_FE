@@ -1,44 +1,45 @@
 import {useState} from 'react';
-import {createPost, deletePost, getPostsList} from "../gateway/postsGateway";
+
+import {getPosts, createPost} from '../gateway/postsGateway';
 
 import MainLayout from "../components/layout/MainLayout";
 import Form from "../components/forms/Form";
-import Posts from "../components/posts/Posts";
+import List from "../components/list/List";
+import Post from "../components/post/Post";
 
-export default function Home({posts}) {
-    const [postList, setPostList] = useState(posts);
-    const [text, setText] = useState('');
+export default function Posts({posts}) {
+    const [postsList, setPostsList] = useState(posts);
 
+    const handleDeleteClick = (id) => {
+        const newPostList = postsList.filter((post) => post.id !== id);
 
-    const handleChange = (e) => setText(e.target.value);
-
-    const handleClick = async (id) =>{
-        const newPostsList = await deletePost(id);
-
-        setPostList(newPostsList);
+        setPostsList(newPostList);
     }
 
+    const handleCreateSumbit = async (postDescription) => {
+        const newPost = {
+            content: postDescription,
+            name: 'User-Login'
+        }
 
-    const handleSumbit = async (e) => {
-        e.preventDefault();
-
-        if (!text) return null;
-
-        setPostList(await createPost(text));
-        setText('');
+        const post = await createPost('posts', newPost);
+        setPostsList([...postsList, post]);
     }
 
-    const reversePostsList = postList.slice().reverse();
+    const [...newPostList] = postsList;
 
     return (
         <MainLayout>
-            <Form onChange={handleChange} onSubmit={handleSumbit} text={text}/>
-            <Posts onClick={handleClick} posts={reversePostsList} />
+            <Form onSubmit={handleCreateSumbit}/>
+            <List>
+                {newPostList.reverse().map(post => <Post key={post.id} {...post} onDelete={handleDeleteClick}/>)}
+            </List>
         </MainLayout>
     )
 }
 
-Home.getInitialProps = async () => {
-    return {posts: await getPostsList()}
+Posts.getInitialProps = async () => {
+    const posts = await getPosts('posts');
+    return {posts};
 };
 
