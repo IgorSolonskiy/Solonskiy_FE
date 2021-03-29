@@ -11,7 +11,7 @@ import Posts from '../../components/post/Post';
 export default function Post({posts}) {
     const router = useRouter();
 
-    const handleRedirect =async (id) => {
+    const handleDeleteClick =async (id) => {
         await  deletePost(`posts/${id}`);
         router.push('/');
     }
@@ -25,7 +25,7 @@ export default function Post({posts}) {
     return (
         <MainLayout>
             <FormPosts post={posts} onSubmit={handleEditSubmit}/>
-            <List>{[posts].map(post=><Posts key={post.id} {...post}  onDelete={handleRedirect} />) }</List>
+            <List>{[posts].map(post=><Posts key={post.id} {...post}  onDelete={handleDeleteClick} />) }</List>
         </MainLayout>)
 }
 
