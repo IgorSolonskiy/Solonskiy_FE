@@ -1,8 +1,7 @@
-import {useState} from 'react';
 import {useRouter} from "next/router";
 import PropTypes from "prop-types";
 
-import {changePost, getPosts} from '../../gateway/postsGateway';
+import {changePost, deletePost, getPosts} from '../../gateway/postsGateway';
 
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
@@ -10,23 +9,23 @@ import List from "../../components/list/List";
 import Posts from '../../components/post/Post';
 
 export default function Post({posts}) {
-    const [postsList, setPostList] = useState(posts);
     const router = useRouter();
 
-    const handleDeleteClick = () => {
+    const handleRedirect =async (id) => {
+        await  deletePost(`posts/${id}`);
         router.push('/');
     }
 
     const handleEditSubmit = async (newPost) => {
-        const post = await  changePost(`posts/${postsList.id}`,newPost );
+        await  changePost(`posts/${posts.id}`,newPost );
 
-        setPostList(post);
+        router.push('/');
     }
 
     return (
         <MainLayout>
-            <FormPosts post={postsList} onSubmit={handleEditSubmit}/>
-            <List>{[postsList].map(post=><Posts key={post.id} {...post}  onDelete={handleDeleteClick} />) }</List>
+            <FormPosts post={posts} onSubmit={handleEditSubmit}/>
+            <List>{[posts].map(post=><Posts key={post.id} {...post}  onDelete={handleRedirect} />) }</List>
         </MainLayout>)
 }
 

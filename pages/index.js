@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import PropTypes from "prop-types";
 
-import {getPosts, createPost} from '../gateway/postsGateway';
+import {getPosts, createPost, deletePost} from '../gateway/postsGateway';
 
 import MainLayout from "../components/layout/MainLayout";
 import FormPosts from "../components/forms/FormPosts";
@@ -11,7 +11,9 @@ import Post from "../components/post/Post";
 export default function Posts({posts}) {
     const [postsList, setPostsList] = useState(posts);
 
-    const handleDeleteClick = (id) => {
+    const handleDeleteClick = async (id) => {
+        await  deletePost(`posts/${id}`);
+
         const newPostList = postsList.filter((post) => post.id !== id);
 
         setPostsList(newPostList);

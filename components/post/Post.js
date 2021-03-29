@@ -1,13 +1,7 @@
 import Link from "next/link";
-import {deletePost} from "../../gateway/postsGateway";
 import PropTypes from "prop-types";
 
 export default function Post({content, title, id, onDelete}) {
-    const handleDeleteClick = async () => {
-        await  deletePost(`posts/${id}`);
-        onDelete(id);
-    }
-
     return (
         <li className="posts__item">
             <Link href={`/post/${id}`}>
@@ -18,7 +12,7 @@ export default function Post({content, title, id, onDelete}) {
                     <p className="posts__text">{content}</p>
                 </div>
             </Link>
-            <span className="posts__btn-del" onClick={handleDeleteClick}>&times;</span>
+            <span className="posts__btn-del" onClick={()=>onDelete(id)}>&times;</span>
         </li>
     )
 }
