@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import PropTypes from "prop-types";
 
 import {getPosts, createPost} from '../gateway/postsGateway';
 
@@ -39,3 +40,6 @@ Posts.getInitialProps = async () => {
     return {posts};
 };
 
+Posts.propTypes = {
+    posts: PropTypes.array.isRequired,
+}

@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {useRouter} from "next/router";
+import PropTypes from "prop-types";
 
 import {changePost, getPosts} from '../../gateway/postsGateway';
 
@@ -21,9 +22,10 @@ export default function Post({posts}) {
 
         setPostList(post);
     }
+
     return (
         <MainLayout>
-            <FormPosts onSubmit={handleEditSubmit}/>
+            <FormPosts post={postsList} onSubmit={handleEditSubmit}/>
             <List>{[postsList].map(post=><Posts key={post.id} {...post}  onDelete={handleDeleteClick} />) }</List>
         </MainLayout>)
 }
@@ -32,3 +34,11 @@ Post.getInitialProps = async (ctx) => {
     const posts = await getPosts(`posts/${ctx.query.id}`);
     return {posts};
 };
+
+Post.propTypes = {
+    posts: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        content: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+    }).isRequired,
+}
