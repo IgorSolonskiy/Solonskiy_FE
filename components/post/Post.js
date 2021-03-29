@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {deletePost} from "../../gateway/postsGateway";
 
-export default function Post({content, name, id, onDelete}) {
+export default function Post({content, title, id, onDelete}) {
     const handleDeleteClick = async () => {
         await  deletePost(`posts/${id}`);
         onDelete(id);
@@ -12,7 +12,7 @@ export default function Post({content, name, id, onDelete}) {
             <Link href={`/post/${id}`}>
                 <div className="posts__user">
                     <div className="posts__profile">
-                        <span className="posts__name">{name}</span>
+                        <span className="posts__name">{title}</span>
                     </div>
                     <p className="posts__text">{content}</p>
                 </div>

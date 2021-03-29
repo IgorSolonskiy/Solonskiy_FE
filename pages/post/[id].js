@@ -4,7 +4,7 @@ import {useRouter} from "next/router";
 import {changePost, getPosts} from '../../gateway/postsGateway';
 
 import MainLayout from "../../components/layout/MainLayout";
-import Form from "../../components/forms/Form";
+import FormPosts from "../../components/forms/FormPosts";
 import List from "../../components/list/List";
 import Posts from '../../components/post/Post';
 
@@ -16,18 +16,14 @@ export default function Post({posts}) {
         router.push('/');
     }
 
-    const handleEditSubmit = async (postDescription) => {
-        const editPost = {
-            content: postDescription,
-            name: 'User-Login'
-        };
-        const post = await  changePost(`posts/${postsList.id}`,editPost );
+    const handleEditSubmit = async (newPost) => {
+        const post = await  changePost(`posts/${postsList.id}`,newPost );
 
         setPostList(post);
     }
     return (
         <MainLayout>
-            <Form onSubmit={handleEditSubmit}/>
+            <FormPosts onSubmit={handleEditSubmit}/>
             <List>{[postsList].map(post=><Posts key={post.id} {...post}  onDelete={handleDeleteClick} />) }</List>
         </MainLayout>)
 }
