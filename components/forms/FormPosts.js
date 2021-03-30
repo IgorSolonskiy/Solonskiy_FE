@@ -1,54 +1,37 @@
 import {useState} from 'react';
-import PropTypes from 'prop-types';
 
-export default function FormPosts({onSubmit,post}) {
-    const [content, setContent] = useState(post.content );
-    const [title, setTitle] = useState(post.title );
+export default function FormPosts({onSubmit, post = {content: '', title: ''}}) {
+    const [posts, setPosts] = useState(post);
 
-    const handleInputChange = (e) => e.target.id === "title" ? setTitle(e.target.value) : setContent(e.target.value);
+    const handleChange = (e) => {
+        setPosts(prev => {
+            return {
+                ...prev,
+                [e.target.id]: e.target.value,
+            }
+        })
+    }
 
-
-    const handleCreateSubmit = e => {
+    const handleCreateSubmit =async e => {
         e.preventDefault();
 
-        if (!content || !title) {
-            return;
+        if(!posts.content || !posts.title){
+            return ;
         }
 
-        const newPost = {
-            content,
-            title,
-        }
-
-        onSubmit(newPost);
-        setContent('');
-        setTitle('');
+        await onSubmit(posts);
+        setPosts({content: '', title: ''});
     }
 
     return (
         <form className="form-posts" onSubmit={handleCreateSubmit}>
             <label htmlFor="title" className='form-posts__label'>Title</label>
-            <input type="text" id='title' className="form-posts__title" onChange={handleInputChange} value={title}
+            <input type="text" id='title' className="form-posts__title" onChange={handleChange} value={posts.title}
                    placeholder="Title?"/>
             <label htmlFor="content" className='form-posts__label'>Content</label>
-            <input type="text" id='content' className="form-posts__text" onChange={handleInputChange} value={content}
+            <input type="text" id='content' className="form-posts__text" onChange={handleChange} value={posts.content}
                    placeholder="What's happening?"/>
             <input type="submit" value="Tweet" className="form-posts__btn"/>
         </form>
     )
-}
-
-FormPosts.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    post: PropTypes.shape({
-        title: PropTypes.string,
-        content: PropTypes.string
-    }),
-}
-
-FormPosts.defaultProps = {
-    post: {
-        title: '',
-        content: '',
-    },
 }

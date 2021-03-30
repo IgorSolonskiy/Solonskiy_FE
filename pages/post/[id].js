@@ -1,5 +1,4 @@
 import {useRouter} from "next/router";
-import PropTypes from "prop-types";
 
 import {changePost, deletePost, getPosts} from '../../gateway/postsGateway';
 
@@ -18,7 +17,6 @@ export default function Post({posts}) {
 
     const handleEditSubmit = async (newPost) => {
         await  changePost(`posts/${posts.id}`,newPost );
-
         router.push('/');
     }
 
@@ -33,11 +31,3 @@ Post.getInitialProps = async (ctx) => {
     const posts = await getPosts(`posts/${ctx.query.id}`);
     return {posts};
 };
-
-Post.propTypes = {
-    posts: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        content: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-    }).isRequired,
-}
