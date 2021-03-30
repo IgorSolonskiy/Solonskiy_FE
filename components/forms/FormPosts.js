@@ -4,13 +4,10 @@ export default function FormPosts({onSubmit, post = {content: '', title: ''}}) {
     const [posts, setPosts] = useState(post);
     const {title, content} = posts;
 
-    const handleInputChange = (e) => setPosts(prev => {
-        return {
-            ...prev,
-            [e.target.id]: e.target.value,
-        }
+    const handleInputChange = (e) => setPosts({
+        ...posts,
+        [e.target.id]: e.target.value,
     })
-
 
     const handleCreateSubmit = async e => {
         e.preventDefault();
