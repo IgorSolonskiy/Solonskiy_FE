@@ -10,12 +10,11 @@ export default function FormPosts({onSubmit, postData = {content: '', title: ''}
 
     const handleCreateSubmit = (e, newPost) => {
         e.preventDefault();
-        setPost({content: '', title: ''});
-        onSubmit(newPost);
+        onSubmit(newPost, setPost);
     }
 
     return (
-        <form className="form-posts" onSubmit={e => handleCreateSubmit(e, post)}>
+        <form className="form-posts" onSubmit={e => handleCreateSubmit(e, post )}>
             <label htmlFor="title" className='form-posts__label'>Title</label>
             <input type="text" className="form-posts__title"
                    onChange={e => handleInputChange('title', e.target.value)}

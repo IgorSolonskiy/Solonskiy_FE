@@ -15,9 +15,9 @@ export default function Posts({postsList}) {
         setPosts(posts.filter((post) => post.id !== deletedPost.id));
     }
 
-    const handleCreateSumbit = async (newPost) => {
+    const handleCreateSumbit = async (newPost,postState) => {
         const post = await createPost(newPost);
-
+        postState({content: '', title: ''})
         setPosts([...posts, post]);
     }
 
