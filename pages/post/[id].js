@@ -26,8 +26,12 @@ export default function Post({post}) {
         </MainLayout>)
 }
 
-Post.getInitialProps = async (ctx) => {
-    const post = await getPosts(ctx.query.id);
+export async function getServerSideProps(context){
+    try{
+        const post = await getPosts(context.query.id);
 
-    return {post};
+        return {props: {post}};
+    } catch (error) {
+        return {notFound: true}
+    }
 };

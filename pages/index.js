@@ -16,9 +16,10 @@ export default function Posts({postsList}) {
     }
 
     const handleCreateSumbit = async (newPost,postState) => {
-        const post = await createPost(newPost);
-        postState({content: '', title: ''})
-        setPosts([...posts, post]);
+            const post = await createPost(newPost);
+
+            postState({content: '', title: ''})
+            setPosts([...posts, post]);
     }
 
     return (
@@ -31,8 +32,12 @@ export default function Posts({postsList}) {
     )
 }
 
-Posts.getInitialProps = async () => {
-    const postsList = await getPosts();
+export async function getServerSideProps(context){
+    try{
+        const postsList = await getPosts();
 
-    return {postsList};
+        return {props: {postsList}};
+    } catch (error) {
+        return {notFound: true}
+    }
 };
