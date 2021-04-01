@@ -1,32 +1,30 @@
 import {useState} from 'react';
 
-export default function FormPosts({onSubmit, post = {content: '', title: ''}}) {
-    const [posts, setPosts] = useState(post);
-    const {title, content} = posts;
+export default function FormPosts({onSubmit, postData = {content: '', title: ''}}) {
+    const [post, setPost] = useState(postData);
 
-    const handleInputChange = (e) => setPosts({
-        ...posts,
-        [e.target.id]: e.target.value,
+    const handleInputChange = (name, value) => setPost({
+        ...post,
+        [name]: value,
     })
 
-    const handleCreateSubmit = async e => {
+    const handleCreateSubmit = (e, newPost) => {
         e.preventDefault();
-
-        if (!content || !title) {
-            return;
-        }
-
-        await onSubmit(posts);
-        setPosts({content: '', title: ''});
+        setPost({content: '', title: ''});
+        onSubmit(newPost);
     }
 
     return (
-        <form className="form-posts" onSubmit={handleCreateSubmit}>
+        <form className="form-posts" onSubmit={e => handleCreateSubmit(e, post)}>
             <label htmlFor="title" className='form-posts__label'>Title</label>
-            <input type="text" id='title' className="form-posts__title" onChange={handleInputChange} value={title}
+            <input type="text" className="form-posts__title"
+                   onChange={e => handleInputChange('title', e.target.value)}
+                   value={post.title}
                    placeholder="Title?"/>
             <label htmlFor="content" className='form-posts__label'>Content</label>
-            <input type="text" id='content' className="form-posts__text" onChange={handleInputChange} value={content}
+            <input type="text" className="form-posts__text"
+                   onChange={e => handleInputChange('content', e.target.value)}
+                   value={post.content}
                    placeholder="What's happening?"/>
             <input type="submit" value="Tweet" className="form-posts__btn"/>
         </form>

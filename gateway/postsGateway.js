@@ -1,9 +1,9 @@
 import Api from '../utils/Api';
 
-export const getPosts = async url => {
+export const getPosts = async (id = '') => {
     try {
 
-        const response = await Api.get(url);
+        const response = await Api.get(`posts/${id}`);
         return response.data;
 
     } catch (error) {
@@ -13,10 +13,10 @@ export const getPosts = async url => {
     }
 }
 
-export const createPost = async (url, post )=> {
+export const createPost = async ( post )=> {
     try {
 
-        const response = await Api.post(url, post);
+        const response = await Api.post('posts',post);
         return response.data;
 
     } catch (error) {
@@ -26,10 +26,10 @@ export const createPost = async (url, post )=> {
     }
 }
 
-export const changePost = async (url,post) => {
+export const changePost = async (id,post) => {
     try {
 
-        const response = await Api.put(url,post);
+        const response = await Api.put(`posts/${id}`,post);
         return response.data;
 
     } catch (error) {
@@ -39,10 +39,10 @@ export const changePost = async (url,post) => {
     }
 }
 
-export const deletePost = async url => {
+export const deletePost = async id => {
     try {
 
-        const response = await Api.delete(url);
+        const response = await Api.delete(`posts/${id}`);
         return response.data;
 
     } catch (error) {

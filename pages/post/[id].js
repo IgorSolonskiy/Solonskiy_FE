@@ -4,30 +4,30 @@ import {changePost, deletePost, getPosts} from '../../gateway/postsGateway';
 
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
-import List from "../../components/list/List";
 import Posts from '../../components/post/Post';
 
-export default function Post({posts}) {
+export default function Post({post}) {
     const router = useRouter();
 
-    const handleDeleteClick =async (id) => {
-        await  deletePost(`posts/${id}`);
+    const handleDeleteClick =async (deletedPost) => {
+        await  deletePost(deletedPost.id);
         router.push('/');
     }
 
     const handleEditSubmit = async (newPost) => {
-        await  changePost(`posts/${posts.id}`,newPost );
+        await  changePost(post.id,newPost);
         router.push('/');
     }
 
     return (
         <MainLayout>
-            <FormPosts post={posts} onSubmit={handleEditSubmit}/>
-            <List>{[posts].map(post=><Posts key={post.id} {...post}  onDelete={handleDeleteClick} />) }</List>
+            <FormPosts postData={post} onSubmit={handleEditSubmit}/>
+            <Posts key={post.id} post={post} onDelete={handleDeleteClick} />
         </MainLayout>)
 }
 
 Post.getInitialProps = async (ctx) => {
-    const posts = await getPosts(`posts/${ctx.query.id}`);
-    return {posts};
+    const post = await getPosts(ctx.query.id);
+
+    return {post};
 };

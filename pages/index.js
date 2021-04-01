@@ -7,36 +7,32 @@ import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
 import Post from "../components/post/Post";
 
-export default function Posts({posts}) {
-    const [postsList, setPostsList] = useState(posts);
+export default function Posts({postsList}) {
+    const [posts, setPosts] = useState(postsList);
 
-    const handleDeleteClick = async (id) => {
-        await  deletePost(`posts/${id}`);
-
-        const newPostList = postsList.filter((post) => post.id !== id);
-
-        setPostsList(newPostList);
+    const handleDeleteClick = async (deletedPost) => {
+        await  deletePost(deletedPost.id);
+        setPosts(posts.filter((post) => post.id !== deletedPost.id));
     }
 
     const handleCreateSumbit = async (newPost) => {
-        const post = await createPost('posts', newPost);
+        const post = await createPost(newPost);
 
-        setPostsList([...postsList, post]);
+        setPosts([...posts, post]);
     }
-
-    const [...newPostList] = postsList;
 
     return (
         <MainLayout>
             <FormPosts onSubmit={handleCreateSumbit}/>
             <List>
-                {newPostList.reverse().map(post => <Post key={post.id} {...post} onDelete={handleDeleteClick}/>)}
+                {posts.map(post => <Post key={post.id} post={post} onDelete={handleDeleteClick}/>)}
             </List>
         </MainLayout>
     )
 }
 
 Posts.getInitialProps = async () => {
-    const posts = await getPosts('posts');
-    return {posts};
+    const postsList = await getPosts();
+
+    return {postsList};
 };
