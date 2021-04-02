@@ -16,12 +16,12 @@ export default function FormPosts({onSubmit, postData = {content: '', title: ''}
     return (
         <form className="form-posts" onSubmit={e => handleCreateSubmit(e, post )}>
             <label htmlFor="title" className='form-posts__label'>Title</label>
-            <input type="text" className="form-posts__title"
+            <input type="text" id="title" className="form-posts__title"
                    onChange={e => handleInputChange('title', e.target.value)}
                    value={post.title}
                    placeholder="Title?"/>
             <label htmlFor="content" className='form-posts__label'>Content</label>
-            <input type="text" className="form-posts__text"
+            <input type="text" id="content" className="form-posts__text"
                    onChange={e => handleInputChange('content', e.target.value)}
                    value={post.content}
                    placeholder="What's happening?"/>
