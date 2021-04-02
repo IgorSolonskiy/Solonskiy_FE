@@ -3,9 +3,9 @@ import {useState} from 'react';
 export default function FormPosts({onSubmit, postData = {content: '', title: ''}}) {
     const [post, setPost] = useState(postData);
 
-    const handleInputChange = (name, value) => setPost({
-        ...post,
-        [name]: value,
+    const handleInputChange = (name, value) => setPost(prevPost=>{
+        return{...prevPost,
+            [name]: value,}
     })
 
     const handleCreateSubmit = (e, newPost) => {

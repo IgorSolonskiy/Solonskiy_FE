@@ -19,7 +19,7 @@ export default function Posts({postsList}) {
             const post = await createPost(newPost);
 
             postState({content: '', title: ''})
-            setPosts([...posts, post]);
+            setPosts(prevPosts=>[...prevPosts, post]);
     }
 
     return (
