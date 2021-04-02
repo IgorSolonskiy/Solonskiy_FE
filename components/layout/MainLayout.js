@@ -7,7 +7,7 @@ export default function MainLayout({children}) {
                 <div className="header__logo"><i className="fab fa-twitter"></i></div>
                 <nav className="navigation">
                     <ul className="menu">
-                        <li className="menu__list" ><Link href="/" className='menu__link'>Home</Link></li>
+                        <li className="menu__list" ><Link href="/">Home</Link></li>
                     </ul>
                 </nav>
             </header>
