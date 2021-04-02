@@ -12,7 +12,7 @@ export default function Posts({postsList}) {
 
     const handleDeleteClick = async (deletedPost) => {
         await  deletePost(deletedPost.id);
-        setPosts(posts.filter((post) => post.id !== deletedPost.id));
+        setPosts(prevPosts => prevPosts.filter((post) => post.id !== deletedPost.id));
     }
 
     const handleCreateSumbit = async (newPost,postState) => {
