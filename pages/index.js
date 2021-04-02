@@ -1,25 +1,43 @@
-import MainLayout from "../components/MainLayout";
-import axios from 'axios';
+import {useState} from 'react';
 
-export default function Home({users}) {
+import {getPosts, createPost, deletePost} from '../gateway/postsGateway';
+
+import MainLayout from "../components/layout/MainLayout";
+import FormPosts from "../components/forms/FormPosts";
+import List from "../components/list/List";
+import Post from "../components/post/Post";
+
+export default function Posts({postsList}) {
+    const [posts, setPosts] = useState(postsList);
+
+    const handleDeleteClick = async (deletedPost) => {
+        await  deletePost(deletedPost.id);
+        setPosts(prevPosts => prevPosts.filter((post) => post.id !== deletedPost.id));
+    }
+
+    const handleCreateSumbit = async (newPost,postState) => {
+            const post = await createPost(newPost);
+
+            postState({content: '', title: ''})
+            setPosts(prevPosts=>[...prevPosts, post]);
+    }
+
     return (
         <MainLayout>
-            <ul className="users">
-                {users.map(user=>(
-                    <li key={user.id} className="users__item">
-                    <span className='users__name'>{user.name}</span>
-                    <span className='users__email'>{user.email}</span>
-                    <span className='users__id'>{user.id}</span>
-                    <span className='users__tel'>{user.tel}</span>
-                    </li>
-                ))}
-            </ul>
+            <FormPosts onSubmit={handleCreateSumbit}/>
+            <List>
+                {posts.map(post => <Post key={post.id} post={post} onDelete={handleDeleteClick}/>)}
+            </List>
         </MainLayout>
     )
 }
 
-Home.getInitialProps = async (ctx) => {
-    const usersList = await axios.get('http://127.0.0.1:8000/api/users');
+export async function getServerSideProps(context){
+    try{
+        const postsList = await getPosts();
 
-    return {users: usersList.data}
-}
+        return {props: {postsList}};
+    } catch (error) {
+        return {notFound: true}
+    }
+};
