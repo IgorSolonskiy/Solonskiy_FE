@@ -22,7 +22,7 @@ export default function Post({post}) {
     return (
         <MainLayout>
             <FormPosts postData={post} onSubmit={handleEditSubmit}/>
-            <Posts key={post.id} post={post} onDelete={handleDeleteClick} />
+            <Posts post={post} onDelete={handleDeleteClick} />
         </MainLayout>)
 }
 
