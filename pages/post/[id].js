@@ -23,9 +23,13 @@ export default function Post({post, user}) {
 
     return (
         <MainLayout user={user}>
-            {user.email === post.user_email ? <FormPosts postData={post} onSubmit={handleEditSubmit}/> : ''}
-            <div className="mb-3"><Link href='/home'>Home</Link></div>
-            <Posts user={user} post={post} onDelete={handleDeleteClick}/>
+            <div className='w-100 h-100 d-flex flex-column align-items-center'>
+                {user.email === post.user_email ? <FormPosts postData={post} onSubmit={handleEditSubmit}/> : ''}
+                <Link href="/home"><span className='btn btn-outline-success w-25 mt-5'>Home</span></Link>
+                <div className='mt-5 w-100'>
+                    <Posts user={user} post={post} onDelete={handleDeleteClick}/>
+                </div>
+            </div>
         </MainLayout>)
 }
 

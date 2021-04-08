@@ -8,10 +8,11 @@ import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
 import Post from "../components/post/Post";
 import MainLayout from "../components/layout/MainLayout";
-// import FormFilters from "../components/inputs/FormFilters";
+import FormFilters from '../components/forms/FormFilters';
 
 export default function Home({postsList, user}) {
     const [posts, setPosts] = useState(postsList);
+    const [filterUser,setFilterUser] = useState('');
     const router = useRouter();
 
     const handleDeleteClick = async (deletedPost) => {
@@ -26,9 +27,14 @@ export default function Home({postsList, user}) {
         setPosts(prevPosts => [...prevPosts, post]);
     }
 
-    const handleSearchUser = (email, setEmail) => {
-        setEmail('');
-        router.push(`/user/${email}`)
+    const handleChangeFilters = (email) =>{
+        setFilterUser(email);
+    }
+
+    const handleFlitersUser = (e) => {
+        e.preventDefault();
+        setFilterUser('');
+        router.push(`/user/${filterUser}`)
     }
 
 
@@ -38,7 +44,7 @@ export default function Home({postsList, user}) {
                 <h1 className=''>Hello, {user.name}</h1>
             </div>
             <FormPosts onSubmit={handleCreateSumbit}/>
-            {/*<FormFilters onSubmit={handleSearchUser} />*/}
+            <FormFilters onSubmit={handleFlitersUser} onChange={handleChangeFilters} filtersUser={filterUser}/>
             <List>
                 {posts.map(post => <Post user={user} key={post.id} post={post} onDelete={handleDeleteClick}/>)}
             </List>
