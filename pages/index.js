@@ -11,7 +11,7 @@ export default function Authentication(){
     }
 
     return (<MainLayout>
-            <section className="d-flex">
+            <section className="d-flex h-100 align-items-center">
                 <Btn name='Log in' classBtn='btn-primary' onClick={()=>handleClickRoute('login')}/>
                 <Btn name="Sign up" classBtn='btn-success ms-3' onClick={()=>handleClickRoute('signup')}/>
             </section>

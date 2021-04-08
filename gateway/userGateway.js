@@ -39,7 +39,7 @@ export const registerUser = async (user) => {
 
 export const logoutUser = async () => {
     try {
-        const response = await Api.post('logout',{},configApi());
+        const response = await Api.get('logout',configApi());
 
         return response.data;
     } catch (error) {

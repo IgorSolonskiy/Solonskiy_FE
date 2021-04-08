@@ -33,10 +33,12 @@ export default function Login() {
 
     return (
         <MainLayout>
-            <FormLogin user={user}
-                       onSubmit={handleSubmitForm}
-                       onChange={handleChangeInput}/>
-           <Link href="/signup"><span className='btn btn-primary mt-2'>Sign up</span></Link>
+            <div className='h-100 d-flex flex-column justify-content-center'>
+                <FormLogin user={user}
+                           onSubmit={handleSubmitForm}
+                           onChange={handleChangeInput}/>
+                <Link href="/signup"><span className='btn btn-primary mt-2'>Sign up</span></Link>
+            </div>
         </MainLayout>
     )
 }
