@@ -3,20 +3,22 @@ import Btn from "../btn/Btn";
 
 export default function Post({post, onDelete, user}) {
     return (
-        <li className="list-group-item d-flex justify-content-between align-items-start">
+        <div className='d-flex align-items-center position-relative'>
             <Link href={`/post/${post.id}`}>
-                <div className="ms-2 me-auto">
-                    <div className="fw-bold">{post.user_email}</div>
-                    <div className="fw-bold">{post.title}</div>
-                    {post.content}
-                </div>
+                <li className="list-group-item d-flex justify-content-between align-items-start list-group-item w-100">
+                    <div className="ms-2 me-auto">
+                        <div className="fw-bold">{post.user_email}</div>
+                        <div className="fw-bold">{post.title}</div>
+                        {post.content}
+                    </div>
+                </li>
             </Link>
             {post.user_email === user.email ?
                 <Btn name='&times;'
-                     classBtn='badge bg-primary rounded-pill d-block'
+                     classBtn='badge bg-primary rounded-pill d-block position-absolute end-0'
                      onClick={() => onDelete(post)}
                      typeBtn='button'/>
-                     : ''}
-        </li>
+                : ''}
+        </div>
     )
 }
