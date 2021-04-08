@@ -1,17 +1,22 @@
 import Link from "next/link";
+import Btn from "../btn/Btn";
 
-export default function Post( {post, onDelete}) {
+export default function Post({post, onDelete, user}) {
     return (
-        <li className="posts__item">
+        <li className="list-group-item d-flex justify-content-between align-items-start">
             <Link href={`/post/${post.id}`}>
-                <div className="posts__user">
-                    <div className="posts__profile">
-                        <span className="posts__name">{post.title}</span>
-                    </div>
-                    <p className="posts__text">{post.content}</p>
+                <div className="ms-2 me-auto">
+                    <div className="fw-bold">{post.user_email}</div>
+                    <div className="fw-bold">{post.title}</div>
+                    {post.content}
                 </div>
             </Link>
-            <span className="posts__btn-del" onClick={()=>onDelete(post)}>&times;</span>
+            {post.user_email === user.email ?
+                <Btn name='&times;'
+                     classBtn='badge bg-primary rounded-pill d-block'
+                     onClick={() => onDelete(post)}
+                     typeBtn='button'/>
+                     : ''}
         </li>
     )
 }

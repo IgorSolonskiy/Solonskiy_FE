@@ -1,43 +1,37 @@
-import {useState} from 'react';
-
-import {getPosts, createPost, deletePost} from '../gateway/postsGateway';
-
 import MainLayout from "../components/layout/MainLayout";
-import FormPosts from "../components/forms/FormPosts";
-import List from "../components/list/List";
-import Post from "../components/post/Post";
+import Btn from "../components/btn/Btn";
+import {useRouter} from "next/router";
+import {confirmUser} from "../gateway/userGateway";
 
-export default function Posts({postsList}) {
-    const [posts, setPosts] = useState(postsList);
+export default function Authentication(){
+    const router = useRouter();
 
-    const handleDeleteClick = async (deletedPost) => {
-        await  deletePost(deletedPost.id);
-        setPosts(prevPosts => prevPosts.filter((post) => post.id !== deletedPost.id));
+    const handleClickRoute = (route) =>{
+        router.push(route);
     }
 
-    const handleCreateSumbit = async (newPost,postState) => {
-            const post = await createPost(newPost);
-
-            postState({content: '', title: ''})
-            setPosts(prevPosts=>[...prevPosts, post]);
-    }
-
-    return (
-        <MainLayout>
-            <FormPosts onSubmit={handleCreateSumbit}/>
-            <List>
-                {posts.map(post => <Post key={post.id} post={post} onDelete={handleDeleteClick}/>)}
-            </List>
+    return (<MainLayout>
+            <section className="d-flex">
+                <Btn name='Log in' classBtn='btn-primary' onClick={()=>handleClickRoute('login')}/>
+                <Btn name="Sign up" classBtn='btn-success ms-3' onClick={()=>handleClickRoute('signup')}/>
+            </section>
         </MainLayout>
     )
 }
 
-export async function getServerSideProps(context){
-    try{
-        const postsList = await getPosts();
+export async function getServerSideProps(context) {
+    try {
+        await confirmUser(context);
 
-        return {props: {postsList}};
-    } catch (error) {
-        return {notFound: true}
+        return {
+            redirect: {
+                destination: '/home',
+                permanent: false,
+            },
+        }
+    } catch (e) {
+        return {
+            props: {},
+        }
     }
-};
+}
