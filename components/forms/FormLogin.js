@@ -1,6 +1,6 @@
 import Btn from "../btn/Btn";
 
-export default function FormLogin({user ,onChange, onSubmit, error}) {
+export default function FormLogin({user ,onChange, onSubmit}) {
     return (
         <form onSubmit={onSubmit} className='d-flex flex-column justify-content-center'>
             <div className="mb-3">
@@ -19,7 +19,6 @@ export default function FormLogin({user ,onChange, onSubmit, error}) {
                        value={user.password}
                        onChange={(e)=>onChange('password',e.target.value)}/>
             </div>
-            {error && <div className=''>{error}</div>}
             <Btn name='Log in' classBtn='btn-success' typeBtn='submit'/>
         </form>
     )

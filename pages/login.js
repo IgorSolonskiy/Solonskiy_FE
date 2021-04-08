@@ -8,7 +8,6 @@ import Link from "next/link";
 
 export default function Login() {
     const router = useRouter();
-    const [error, setError] = useState('');
     const [user, setUser] = useState({
         email: '',
         password: '',
@@ -24,21 +23,18 @@ export default function Login() {
     }
 
     const handleSubmitForm = async (e) => {
-        try {
             e.preventDefault();
+
             const token = await loginUser(user);
+
             document.cookie = `jwt=${JSON.stringify(token)};path=/; max-age=${60*60*24}`;
             router.push('/home');
-        } catch (e) {
-            setError(e.message);
-        }
     }
 
     return (
         <MainLayout>
             <FormLogin user={user}
                        onSubmit={handleSubmitForm}
-                       error={error}
                        onChange={handleChangeInput}/>
            <Link href="/signup"><span className='btn btn-primary mt-2'>Sign up</span></Link>
         </MainLayout>
