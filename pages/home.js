@@ -10,7 +10,6 @@ import Post from "../components/post/Post";
 import MainLayout from "../components/layout/MainLayout";
 // import FormFilters from "../components/inputs/FormFilters";
 
-
 export default function Home({postsList, user}) {
     const [posts, setPosts] = useState(postsList);
     const router = useRouter();
@@ -27,15 +26,17 @@ export default function Home({postsList, user}) {
         setPosts(prevPosts => [...prevPosts, post]);
     }
 
-    const handleSearchUser = (email,setEmail) =>{
+    const handleSearchUser = (email, setEmail) => {
         setEmail('');
         router.push(`/user/${email}`)
     }
 
 
     return (
-        <MainLayout>
-            <h1 className=''>Hello, {user.name}</h1>
+        <MainLayout user={user}>
+            <div className="d-flex">
+                <h1 className=''>Hello, {user.name}</h1>
+            </div>
             <FormPosts onSubmit={handleCreateSumbit}/>
             {/*<FormFilters onSubmit={handleSearchUser} />*/}
             <List>

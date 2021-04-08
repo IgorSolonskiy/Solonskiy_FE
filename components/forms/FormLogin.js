@@ -12,7 +12,7 @@ export default function FormLogin({user ,onChange, onSubmit, error}) {
                        onChange={(e)=>onChange('email',e.target.value)}/>
             </div>
             <div className="mb-3">
-                <label htmlFor="text" className='form-label'>Password</label>
+                <label htmlFor="password" className='form-label'>Password</label>
                 <input type="password"
                        id='password'
                        className='form-control'

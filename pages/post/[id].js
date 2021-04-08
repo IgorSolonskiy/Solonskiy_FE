@@ -22,7 +22,7 @@ export default function Post({post, user}) {
     }
 
     return (
-        <MainLayout>
+        <MainLayout user={user}>
             {user.email === post.user_email ? <FormPosts postData={post} onSubmit={handleEditSubmit}/> : ''}
             <div className="mb-3"><Link href='/home'>Home</Link></div>
             <Posts user={user} post={post} onDelete={handleDeleteClick}/>
