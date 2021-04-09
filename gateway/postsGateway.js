@@ -1,10 +1,10 @@
 import Api from '../utils/Api';
 import configApi from '../common/configApi';
 
-export const getPosts = async (id = '', token ='') => {
+export const getPosts = async (id = '', token = '') => {
     try {
 
-        const response = await Api.get(`posts/${id}`,configApi(token));
+        const response = await Api.get(`posts/${id}`, configApi(token));
         return response.data;
 
     } catch (error) {
@@ -14,10 +14,10 @@ export const getPosts = async (id = '', token ='') => {
     }
 }
 
-export const createPost = async ( post )=> {
+export const createPost = async (post) => {
     try {
 
-        const response = await Api.post('posts',post,configApi());
+        const response = await Api.post('posts', post, configApi());
         return response.data;
 
     } catch (error) {
@@ -27,10 +27,10 @@ export const createPost = async ( post )=> {
     }
 }
 
-export const changePost = async (id,post) => {
+export const changePost = async (id, post) => {
     try {
 
-        const response = await Api.put(`posts/${id}`,post, configApi());
+        const response = await Api.put(`posts/${id}`, post, configApi());
         return response.data;
 
     } catch (error) {

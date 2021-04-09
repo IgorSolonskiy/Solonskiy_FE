@@ -37,7 +37,6 @@ export default function Home({postsList, user}) {
         router.push(`/user/${filterUser}`)
     }
 
-
     return (
         <MainLayout user={user}>
             <div className="d-flex">
@@ -62,7 +61,7 @@ export async function getServerSideProps(context) {
         return {
             redirect: {
                 destination: '/login',
-                permanent: true,
+                permanent: false,
             }
         }
     }
