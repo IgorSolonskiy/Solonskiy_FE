@@ -1,19 +1,24 @@
-import Link from 'next/link';
+import Btn from "../btn/Btn";
+import {logoutUser} from "../../gateway/usersGateway";
+import {useRouter} from "next/router";
+import cookies from "next-cookies";
 
-export default function MainLayout({children}) {
+
+export default function MainLayout({children,user=''}) {
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await logoutUser();
+        document.cookie = `jwt=${JSON.stringify(cookies(document.cookie).jwt)}; path=/; max-age=0`;
+        router.push('/');
+    }
+
     return (
-        <div className="container">
-            <header className="header">
-                <div className="header__logo"><i className="fab fa-twitter"></i></div>
-                <nav className="navigation">
-                    <ul className="menu">
-                        <li className="menu__list" ><Link href="/">Home</Link></li>
-                    </ul>
-                </nav>
-            </header>
-            <main className="page">
+        <div className="container d-flex" >
+            <main className="min-vh-100 d-flex flex-column align-items-center justify-content-start w-100">
                 {children}
             </main>
+            {user && <Btn name='Sign out' classBtn='btn btn-secondary h-25 mt-3' typeBtn='button' onClick={handleLogout}/>}
         </div>
     )
 }
