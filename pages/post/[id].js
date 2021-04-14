@@ -1,12 +1,14 @@
 import {useRouter} from "next/router";
+import Link from "next/link";
 
-import {changePost, deletePost, getPosts} from '../../gateway/postsGateway';
+import {changePost, deletePost, getPost} from '../../gateway/postsGateway';
 
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
+import {confirmUser} from "../../gateway/usersGateway";
 
-export default function Post({post}) {
+export default function Post({post,user}) {
     const router = useRouter();
 
     const handleDeleteClick =async (deletedPost) => {
@@ -22,15 +24,17 @@ export default function Post({post}) {
     return (
         <MainLayout>
             <FormPosts postData={post} onSubmit={handleEditSubmit}/>
-            <Posts post={post} onDelete={handleDeleteClick} />
+            <Link href="/"><span className='btn btn-outline-success mt-2'>Home</span></Link>
+            <Posts user={user} post={post} onDelete={handleDeleteClick} />
         </MainLayout>)
 }
 
 export async function getServerSideProps(context){
     try{
-        const post = await getPosts(context.query.id);
+        const user = await confirmUser(context);
+        const post = await getPost(context.query.id, context);
 
-        return {props: {post}};
+        return {props: {user,post}};
     } catch (error) {
         return {notFound: true}
     }

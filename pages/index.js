@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {createPost, deletePost, getPosts} from '../gateway/postsGateway';
+import {createPost, deletePost, userPosts} from '../gateway/postsGateway';
 import {confirmUser} from "../gateway/usersGateway";
 
 import FormPosts from "../components/forms/FormPosts";
@@ -38,7 +38,7 @@ export default function Home({postsList, user}) {
 export async function getServerSideProps(context) {
     try {
         const user = await confirmUser(context);
-        const postsList = await getPosts('', context);
+        const postsList = await userPosts(user.id, context);
 
         return {props: {postsList, user}};
     } catch (error) {
