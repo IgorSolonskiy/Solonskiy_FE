@@ -12,6 +12,7 @@ export default function Signup() {
         name: '',
         email: '',
         password: '',
+        password_confirmation: '',
     });
 
     const handleChangeInput = (key,value) =>{

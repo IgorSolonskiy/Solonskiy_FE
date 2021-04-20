@@ -1,4 +1,4 @@
-import Btn from "../btn/Btn";
+import Button from "../btn/Button";
 
 export default function FormSignup({onChange, onSubmit, user}) {
     return (
@@ -27,7 +27,15 @@ export default function FormSignup({onChange, onSubmit, user}) {
                        value={user.password}
                        onChange={event => onChange('password', event.target.value)}/>
             </div>
-            <Btn name='Sign up' classBtn='btn-success' typeBtn='submit'/>
+            <div className="mb-3">
+                <label htmlFor="password_confirmation" className='form-label'>Confirm password</label>
+                <input type="password"
+                       id='password_confirmation'
+                       className='form-control'
+                       value={user.password_confirmation}
+                       onChange={event => onChange('password_confirmation', event.target.value)}/>
+            </div>
+            <Button name='Sign up' classBtn='btn-success' typeBtn='submit'/>
         </form>
     )
 }

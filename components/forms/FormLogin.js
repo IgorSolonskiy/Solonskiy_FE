@@ -1,4 +1,4 @@
-import Btn from "../btn/Btn";
+import Button from "../btn/Button";
 
 export default function FormLogin({user ,onChange, onSubmit}) {
     return (
@@ -19,7 +19,7 @@ export default function FormLogin({user ,onChange, onSubmit}) {
                        value={user.password}
                        onChange={(e)=>onChange('password',e.target.value)}/>
             </div>
-            <Btn name='Log in' classBtn='btn-success' typeBtn='submit'/>
+            <Button name='Log in' classBtn='btn-success' typeBtn='submit'/>
         </form>
     )
 }
