@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Button from "../btn/Button";
+import Btn from "../btn/Btn";
 
 export default function Post({post, onDelete, user}) {
 
@@ -15,10 +15,9 @@ export default function Post({post, onDelete, user}) {
                 </div>
             </Link>
             {post.author.id === user.id ?
-                <Button name='&times;'
+                <Btn name='&times;'
                         classBtn='badge bg-primary rounded-pill d-block position-absolute end-0'
-                        onClick={() => onDelete(post)}
-                        typeBtn='button'/>
+                        onClick={() => onDelete(post)}/>
                 : ''}
         </li>
     )

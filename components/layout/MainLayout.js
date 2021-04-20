@@ -1,4 +1,4 @@
-import Button from "../btn/Button";
+import Btn from "../btn/Btn";
 import {logoutUser} from "../../gateway/usersGateway";
 import {useRouter} from "next/router";
 import cookies from "next-cookies";
@@ -14,11 +14,11 @@ export default function MainLayout({children,user=''}) {
     }
 
     return (
-        <div className="container d-flex" >
-            <main className="min-vh-100 d-flex flex-column align-items-center justify-content-start w-100">
+        <div className="container d-flex align-items-start" >
+            <main className="min-vh-100 d-flex flex-column align-items-center justify-content-start w-75 m-auto">
                 {children}
             </main>
-            {user && <Button name='Sign out' classBtn='btn btn-secondary h-25 mt-3' typeBtn='button' onClick={handleLogout}/>}
+            {user && <Btn name='Sign out' classBtn='btn btn-outline-secondary mt-3' onClick={handleLogout}/>}
         </div>
     )
 }

@@ -35,7 +35,7 @@ export default function Signup() {
 
     return (
         <MainLayout>
-            <div className='h-100 d-flex flex-column justify-content-center'>
+            <div className='min-vh-100 d-flex flex-column justify-content-center'>
                 <FormSignup onChange={handleChangeInput}
                             onSubmit={handleSubmitForm}
                             user={user}/>

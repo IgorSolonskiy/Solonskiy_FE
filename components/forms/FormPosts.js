@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import Button from "../btn/Button";
+import Btn from "../btn/Btn";
 
 export default function FormPosts({onSubmit, postData = {content: '', title: ''}}) {
     const [post, setPost] = useState(postData);
@@ -26,7 +26,7 @@ export default function FormPosts({onSubmit, postData = {content: '', title: ''}
                    onChange={e => handleInputChange('content', e.target.value)}
                    value={post.content}
                    placeholder="What's happening?"/>
-            <Button name='Tweet' classBtn='btn-success mt-3' typeBtn='submit'/>
+            <Btn name='Tweet' classBtn='btn-success mt-3'/>
         </form>
     )
 }

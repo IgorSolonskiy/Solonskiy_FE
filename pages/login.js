@@ -33,7 +33,7 @@ export default function Login() {
 
     return (
         <MainLayout>
-            <div className='h-100 d-flex flex-column justify-content-center'>
+            <div className='min-vh-100 d-flex flex-column justify-content-center'>
                 <FormLogin user={user}
                            onSubmit={handleSubmitForm}
                            onChange={handleChangeInput}/>
