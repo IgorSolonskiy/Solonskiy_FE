@@ -4,9 +4,11 @@ import Btn from "../btn/Btn";
 export default function FormPosts({onSubmit, postData = {content: '', title: ''}}) {
     const [post, setPost] = useState(postData);
 
-    const handleInputChange = (name, value) => setPost(prevPost=>{
-        return{...prevPost,
-            [name]: value,}
+    const handleInputChange = (name, value) => setPost(prevPost => {
+        return {
+            ...prevPost,
+            [name]: value,
+        }
     })
 
     const handleCreateSubmit = (e, newPost) => {
@@ -15,7 +17,7 @@ export default function FormPosts({onSubmit, postData = {content: '', title: ''}
     }
 
     return (
-        <form className="d-flex flex-column justify-content-center" onSubmit={e => handleCreateSubmit(e, post )}>
+        <form className="d-flex flex-column justify-content-center" onSubmit={e => handleCreateSubmit(e, post)}>
             <label htmlFor="title" className='form-label'>Title</label>
             <input type="text" id="title" className="form-control"
                    onChange={e => handleInputChange('title', e.target.value)}

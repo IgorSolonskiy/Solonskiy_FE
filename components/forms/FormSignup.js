@@ -2,7 +2,7 @@ import Btn from "../btn/Btn";
 
 export default function FormSignup({onChange, onSubmit, user}) {
     return (
-        <form onSubmit={e=>onSubmit(e,user)} className='d-flex flex-column justify-content-center'>
+        <form onSubmit={e => onSubmit(e, user)} className='d-flex flex-column justify-content-center'>
             <div className="mb-3">
                 <label htmlFor="text" className='form-label'>Name</label>
                 <input type="text"
@@ -10,6 +10,14 @@ export default function FormSignup({onChange, onSubmit, user}) {
                        className='form-control'
                        value={user.name}
                        onChange={event => onChange('name', event.target.value)}/>
+            </div>
+            <div className="mb-3">
+                <label htmlFor="text" className='form-label'>Username</label>
+                <input type="text"
+                       id='text'
+                       className='form-control'
+                       value={user.user_name}
+                       onChange={event => onChange('user_name', event.target.value)}/>
             </div>
             <div className="mb-3">
                 <label htmlFor="email" className='form-label'>Email</label>

@@ -38,7 +38,7 @@ export default function Home({postsList, user}) {
 export async function getServerSideProps(context) {
     try {
         const user = await confirmUser(context);
-        const postsList = await userPosts(user.id, context);
+        const postsList = await userPosts(user.user_name, context);
 
         return {props: {postsList, user}};
     } catch (error) {

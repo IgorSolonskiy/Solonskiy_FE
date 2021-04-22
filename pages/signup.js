@@ -10,6 +10,7 @@ export default function Signup() {
     const router = useRouter();
     const [user, setUser] = useState({
         name: '',
+        user_name: '',
         email: '',
         password: '',
         password_confirmation: '',
