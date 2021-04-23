@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useRouter} from "next/router";
 import {confirmUser, registerUser} from "../gateway/usersGateway";
 
-import MainLayout from "../components/layout/MainLayout";
+import AuthLayout from "../components/layout/AuthLayout";
 import FormSignup from "../components/forms/FormSignup";
 import Link from "next/link";
 
@@ -30,19 +30,19 @@ export default function Signup() {
 
         const token = await registerUser(user);
 
-        document.cookie = `jwt=${JSON.stringify(token)}`;
+        document.cookie = `jwt=${JSON.stringify(token)};path=/; max-age=${60*60*24}`;
         router.push('/');
     }
 
     return (
-        <MainLayout>
+        <AuthLayout>
             <div className='min-vh-100 d-flex flex-column justify-content-center'>
                 <FormSignup onChange={handleChangeInput}
                             onSubmit={handleSubmitForm}
                             user={user}/>
                 <Link href="/login"><span className='btn btn-primary mt-2'>Log in</span></Link>
             </div>
-        </MainLayout>
+        </AuthLayout>
     )
 }
 

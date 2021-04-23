@@ -14,10 +14,10 @@ export const getPost = async (id = '', token = '') => {
     }
 }
 
-export const userPosts = async (id = '', token = '') => {
+export const userPosts = async (login = '', token = '') => {
     try {
 
-        const response = await Api.get(`users/${id}/posts`, configApi(token));
+        const response = await Api.get(`users/${login}/posts`, configApi(token));
         return response.data;
 
     } catch (error) {

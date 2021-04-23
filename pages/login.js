@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {useRouter} from "next/router";
 import {confirmUser, loginUser} from "../gateway/usersGateway";
 
-import MainLayout from "../components/layout/MainLayout";
+import AuthLayout from "../components/layout/AuthLayout";
 import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
 
@@ -32,14 +32,14 @@ export default function Login() {
     }
 
     return (
-        <MainLayout>
+        <AuthLayout>
             <div className='min-vh-100 d-flex flex-column justify-content-center'>
                 <FormLogin user={user}
                            onSubmit={handleSubmitForm}
                            onChange={handleChangeInput}/>
                 <Link href="/signup"><span className='btn btn-primary mt-2'>Sign up</span></Link>
             </div>
-        </MainLayout>
+        </AuthLayout>
     )
 }
 
