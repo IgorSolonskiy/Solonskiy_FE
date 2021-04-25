@@ -20,8 +20,8 @@ export default function User({user, posts}) {
 
 export async function getServerSideProps(context) {
     try {
-        const user = await userInformation(context.params.user_name, context);
-        const posts = await userPosts(context.params.user_name, context);
+        const user = await userInformation(context.params.username, context);
+        const posts = await userPosts(context.params.username, context);
 
         return {props: {user, posts}};
     } catch (error) {

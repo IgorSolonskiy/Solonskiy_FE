@@ -7,7 +7,7 @@ export default function Post({post, onDelete}) {
             <Link href={`/post/${post.id}`}>
                 <div className="w-100">
                     <div className=" ms-2 me-auto">
-                        <div className="fw-bold mt-2 w-100 text-center text-uppercase ">{post.author.user_name}</div>
+                        <div className="fw-bold mt-2 w-100 text-center text-uppercase ">{post.author.username}</div>
                         <div className="fw-bold mt-2 w-100">{post.title}</div>
                         <p className="mt-3">{post.content}</p>
                     </div>
