@@ -3,15 +3,15 @@ import {userInformation} from "../../gateway/usersGateway";
 
 import UserInfo from "../../components/user/UserInfo";
 import List from "../../components/list/List";
-import UserPost from '../../components/post/UserPost';
 import MainLayout from "../../components/layout/MainLayout";
+import Post from "../../components/post/Post";
 
 export default function User({user, posts}) {
     return (
         <MainLayout>
             <UserInfo user={user} postNumber={posts.length}>
                 <List>
-                    {posts.map(post => <UserPost  key={post.id} post={post}/>)}
+                    {posts.map(post => <Post user={!user} key={post.id} post={post}/>)}
                 </List>
             </UserInfo>
         </MainLayout>

@@ -45,7 +45,7 @@ export default function Home({postsList, user}) {
             <FormPosts onSubmit={handleCreateSumbit}/>
             <FormFilters onSubmit={handleFlitersUser} onChange={handleChangeFilters} filtersUser={filterUser}/>
             <List>
-                {posts.map(post => <Post key={post.id} post={post} onDelete={handleDeleteClick}/>)}
+                {posts.map(post => <Post user={user} key={post.id} post={post} onDelete={handleDeleteClick}/>)}
             </List>
         </MainLayout>
     )
