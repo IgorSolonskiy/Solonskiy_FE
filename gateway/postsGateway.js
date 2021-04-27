@@ -1,10 +1,9 @@
 import Api from '../utils/Api';
-import configApi from '../utils/configApi';
 
-export const getPost = async (id = '', token = '') => {
+export const getPost = async (id = '') => {
     try {
 
-        const response = await Api.get(`posts/${id}`, configApi(token));
+        const response = await Api.get(`posts/${id}`);
         return response.data;
 
     } catch (error) {
@@ -14,10 +13,10 @@ export const getPost = async (id = '', token = '') => {
     }
 }
 
-export const userPosts = async (id = '', token = '') => {
+export const userPosts = async (id = '') => {
     try {
 
-        const response = await Api.get(`users/${id}/posts`, configApi(token));
+        const response = await Api.get(`users/${id}/posts`);
         return response.data;
 
     } catch (error) {
@@ -30,7 +29,7 @@ export const userPosts = async (id = '', token = '') => {
 export const createPost = async (post) => {
     try {
 
-        const response = await Api.post('posts', post, configApi());
+        const response = await Api.post('posts', post);
         return response.data;
 
     } catch (error) {
@@ -43,7 +42,7 @@ export const createPost = async (post) => {
 export const changePost = async (id, post) => {
     try {
 
-        const response = await Api.put(`posts/${id}`, post, configApi());
+        const response = await Api.put(`posts/${id}`, post);
         return response.data;
 
     } catch (error) {
@@ -56,7 +55,7 @@ export const changePost = async (id, post) => {
 export const deletePost = async (id) => {
     try {
 
-        const response = await Api.delete(`posts/${id}`, configApi());
+        const response = await Api.delete(`posts/${id}`);
         return response.data;
 
     } catch (error) {

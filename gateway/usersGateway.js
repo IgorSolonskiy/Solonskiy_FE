@@ -1,5 +1,4 @@
 import Api from '../utils/Api';
-import configApi from "../utils/configApi";
 
 export const loginUser = async (user) => {
     try {
@@ -11,9 +10,9 @@ export const loginUser = async (user) => {
     }
 }
 
-export const confirmUser = async (token = '') => {
+export const confirmUser = async () => {
     try {
-        const response = await Api.get('profile', configApi(token));
+        const response = await Api.get('profile');
 
         return response.data;
     } catch (error) {
@@ -37,7 +36,7 @@ export const registerUser = async (user) => {
 
 export const logoutUser = async () => {
     try {
-        const response = await Api.get('logout', configApi());
+        const response = await Api.get('logout');
 
         return response.data;
     } catch (error) {
@@ -47,9 +46,9 @@ export const logoutUser = async () => {
     }
 }
 
-export const userInformation = async (email, token = '') => {
+export const userInformation = async (email) => {
     try {
-        const response = await Api.get(`users/${email}`, configApi(token));
+        const response = await Api.get(`users/${email}`);
 
         return response.data;
     } catch (error) {
@@ -59,9 +58,9 @@ export const userInformation = async (email, token = '') => {
     }
 }
 
-export const getUsers = async (token = '') => {
+export const getUsers = async () => {
     try {
-        const response = await Api.get('users', configApi(token));
+        const response = await Api.get('users');
 
         return response.data;
     } catch (error) {
