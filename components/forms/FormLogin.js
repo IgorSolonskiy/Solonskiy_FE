@@ -19,7 +19,7 @@ export default function FormLogin({user, onChange, onSubmit}) {
                        value={user.password}
                        onChange={(e) => onChange('password', e.target.value)}/>
             </div>
-            <Btn name='Log in' classBtn='btn-success'/>
+            <Btn type='submit' name='Log in' classBtn='btn-success'/>
         </form>
     )
 }

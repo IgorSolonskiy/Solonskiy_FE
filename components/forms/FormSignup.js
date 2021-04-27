@@ -43,7 +43,7 @@ export default function FormSignup({onChange, onSubmit, user}) {
                        value={user.password_confirmation}
                        onChange={event => onChange('password_confirmation', event.target.value)}/>
             </div>
-            <Btn name='Sign up' classBtn='btn-success'/>
+            <Btn type='submit' name='Sign up' classBtn='btn-success'/>
         </form>
     )
 }

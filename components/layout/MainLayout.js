@@ -18,7 +18,7 @@ export default function MainLayout({children, user = ''}) {
             <main className="min-vh-100 d-flex flex-column align-items-center justify-content-start w-75 m-auto">
                 {children}
             </main>
-            {user && <Btn name='Sign out' classBtn='btn btn-outline-secondary mt-3' onClick={handleLogout}/>}
+            {user && <Btn type='button' name='Sign out' classBtn='btn btn-outline-secondary mt-3' onClick={handleLogout}/>}
         </div>
     )
 }
