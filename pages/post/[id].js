@@ -1,12 +1,14 @@
+import cookies from "next-cookies";
+
 import {useRouter} from "next/router";
+import {changePost, deletePost} from '../../gateway/postsGateway';
+
 import Link from "next/link";
-
-import {changePost, deletePost, getPost} from '../../gateway/postsGateway';
-
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
-import {confirmUser} from "../../gateway/usersGateway";
+
+import serverApi from "../../utils/serverApi";
 
 export default function Post({post, user}) {
     const router = useRouter();
@@ -31,10 +33,12 @@ export default function Post({post, user}) {
 
 export async function getServerSideProps(context) {
     try {
-        const user = await confirmUser(context);
-        const post = await getPost(context.query.id, context);
+        serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
 
-        return {props: {user, post}};
+        const user = await serverApi.get('/profile');
+        const post = await serverApi.get(`posts/${context.query.id}`);
+
+        return {props: {user: user.data, post: post.data}};
     } catch (error) {
         return {notFound: true}
     }

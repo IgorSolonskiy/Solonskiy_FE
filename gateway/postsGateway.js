@@ -13,10 +13,10 @@ export const getPost = async (id = '') => {
     }
 }
 
-export const userPosts = async (id = '') => {
+export const userPosts = async (email = '') => {
     try {
 
-        const response = await Api.get(`users/${id}/posts`);
+        const response = await Api.get(`users/${email}/posts`);
         return response.data;
 
     } catch (error) {

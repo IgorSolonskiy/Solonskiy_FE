@@ -1,13 +1,16 @@
+import cookies from "next-cookies";
 import {useState} from 'react';
-import {createPost, deletePost, userPosts} from '../gateway/postsGateway';
-import {confirmUser} from "../gateway/usersGateway";
+import {createPost, deletePost} from '../gateway/postsGateway';
 
 import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
 import Post from "../components/post/Post";
 import MainLayout from "../components/layout/MainLayout";
 
+import serverApi from "../utils/serverApi";
+
 export default function Home({postsList, user}) {
+
     const [posts, setPosts] = useState(postsList);
 
     const handleDeleteClick = async (deletedPost) => {
@@ -37,10 +40,12 @@ export default function Home({postsList, user}) {
 
 export async function getServerSideProps(context) {
     try {
-        const user = await confirmUser(context);
-        const postsList = await userPosts(user.user_name, context);
+        serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
 
-        return {props: {postsList, user}};
+        const user = await serverApi.get('/profile');
+        const postsList = await serverApi.get(`users/${user.data.username}/posts`);
+
+        return {props: {postsList: postsList.data, user: user.data}};
     } catch (error) {
         return {
             redirect: {
