@@ -1,6 +1,6 @@
 import Api from '../utils/Api';
 
-export const getPosts = async (id = '') => {
+export const getPost = async (id = '') => {
     try {
 
         const response = await Api.get(`posts/${id}`);
@@ -13,10 +13,10 @@ export const getPosts = async (id = '') => {
     }
 }
 
-export const createPost = async ( post )=> {
+export const userPosts = async (email = '') => {
     try {
 
-        const response = await Api.post('posts',post);
+        const response = await Api.get(`users/${email}/posts`);
         return response.data;
 
     } catch (error) {
@@ -26,10 +26,10 @@ export const createPost = async ( post )=> {
     }
 }
 
-export const changePost = async (id,post) => {
+export const createPost = async (post) => {
     try {
 
-        const response = await Api.put(`posts/${id}`,post);
+        const response = await Api.post('posts', post);
         return response.data;
 
     } catch (error) {
@@ -39,7 +39,20 @@ export const changePost = async (id,post) => {
     }
 }
 
-export const deletePost = async id => {
+export const changePost = async (id, post) => {
+    try {
+
+        const response = await Api.put(`posts/${id}`, post);
+        return response.data;
+
+    } catch (error) {
+
+        throw new Error('Internal Server Error');
+
+    }
+}
+
+export const deletePost = async (id) => {
     try {
 
         const response = await Api.delete(`posts/${id}`);
