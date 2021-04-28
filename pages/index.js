@@ -1,17 +1,22 @@
-import cookies from "next-cookies";
 import {useState} from 'react';
-import {createPost, deletePost} from '../gateway/postsGateway';
+import {useRouter} from "next/router";
+import {createPost, deletePost, userPosts} from '../gateway/postsGateway';
+import {confirmUser} from "../gateway/usersGateway";
 
 import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
 import Post from "../components/post/Post";
 import MainLayout from "../components/layout/MainLayout";
-
+import FormFilters from "../components/forms/FormFilters";
+import cookies from "next-cookies";
 import serverApi from "../utils/serverApi";
 
 export default function Home({postsList, user}) {
-
+    const [userName, setUserName] = useState({
+        username: ''
+    });
     const [posts, setPosts] = useState(postsList);
+    const router = useRouter();
 
     const handleDeleteClick = async (deletedPost) => {
         await deletePost(deletedPost.id);
@@ -25,12 +30,25 @@ export default function Home({postsList, user}) {
         setPosts(prevPosts => [...prevPosts, post]);
     }
 
+    const handleChangeFilter = (name, value) => setUserName(prevName => {
+        return {
+            ...prevName,
+            [name]: value,
+        }
+    })
+
+    const handleFilterSubmit = async (e, username) => {
+        e.preventDefault();
+        router.push(`/users/${username}`);
+    }
+
     return (
         <MainLayout user={user}>
             <div className="d-flex">
-                <h1 className=''>Hello, {user.name}</h1>
+                <h1>Hello, {user.name}</h1>
             </div>
             <FormPosts onSubmit={handleCreateSumbit}/>
+            <FormFilters user={userName} onChange={handleChangeFilter} onSubmit={handleFilterSubmit}/>
             <List>
                 {posts.map(post => <Post user={user} key={post.id} post={post} onDelete={handleDeleteClick}/>)}
             </List>
@@ -42,10 +60,10 @@ export async function getServerSideProps(context) {
     try {
         serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
 
-        const user = await serverApi.get('/profile');
-        const postsList = await serverApi.get(`users/${user.data.username}/posts`);
+        const user = await confirmUser();
+        const postsList = await userPosts(user.username);
 
-        return {props: {postsList: postsList.data, user: user.data}};
+        return {props: {postsList, user}};
     } catch (error) {
         return {
             redirect: {

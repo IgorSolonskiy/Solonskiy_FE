@@ -1,9 +1,10 @@
 import Api from '../utils/Api';
+import serverApi from "../utils/serverApi";
 
 export const getPost = async (id = '') => {
     try {
 
-        const response = await Api.get(`posts/${id}`);
+        const response = await serverApi.get(`posts/${id}`);
         return response.data;
 
     } catch (error) {
@@ -15,8 +16,7 @@ export const getPost = async (id = '') => {
 
 export const userPosts = async (email = '') => {
     try {
-
-        const response = await Api.get(`users/${email}/posts`);
+        const response = await serverApi.get(`users/${email}/posts`);
         return response.data;
 
     } catch (error) {

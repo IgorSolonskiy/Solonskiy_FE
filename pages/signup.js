@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useRouter} from "next/router";
-import {registerUser} from "../gateway/usersGateway";
+import {confirmUser, registerUser} from "../gateway/usersGateway";
 
 import MainLayout from "../components/layout/MainLayout";
 import FormSignup from "../components/forms/FormSignup";
@@ -52,7 +52,7 @@ export async function getServerSideProps(context) {
     try {
         serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
 
-        const user = await serverApi.get('/profile');
+        await confirmUser();
 
         return {
             redirect: {

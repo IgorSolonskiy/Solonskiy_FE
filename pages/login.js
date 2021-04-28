@@ -1,13 +1,11 @@
-import cookies from "next-cookies";
-
 import {useState} from 'react';
 import {useRouter} from "next/router";
-import {loginUser} from "../gateway/usersGateway";
+import {confirmUser, loginUser} from "../gateway/usersGateway";
 
 import MainLayout from "../components/layout/MainLayout";
 import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
-
+import cookies from "next-cookies";
 import serverApi from "../utils/serverApi";
 
 export default function Login() {
@@ -51,7 +49,7 @@ export async function getServerSideProps(context) {
     try {
         serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
 
-        const user = await serverApi.get('/profile');
+        await confirmUser();
 
         return {
             redirect: {
