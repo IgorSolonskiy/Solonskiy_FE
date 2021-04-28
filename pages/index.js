@@ -12,9 +12,6 @@ import cookies from "next-cookies";
 import serverApi from "../utils/serverApi";
 
 export default function Home({postsList, user}) {
-    const [userName, setUserName] = useState({
-        username: ''
-    });
     const [posts, setPosts] = useState(postsList);
     const router = useRouter();
 
@@ -23,22 +20,14 @@ export default function Home({postsList, user}) {
         setPosts(prevPosts => prevPosts.filter((post) => post.id !== deletedPost.id));
     }
 
-    const handleCreateSumbit = async (newPost, postState) => {
+    const handleCreateSumbit = async (newPost,formikHelpers) => {
         const post = await createPost(newPost);
 
-        postState({content: '', title: ''})
         setPosts(prevPosts => [...prevPosts, post]);
+        formikHelpers.resetForm(true);
     }
 
-    const handleChangeFilter = (name, value) => setUserName(prevName => {
-        return {
-            ...prevName,
-            [name]: value,
-        }
-    })
-
-    const handleFilterSubmit = async (e, username) => {
-        e.preventDefault();
+    const handleFilterSubmit = async (username) => {
         router.push(`/users/${username}`);
     }
 
@@ -48,7 +37,7 @@ export default function Home({postsList, user}) {
                 <h1>Hello, {user.name}</h1>
             </div>
             <FormPosts onSubmit={handleCreateSumbit}/>
-            <FormFilters user={userName} onChange={handleChangeFilter} onSubmit={handleFilterSubmit}/>
+            <FormFilters onSubmit={handleFilterSubmit}/>
             <List>
                 {posts.map(post => <Post user={user} key={post.id} post={post} onDelete={handleDeleteClick}/>)}
             </List>
