@@ -1,4 +1,5 @@
 import Api from '../utils/Api';
+import serverApi from "../utils/serverApi";
 
 export const loginUser = async (user) => {
     try {
@@ -12,7 +13,7 @@ export const loginUser = async (user) => {
 
 export const confirmUser = async () => {
     try {
-        const response = await Api.get('profile');
+        const response = await serverApi.get('profile');
 
         return response.data;
     } catch (error) {
@@ -48,19 +49,7 @@ export const logoutUser = async () => {
 
 export const userInformation = async (email) => {
     try {
-        const response = await Api.get(`users/${email}`);
-
-        return response.data;
-    } catch (error) {
-
-        throw new Error('Internal Server Error');
-
-    }
-}
-
-export const getUsers = async () => {
-    try {
-        const response = await Api.get('users');
+        const response = await serverApi.get(`users/${email}`);
 
         return response.data;
     } catch (error) {

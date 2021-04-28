@@ -1,14 +1,13 @@
-import cookies from "next-cookies";
-
 import {useRouter} from "next/router";
-import {changePost, deletePost} from '../../gateway/postsGateway';
+import {changePost, deletePost, getPost} from '../../gateway/postsGateway';
 
 import Link from "next/link";
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
-
+import {confirmUser} from "../../gateway/usersGateway";
 import serverApi from "../../utils/serverApi";
+import cookies from "next-cookies";
 
 export default function Post({post, user}) {
     const router = useRouter();
@@ -25,7 +24,12 @@ export default function Post({post, user}) {
 
     return (
         <MainLayout user={user}>
-            <FormPosts postData={post} onSubmit={handleEditSubmit}/>
+            {post.author.id === user.id ?
+                <FormPosts postData={post} onSubmit={handleEditSubmit}/>
+                :
+                <Link href={`/users/${post.author.username}`}>
+                    <span className='btn btn-outline-success mt-2'>{post.author.username}</span>
+                </Link>}
             <Link href="/"><span className='btn btn-outline-success mt-2'>Home</span></Link>
             <Posts user={user} post={post} onDelete={handleDeleteClick}/>
         </MainLayout>)
@@ -35,10 +39,10 @@ export async function getServerSideProps(context) {
     try {
         serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
 
-        const user = await serverApi.get('/profile');
-        const post = await serverApi.get(`posts/${context.query.id}`);
+        const user = await confirmUser();
+        const post = await getPost(context.query.id);
 
-        return {props: {user: user.data, post: post.data}};
+        return {props: {user, post}};
     } catch (error) {
         return {notFound: true}
     }
