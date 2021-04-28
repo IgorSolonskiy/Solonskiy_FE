@@ -1,19 +1,22 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useRouter} from "next/router";
 import {createPost, deletePost, userPosts} from '../gateway/postsGateway';
 import {confirmUser} from "../gateway/usersGateway";
+import {Api} from "../utils/Api";
 
 import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
 import Post from "../components/post/Post";
 import MainLayout from "../components/layout/MainLayout";
 import FormFilters from "../components/forms/FormFilters";
-import cookies from "next-cookies";
-import serverApi from "../utils/serverApi";
 
 export default function Home({postsList, user}) {
     const [posts, setPosts] = useState(postsList);
     const router = useRouter();
+
+    useEffect(()=>{
+        Api.setToken(document.cookie);
+    },[])
 
     const handleDeleteClick = async (deletedPost) => {
         await deletePost(deletedPost.id);
@@ -47,7 +50,7 @@ export default function Home({postsList, user}) {
 
 export async function getServerSideProps(context) {
     try {
-        serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
+        Api.setToken(context)
 
         const user = await confirmUser();
         const postsList = await userPosts(user.username);

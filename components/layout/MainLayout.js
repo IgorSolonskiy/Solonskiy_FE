@@ -9,7 +9,7 @@ export default function MainLayout({children, user = ''}) {
 
     const handleLogout = async () => {
         await logoutUser();
-        document.cookie = `jwt=${JSON.stringify(cookies(document.cookie).jwt)}; path=/; max-age=0`;
+        document.cookie = `token=${JSON.stringify(cookies(document.cookie).jwt)}; path=/; max-age=0`;
         router.push('/login');
     }
 

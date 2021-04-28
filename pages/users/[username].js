@@ -1,12 +1,11 @@
 import {userInformation} from "../../gateway/usersGateway";
 import {userPosts} from "../../gateway/postsGateway";
+import {Api} from "../../utils/Api";
 
 import Link from "next/link";
 import List from "../../components/list/List";
 import Post from "../../components/post/Post";
 import MainLayout from "../../components/layout/MainLayout";
-import cookies from "next-cookies";
-import serverApi from "../../utils/serverApi";
 
 export default function User({postsList, user}) {
     return (
@@ -27,7 +26,7 @@ export default function User({postsList, user}) {
 
 export async function getServerSideProps(context) {
     try {
-        serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
+        Api.setToken(context);
 
         const user = await userInformation(context.query.username);
         const postsList = await userPosts(context.query.username);

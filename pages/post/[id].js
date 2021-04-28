@@ -1,13 +1,12 @@
 import {useRouter} from "next/router";
 import {changePost, deletePost, getPost} from '../../gateway/postsGateway';
+import {Api} from "../../utils/Api";
 
 import Link from "next/link";
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
 import {confirmUser} from "../../gateway/usersGateway";
-import serverApi from "../../utils/serverApi";
-import cookies from "next-cookies";
 
 export default function Post({post, user}) {
     const router = useRouter();
@@ -37,7 +36,7 @@ export default function Post({post, user}) {
 
 export async function getServerSideProps(context) {
     try {
-        serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
+        Api.setToken(context);
 
         const user = await confirmUser();
         const post = await getPost(context.query.id);

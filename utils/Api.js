@@ -1,14 +1,26 @@
 import axios from 'axios';
 import cookies from "next-cookies";
 
-const Api = axios.create({
-    baseURL: process.env.API_URL,
-    responseType: "json"
-});
+class AxiosController {
+    constructor(baseURL) {
+        this.instance = axios.create(
+            baseURL
+        );
+        this.init();
+    }
 
-Api.interceptors.request.use(function (config) {
-    config.headers.common.Authorization = `Bearer ${cookies(document.cookie).jwt}`;
-    return config;
-});
+    setToken(token) {
+        this.token = cookies(token).token;
+    }
 
-export default Api;
+    init() {
+        this.instance.interceptors.request.use( config=> {
+            if (this.token) {
+                config.headers.common.Authorization = `Bearer ${this.token}`;
+            }
+            return config;
+        });
+    }
+}
+
+export const Api = new AxiosController({baseURL: process.env.API_URL})

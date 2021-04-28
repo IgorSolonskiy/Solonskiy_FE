@@ -1,9 +1,8 @@
-import Api from '../utils/Api';
-import serverApi from "../utils/serverApi";
+import {Api} from "../utils/Api";
 
 export const loginUser = async (user) => {
     try {
-        const response = await Api.post('login', user);
+        const response = await Api.instance.post('login', user);
         return response.data.token;
 
     } catch (error) {
@@ -13,7 +12,7 @@ export const loginUser = async (user) => {
 
 export const confirmUser = async () => {
     try {
-        const response = await serverApi.get('profile');
+        const response = await Api.instance.get('profile');
 
         return response.data;
     } catch (error) {
@@ -25,7 +24,7 @@ export const confirmUser = async () => {
 
 export const registerUser = async (user) => {
     try {
-        const response = await Api.post('register', user);
+        const response = await Api.instance.post('register', user);
 
         return response.data.token;
     } catch (error) {
@@ -37,7 +36,7 @@ export const registerUser = async (user) => {
 
 export const logoutUser = async () => {
     try {
-        const response = await Api.get('logout');
+        const response = await Api.instance.get('logout');
 
         return response.data;
     } catch (error) {
@@ -49,7 +48,7 @@ export const logoutUser = async () => {
 
 export const userInformation = async (email) => {
     try {
-        const response = await serverApi.get(`users/${email}`);
+        const response = await Api.instance.get(`users/${email}`);
 
         return response.data;
     } catch (error) {

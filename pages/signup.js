@@ -1,11 +1,10 @@
 import {useRouter} from "next/router";
 import {confirmUser, registerUser} from "../gateway/usersGateway";
+import {Api} from "../utils/Api";
 
 import MainLayout from "../components/layout/MainLayout";
 import FormSignup from "../components/forms/FormSignup";
 import Link from "next/link";
-import serverApi from "../utils/serverApi";
-import cookies from "next-cookies";
 
 export default function Signup() {
     const router = useRouter();
@@ -13,7 +12,7 @@ export default function Signup() {
     const handleSubmitForm = async (user) =>{
         const token = await registerUser(user);
 
-        document.cookie = `jwt=${JSON.stringify(token)}`;
+        document.cookie = `token=${JSON.stringify(token)};path=/; max-age=${process.env.AUTH_TOKEN_LIFETIME}`;
         router.push('/');
     }
 
@@ -29,8 +28,7 @@ export default function Signup() {
 
 export async function getServerSideProps(context) {
     try {
-        serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
-
+        Api.setToken(context)
         await confirmUser();
 
         return {

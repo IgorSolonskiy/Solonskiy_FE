@@ -1,11 +1,10 @@
 import {useRouter} from "next/router";
 import {confirmUser, loginUser} from "../gateway/usersGateway";
+import {Api} from "../utils/Api";
 
 import MainLayout from "../components/layout/MainLayout";
 import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
-import cookies from "next-cookies";
-import serverApi from "../utils/serverApi";
 
 export default function Login() {
     const router = useRouter();
@@ -13,7 +12,7 @@ export default function Login() {
     const handleSubmitForm = async (user) => {
         const token = await loginUser(user);
 
-        document.cookie = `jwt=${JSON.stringify(token)};path=/; max-age=${60 * 60 * 24}`;
+        document.cookie = `token=${JSON.stringify(token)};path=/; max-age=${process.env.AUTH_TOKEN_LIFETIME}`;
         router.push('/');
     }
 
@@ -29,8 +28,7 @@ export default function Login() {
 
 export async function getServerSideProps(context) {
     try {
-        serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
-
+        Api.setToken(context)
         await confirmUser();
 
         return {
