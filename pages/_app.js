@@ -1,11 +1,11 @@
 import {Api} from "../utils/Api";
-import Auth from "../hoc/auth-check";
+import CookiesProvider from "../hoc/CookiesProvider";
 
 export default function MyApp({Component, pageProps}) {
     return (
-        <Auth>
+        <CookiesProvider>
             <Component {...pageProps} />
-        </Auth>
+        </CookiesProvider>
     )
 }
 

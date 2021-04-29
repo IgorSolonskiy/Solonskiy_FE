@@ -3,7 +3,7 @@ import {useEffect} from "react";
 
 import Cookies from "../helpers/cookie";
 
-export default function AuthCheck({children}) {
+export default function CookiesProvider({children}) {
 
     useEffect(()=>{
         Api.setToken(Cookies.get('token'));
