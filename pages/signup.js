@@ -1,18 +1,18 @@
 import {useRouter} from "next/router";
-import {confirmUser, registerUser} from "../gateway/usersGateway";
-import {Api} from "../utils/Api";
+import {registerUser} from "../gateway/usersGateway";
 
 import MainLayout from "../components/layout/MainLayout";
 import FormSignup from "../components/forms/FormSignup";
 import Link from "next/link";
+import Cookies from "../helpers/cookie";
 
 export default function Signup() {
     const router = useRouter();
 
-    const handleSubmitForm = async (user) =>{
+    const handleSubmitForm = async (user) => {
         const token = await registerUser(user);
 
-        document.cookie = `token=${JSON.stringify(token)};path=/; max-age=${process.env.AUTH_TOKEN_LIFETIME}`;
+        Cookies.set('token', token, process.env.AUTH_TOKEN_LIFETIME);
         router.push('/');
     }
 
@@ -24,22 +24,4 @@ export default function Signup() {
             </div>
         </MainLayout>
     )
-}
-
-export async function getServerSideProps(context) {
-    try {
-        Api.setToken(context)
-        await confirmUser();
-
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
-        }
-    } catch (e) {
-        return {
-            props: {},
-        }
-    }
 }

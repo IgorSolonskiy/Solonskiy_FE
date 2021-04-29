@@ -1,6 +1,5 @@
 import {userInformation} from "../../gateway/usersGateway";
 import {userPosts} from "../../gateway/postsGateway";
-import {Api} from "../../utils/Api";
 
 import Link from "next/link";
 import List from "../../components/list/List";
@@ -26,18 +25,11 @@ export default function User({postsList, user}) {
 
 export async function getServerSideProps(context) {
     try {
-        Api.setToken(context);
-
         const user = await userInformation(context.query.username);
         const postsList = await userPosts(context.query.username);
 
         return {props: {postsList, user}};
     } catch (error) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            }
-        }
+        return {notFound: true}
     }
 }

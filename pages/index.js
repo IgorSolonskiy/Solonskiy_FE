@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useRouter} from "next/router";
 import {createPost, deletePost, userPosts} from '../gateway/postsGateway';
 import {confirmUser} from "../gateway/usersGateway";
-import {Api} from "../utils/Api";
+import {Api} from "../utils/Api"
 
 import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
@@ -14,16 +14,12 @@ export default function Home({postsList, user}) {
     const [posts, setPosts] = useState(postsList);
     const router = useRouter();
 
-    useEffect(()=>{
-        Api.setToken(document.cookie);
-    },[])
-
     const handleDeleteClick = async (deletedPost) => {
         await deletePost(deletedPost.id);
         setPosts(prevPosts => prevPosts.filter((post) => post.id !== deletedPost.id));
     }
 
-    const handleCreateSumbit = async (newPost,formikHelpers) => {
+    const handleCreateSumbit = async (newPost, formikHelpers) => {
         const post = await createPost(newPost);
 
         setPosts(prevPosts => [...prevPosts, post]);
@@ -50,7 +46,7 @@ export default function Home({postsList, user}) {
 
 export async function getServerSideProps(context) {
     try {
-        Api.setToken(context)
+        Api.setToken(context.req.cookies.token)
 
         const user = await confirmUser();
         const postsList = await userPosts(user.username);

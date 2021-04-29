@@ -1,7 +1,8 @@
-import Btn from "../btn/Btn";
 import {logoutUser} from "../../gateway/usersGateway";
 import {useRouter} from "next/router";
-import cookies from "next-cookies";
+
+import Btn from "../btn/Btn";
+import Cookies from "../../helpers/cookie";
 
 
 export default function MainLayout({children, user = ''}) {
@@ -9,7 +10,8 @@ export default function MainLayout({children, user = ''}) {
 
     const handleLogout = async () => {
         await logoutUser();
-        document.cookie = `token=${JSON.stringify(cookies(document.cookie).jwt)}; path=/; max-age=0`;
+
+        Cookies.remove('token');
         router.push('/login');
     }
 
@@ -18,7 +20,8 @@ export default function MainLayout({children, user = ''}) {
             <main className="min-vh-100 d-flex flex-column align-items-center justify-content-start w-75 m-auto">
                 {children}
             </main>
-            {user && <Btn type='button' name='Sign out' classBtn='btn btn-outline-secondary mt-3' onClick={handleLogout}/>}
+            {user &&
+            <Btn type='button' name='Sign out' classBtn='btn btn-outline-secondary mt-3' onClick={handleLogout}/>}
         </div>
     )
 }

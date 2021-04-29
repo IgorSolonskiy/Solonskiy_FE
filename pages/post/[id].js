@@ -1,12 +1,11 @@
 import {useRouter} from "next/router";
 import {changePost, deletePost, getPost} from '../../gateway/postsGateway';
-import {Api} from "../../utils/Api";
+import {confirmUser} from "../../gateway/usersGateway";
 
 import Link from "next/link";
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
-import {confirmUser} from "../../gateway/usersGateway";
 
 export default function Post({post, user}) {
     const router = useRouter();
@@ -36,8 +35,6 @@ export default function Post({post, user}) {
 
 export async function getServerSideProps(context) {
     try {
-        Api.setToken(context);
-
         const user = await confirmUser();
         const post = await getPost(context.query.id);
 

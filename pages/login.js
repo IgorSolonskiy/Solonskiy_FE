@@ -1,9 +1,9 @@
 import {useRouter} from "next/router";
-import {confirmUser, loginUser} from "../gateway/usersGateway";
-import {Api} from "../utils/Api";
+import {loginUser} from "../gateway/usersGateway";
 
 import MainLayout from "../components/layout/MainLayout";
 import FormLogin from "../components/forms/FormLogin";
+import Cookies from '../helpers/cookie';
 import Link from "next/link";
 
 export default function Login() {
@@ -12,7 +12,7 @@ export default function Login() {
     const handleSubmitForm = async (user) => {
         const token = await loginUser(user);
 
-        document.cookie = `token=${JSON.stringify(token)};path=/; max-age=${process.env.AUTH_TOKEN_LIFETIME}`;
+        Cookies.set('token', token, process.env.AUTH_TOKEN_LIFETIME);
         router.push('/');
     }
 
@@ -24,22 +24,4 @@ export default function Login() {
             </div>
         </MainLayout>
     )
-}
-
-export async function getServerSideProps(context) {
-    try {
-        Api.setToken(context)
-        await confirmUser();
-
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
-        }
-    } catch (e) {
-        return {
-            props: {},
-        }
-    }
 }
