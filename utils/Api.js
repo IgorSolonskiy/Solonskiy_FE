@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from "../helpers/cookie";
 
 class AxiosController {
     constructor(baseURL) {
@@ -16,6 +17,8 @@ class AxiosController {
         this.instance.interceptors.request.use( config=> {
             if (this.token) {
                 config.headers.Authorization = `Bearer ${this.token}`;
+            } else {
+                config.headers.Authorization = 'Bearer ' + Cookies.get('token');
             }
             return config;
         });

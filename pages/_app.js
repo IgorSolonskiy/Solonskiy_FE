@@ -1,12 +1,7 @@
 import {Api} from "../utils/Api";
-import CookiesProvider from "../hoc/CookiesProvider";
 
 export default function MyApp({Component, pageProps}) {
-    return (
-        <CookiesProvider>
-            <Component {...pageProps} />
-        </CookiesProvider>
-    )
+    return (<Component {...pageProps} />)
 }
 
 MyApp.getInitialProps = async (appContext) => {
