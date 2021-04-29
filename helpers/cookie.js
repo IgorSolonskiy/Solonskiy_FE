@@ -1,5 +1,3 @@
-import {Api} from "../utils/Api";
-
 const Cookies = {
     set(name, value, expires, path = '/') {
         document.cookie = `${name}=${value};path=${path}; max-age=${expires}`;
