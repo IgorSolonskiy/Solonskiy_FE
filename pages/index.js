@@ -2,7 +2,6 @@ import {useState} from 'react';
 import {useRouter} from "next/router";
 import {createPost, deletePost, userPosts} from '../gateway/postsGateway';
 import {confirmUser} from "../gateway/usersGateway";
-import {Api} from "../utils/Api"
 
 import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
