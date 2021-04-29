@@ -1,5 +1,13 @@
-import Auth from "../hoc/auth-check";
+import {Api} from "../utils/Api";
 
-export default function MyApp({Component, pageProps}) {
-    return (<Auth><Component {...pageProps} /></Auth>)
+export default function MyApp({Component, pageProps,token}) {
+    Api.setToken(token);
+    return (<Component {...pageProps} />)
+}
+
+MyApp.getInitialProps = async (appContext) => {
+    const token = appContext.ctx.req.cookies.token;
+
+    Api.setToken(token);
+    return {token};
 }

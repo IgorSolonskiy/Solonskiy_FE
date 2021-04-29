@@ -46,8 +46,6 @@ export default function Home({postsList, user}) {
 
 export async function getServerSideProps(context) {
     try {
-        Api.setToken(context.req.cookies.token)
-
         const user = await confirmUser();
         const postsList = await userPosts(user.username);
 

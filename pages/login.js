@@ -1,5 +1,5 @@
 import {useRouter} from "next/router";
-import {loginUser} from "../gateway/usersGateway";
+import {confirmUser, loginUser} from "../gateway/usersGateway";
 
 import MainLayout from "../components/layout/MainLayout";
 import FormLogin from "../components/forms/FormLogin";
@@ -24,4 +24,21 @@ export default function Login() {
             </div>
         </MainLayout>
     )
+}
+
+export async function getServerSideProps(context) {
+    try {
+        await confirmUser();
+
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    } catch (e) {
+        return {
+            props: {},
+        }
+    }
 }
