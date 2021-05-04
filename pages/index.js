@@ -1,17 +1,15 @@
 import {useState} from 'react';
 import {useRouter} from "next/router";
 import {createPost, deletePost, userPosts} from '../gateway/postsGateway';
-import {confirmUser} from "../gateway/usersGateway";
+import {withAuth} from "../hof/withAuth";
 
 import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
 import Post from "../components/post/Post";
 import MainLayout from "../components/layout/MainLayout";
 import FormFilters from "../components/forms/FormFilters";
-import cookies from "next-cookies";
-import serverApi from "../utils/serverApi";
 
-export default function Home({postsList, user}) {
+export default function Home({postsList, auth}) {
     const [posts, setPosts] = useState(postsList);
     const router = useRouter();
 
@@ -32,33 +30,22 @@ export default function Home({postsList, user}) {
     }
 
     return (
-        <MainLayout user={user}>
+        <MainLayout user={auth.user}>
             <div className="d-flex">
-                <h1>Hello, {user.name}</h1>
+                <h1>Hello, {auth.user.name}</h1>
             </div>
             <FormPosts onSubmit={handleCreateSumbit}/>
             <FormFilters onSubmit={handleFilterSubmit}/>
             <List>
-                {posts.map(post => <Post user={user} key={post.id} post={post} onDelete={handleDeleteClick}/>)}
+                {posts.map(post => <Post user={auth.user} key={post.id} post={post} onDelete={handleDeleteClick}/>)}
             </List>
         </MainLayout>
     )
 }
 
-export async function getServerSideProps(context) {
-    try {
-        serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
+export const getServerSideProps = withAuth(async  (ctx,auth) => {
+    const postsList = await userPosts(auth.user.username);
 
-        const user = await confirmUser();
-        const postsList = await userPosts(user.username);
-
-        return {props: {postsList, user}};
-    } catch (error) {
-        return {
-            redirect: {
-                destination: '/login',
-                permanent: false,
-            }
-        }
+    return {props: {postsList}};
     }
-}
+)
