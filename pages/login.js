@@ -5,7 +5,7 @@ import {withoutAuth} from "../hof/withoutAuth";
 import MainLayout from "../components/layout/MainLayout";
 import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
-import cookies from "../helpers/cookie";
+import Cookies from 'js-cookie'
 
 export default function Login() {
     const router = useRouter();
@@ -13,7 +13,7 @@ export default function Login() {
     const handleSubmitForm = async (user) => {
         const token = await loginUser(user);
 
-        cookies.set('token', token, process.env.AUTH_TOKEN_LIFETIME);
+        Cookies.set('token', token, {expires: 1});
         router.push('/');
     }
 

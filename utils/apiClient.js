@@ -1,5 +1,5 @@
 import axios from 'axios';
-import cookie from "../helpers/cookie";
+import Cookies from 'js-cookie';
 
 const apiClient = axios.create({
     baseURL: process.env.API_URL,
@@ -7,7 +7,7 @@ const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(config => {
-    config.headers.common.Authorization = `Bearer ${cookie.get('token')}`;
+    config.headers.common.Authorization = `Bearer ${Cookies.get('token')}`;
     return config;
 });
 

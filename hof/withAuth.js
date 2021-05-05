@@ -23,10 +23,7 @@ export const withAuth = (getServerSideProps) => {
             }
             catch (e) {
                 return {
-                    redirect: {
-                        destination: '/login',
-                        permanent: false,
-                    }
+                    notFound: true,
                 }
             }
         }

@@ -1,7 +1,7 @@
 import Btn from "../btn/Btn";
 import {logoutUser} from "../../gateway/usersGateway";
 import {useRouter} from "next/router";
-import cookie from "../../helpers/cookie";
+import Cookies from 'js-cookie';
 
 
 export default function MainLayout({children, user = ''}) {
@@ -9,7 +9,7 @@ export default function MainLayout({children, user = ''}) {
 
     const handleLogout = async () => {
         await logoutUser();
-        cookie.remove('token');
+        Cookies.remove('token');
         router.push('/login');
     }
 
