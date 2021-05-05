@@ -1,5 +1,5 @@
-import apiServer from '../utils/apiServer';
-import {confirmUser} from "../gateway/usersGateway";
+import apiServer from '../libs/apiServer';
+import {getProfile} from "../api/users";
 
 export const withAuth = (getServerSideProps) => {
     return async (ctx) => {
@@ -7,7 +7,7 @@ export const withAuth = (getServerSideProps) => {
         if (token) {
             try {
                 apiServer.defaults.headers['Authorization'] = `Bearer ${token}`
-                const user = await confirmUser();
+                const user = await getProfile();
                 const auth = {token, user}
                 if (getServerSideProps) {
                     const result = await getServerSideProps(ctx, auth)

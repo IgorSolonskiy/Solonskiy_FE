@@ -1,5 +1,5 @@
 import Btn from "../btn/Btn";
-import {logoutUser} from "../../gateway/usersGateway";
+import {logoutUser} from "../../api/users";
 import {useRouter} from "next/router";
 import Cookies from 'js-cookie';
 

@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useRouter} from "next/router";
-import {createPost, deletePost, userPosts} from '../gateway/postsGateway';
+import {createPost, deletePost, getUserPosts} from '../api/posts';
 import {withAuth} from "../hof/withAuth";
 
 import FormPosts from "../components/forms/FormPosts";
@@ -44,7 +44,7 @@ export default function Home({postsList, auth}) {
 }
 
 export const getServerSideProps = withAuth(async (ctx, auth) => {
-        const postsList = await userPosts(auth.user.username);
+        const postsList = await getUserPosts(auth.user.username);
 
         return {props: {postsList}};
     }

@@ -1,5 +1,5 @@
-import {userInformation} from "../../gateway/usersGateway";
-import {userPosts} from "../../gateway/postsGateway";
+import {getUserInformation} from "../../api/users";
+import {getUserPosts} from "../../api/posts";
 import {withAuth} from "../../hof/withAuth";
 
 import Link from "next/link";
@@ -26,8 +26,8 @@ export default function User({postsList, user}) {
 
 export const getServerSideProps = withAuth(async (ctx) => {
         try {
-            const user = await userInformation(ctx.query.username);
-            const postsList = await userPosts(ctx.query.username);
+            const user = await getUserInformation(ctx.query.username);
+            const postsList = await getUserPosts(ctx.query.username);
 
             return {props: {postsList, user}};
         } catch (e) {

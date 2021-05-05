@@ -1,12 +1,12 @@
-import apiServer from "../utils/apiServer";
-import {confirmUser} from "../gateway/usersGateway";
+import apiServer from "../libs/apiServer";
+import {getProfile} from "../api/users";
 
 export const withoutAuth = (getServerSideProps) => {
     return async (ctx) => {
         try {
             const {token} = ctx.req.cookies
             apiServer.defaults.headers['Authorization'] = `Bearer ${token}`
-            const user = await confirmUser();
+            const user = await getProfile();
             if (user) {
                 return {
                     redirect: {

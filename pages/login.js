@@ -1,5 +1,5 @@
 import {useRouter} from "next/router";
-import {loginUser} from "../gateway/usersGateway";
+import {loginUser} from "../api/users";
 import {withoutAuth} from "../hof/withoutAuth";
 
 import MainLayout from "../components/layout/MainLayout";
@@ -13,7 +13,7 @@ export default function Login() {
     const handleSubmitForm = async (user) => {
         const token = await loginUser(user);
 
-        Cookies.set('token', token, {expires: 1});
+        Cookies.set('token', token);
         router.push('/');
     }
 

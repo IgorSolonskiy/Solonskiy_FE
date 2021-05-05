@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {useRouter} from "next/router";
-import {changePost, deletePost, getPost} from '../../gateway/postsGateway';
+import {changePost, deletePost, getPost} from '../../api/posts';
 import {withAuth} from "../../hof/withAuth";
 
 import Link from "next/link";
