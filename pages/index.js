@@ -18,7 +18,7 @@ export default function Home({postsList, auth}) {
         setPosts(prevPosts => prevPosts.filter((post) => post.id !== deletedPost.id));
     }
 
-    const handleCreateSumbit = async (newPost,formikHelpers) => {
+    const handleCreateSumbit = async (newPost, formikHelpers) => {
         const post = await createPost(newPost);
 
         setPosts(prevPosts => [...prevPosts, post]);
@@ -43,9 +43,9 @@ export default function Home({postsList, auth}) {
     )
 }
 
-export const getServerSideProps = withAuth(async  (ctx,auth) => {
-    const postsList = await userPosts(auth.user.username);
+export const getServerSideProps = withAuth(async (ctx, auth) => {
+        const postsList = await userPosts(auth.user.username);
 
-    return {props: {postsList}};
+        return {props: {postsList}};
     }
 )

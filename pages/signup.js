@@ -10,7 +10,7 @@ import Cookies from 'js-cookie';
 export default function Signup() {
     const router = useRouter();
 
-    const handleSubmitForm = async (user) =>{
+    const handleSubmitForm = async (user) => {
         const token = await registerUser(user);
 
         Cookies.set('token', token, {expires: 1});
