@@ -40,8 +40,14 @@ export default function Post({userPost, auth}) {
 
 
 export const getServerSideProps = withAuth(async (ctx) => {
-        const userPost = await getPost(ctx.query.id);
+        try {
+            const userPost = await getPost(ctx.query.id);
 
-        return {props: {userPost}};
+            return {props: {userPost}};
+        } catch (e) {
+            return {
+                notFound: true,
+            }
+        }
     }
 )

@@ -3,8 +3,8 @@ import apiServer from "../utils/apiServer";
 
 export const loginUser = async (user) => {
     try {
-        const response = await apiClient.post('login', user);
-        return response.data.token;
+        const {data: {token: response}} = await apiClient.post('login', user);
+        return response
 
     } catch (error) {
         throw new Error('Internal Server Error');
@@ -13,9 +13,9 @@ export const loginUser = async (user) => {
 
 export const confirmUser = async () => {
     try {
-        const response = await apiServer.get('profile');
+        const {data: response} = await apiServer.get('profile');
 
-        return response.data;
+        return response;
     } catch (error) {
 
         throw new Error('Internal Server Error');
@@ -25,9 +25,9 @@ export const confirmUser = async () => {
 
 export const registerUser = async (user) => {
     try {
-        const response = await apiClient.post('register', user);
+        const {data: {token: response}} = await apiClient.post('register', user);
 
-        return response.data.token;
+        return response;
     } catch (error) {
 
         throw new Error('Internal Server Error');
@@ -37,9 +37,9 @@ export const registerUser = async (user) => {
 
 export const logoutUser = async () => {
     try {
-        const response = await apiClient.get('logout');
+        const {data: response} = await apiClient.get('logout');
 
-        return response.data;
+        return response;
     } catch (error) {
 
         throw new Error('Internal Server Error');
@@ -49,9 +49,9 @@ export const logoutUser = async () => {
 
 export const userInformation = async (email) => {
     try {
-        const response = await apiServer.get(`users/${email}`);
+        const {data: response} = await apiServer.get(`users/${email}`);
 
-        return response.data;
+        return response;
     } catch (error) {
 
         throw new Error('Internal Server Error');

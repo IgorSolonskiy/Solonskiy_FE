@@ -4,8 +4,8 @@ import apiServer from "../utils/apiServer";
 export const getPost = async (id = '') => {
     try {
 
-        const response = await apiServer.get(`posts/${id}`);
-        return response.data;
+        const {data: response} = await apiServer.get(`posts/${id}`);
+        return response;
 
     } catch (error) {
 
@@ -16,8 +16,8 @@ export const getPost = async (id = '') => {
 
 export const userPosts = async (email = '') => {
     try {
-        const response = await apiServer.get(`users/${email}/posts`);
-        return response.data;
+        const {data: response} = await apiServer.get(`users/${email}/posts`);
+        return response;
 
     } catch (error) {
 
@@ -29,8 +29,8 @@ export const userPosts = async (email = '') => {
 export const createPost = async (post) => {
     try {
 
-        const response = await apiClient.post('posts', post);
-        return response.data;
+        const {data: response} = await apiClient.post('posts', post);
+        return response;
 
     } catch (error) {
 
@@ -42,8 +42,8 @@ export const createPost = async (post) => {
 export const changePost = async (id, post) => {
     try {
 
-        const response = await apiClient.put(`posts/${id}`, post);
-        return response.data;
+        const {data: response} = await apiClient.put(`posts/${id}`, post);
+        return response;
 
     } catch (error) {
 
@@ -55,8 +55,8 @@ export const changePost = async (id, post) => {
 export const deletePost = async (id) => {
     try {
 
-        const response = await apiClient.delete(`posts/${id}`);
-        return response.data;
+        const {data: response} = await apiClient.delete(`posts/${id}`);
+        return response;
 
     } catch (error) {
 

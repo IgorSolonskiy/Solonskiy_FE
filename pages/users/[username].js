@@ -25,10 +25,16 @@ export default function User({postsList, user}) {
 }
 
 export const getServerSideProps = withAuth(async (ctx) => {
-        const user = await userInformation(ctx.query.username);
-        const postsList = await userPosts(ctx.query.username);
+        try {
+            const user = await userInformation(ctx.query.username);
+            const postsList = await userPosts(ctx.query.username);
 
-        return {props: {postsList, user}};
+            return {props: {postsList, user}};
+        } catch (e) {
+            return {
+                notFound: true,
+            }
+        }
     }
 )
 
