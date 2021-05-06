@@ -1,7 +1,10 @@
-import {useState} from 'react';
 import {useRouter} from "next/router";
-import {createPost, deletePost, getUserPosts} from '../api/posts';
+import {useEffect} from "react";
 import {withAuth} from "../hof/withAuth";
+import {getUserPosts} from '../api/posts';
+import {postsActions} from "../store/posts";
+import {useDispatch, useSelector} from 'react-redux'
+import {deletePost,createPost} from "../store/posts/asyncAtions/asyncActions";
 
 import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
@@ -10,18 +13,22 @@ import MainLayout from "../components/layout/MainLayout";
 import FormFilters from "../components/forms/FormFilters";
 
 export default function Home({postsList, auth}) {
-    const [posts, setPosts] = useState(postsList);
+    const {posts} = useSelector((state) => state.posts)
+    const dispatch = useDispatch()
     const router = useRouter();
 
-    const handleDeleteClick = async (deletedPost) => {
-        await deletePost(deletedPost.id);
-        setPosts(prevPosts => prevPosts.filter((post) => post.id !== deletedPost.id));
-    }
+    useEffect(() => {
+        dispatch(postsActions.addPostsList(postsList));
 
-    const handleCreateSumbit = async (newPost, formikHelpers) => {
-        const post = await createPost(newPost);
+        return () => dispatch(postsActions.clearPostsList());
+    }, [postsList]);
 
-        setPosts(prevPosts => [...prevPosts, post]);
+    const handleDeleteClick = (deletedPost) => dispatch(deletePost(deletedPost.id));
+
+
+    const handleCreateSumbit = (newPost, formikHelpers) => {
+        dispatch(createPost(newPost));
+
         formikHelpers.resetForm(true);
     }
 

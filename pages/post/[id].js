@@ -1,29 +1,35 @@
-import {useState} from "react";
 import {useRouter} from "next/router";
-import {changePost, deletePost, getPost} from '../../api/posts';
+import {getPost} from '../../api/posts';
 import {withAuth} from "../../hof/withAuth";
+import {changePost,deletePost} from "../../store/posts/asyncAtions/asyncActions";
+import {useDispatch, useSelector} from "react-redux";
+import {postsActions} from "../../store/posts";
 
 import Link from "next/link";
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
+import {useEffect} from "react";
 
 export default function Post({userPost, auth}) {
-    const [post, setPost] = useState(userPost);
+    const {post} = useSelector((state) => state.posts)
+    const dispatch = useDispatch()
     const router = useRouter();
 
-    const handleDeleteClick = async (deletedPost) => {
-        await deletePost(deletedPost.id);
+    useEffect(() => {
+        dispatch(postsActions.addPost(userPost));
+
+        return () => dispatch(postsActions.clearPost())
+    }, [userPost])
+
+    const handleDeleteClick = (deletedPost) => {
+        dispatch(deletePost(deletedPost.id));
         router.push('/');
     }
 
-    const handleEditSubmit = async (newPost) => {
-        const changedPost = await changePost(post.id, newPost);
+    const handleEditSubmit = (newPost) => dispatch(changePost(post.id, newPost));
 
-        setPost(changedPost);
-    }
-
-    return (
+    return post ? (
         <MainLayout user={auth.user}>
             {
                 post.author.id === auth.user.id ?
@@ -35,7 +41,7 @@ export default function Post({userPost, auth}) {
             }
             <Link href="/"><span className='btn btn-outline-success mt-2'>Home</span></Link>
             <Posts user={auth.user} post={post} onDelete={handleDeleteClick}/>
-        </MainLayout>)
+        </MainLayout>) : <div>Loading...</div>
 }
 
 
