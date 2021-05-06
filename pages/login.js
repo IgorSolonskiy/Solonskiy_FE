@@ -1,11 +1,11 @@
 import {useRouter} from "next/router";
-import {confirmUser, loginUser} from "../gateway/usersGateway";
+import {loginUser} from "../api/users";
+import {withoutAuth} from "../hof/withoutAuth";
 
 import MainLayout from "../components/layout/MainLayout";
 import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
-import cookies from "next-cookies";
-import serverApi from "../utils/serverApi";
+import Cookies from 'js-cookie'
 
 export default function Login() {
     const router = useRouter();
@@ -13,7 +13,7 @@ export default function Login() {
     const handleSubmitForm = async (user) => {
         const token = await loginUser(user);
 
-        document.cookie = `jwt=${JSON.stringify(token)};path=/; max-age=${60 * 60 * 24}`;
+        Cookies.set('token', token);
         router.push('/');
     }
 
@@ -27,21 +27,4 @@ export default function Login() {
     )
 }
 
-export async function getServerSideProps(context) {
-    try {
-        serverApi.defaults.headers.common['Authorization'] = `Bearer ${cookies(context).jwt}`;
-
-        await confirmUser();
-
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
-        }
-    } catch (e) {
-        return {
-            props: {},
-        }
-    }
-}
+export const getServerSideProps = withoutAuth();
