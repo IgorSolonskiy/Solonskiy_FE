@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import {getPost} from '../../api/posts';
 import {withAuth} from "../../hof/withAuth";
-import {changePost,deletePost} from "../../store/posts/asyncAtions/asyncActions";
+import {changePostThunkCreator,deletePostThunkCreator} from "../../store/posts/asyncAtions/asyncActions";
 import {useDispatch, useSelector} from "react-redux";
 import {postsActions} from "../../store/posts";
 
@@ -23,11 +23,11 @@ export default function Post({userPost, auth}) {
     }, [userPost])
 
     const handleDeleteClick = (deletedPost) => {
-        dispatch(deletePost(deletedPost.id));
+        dispatch(deletePostThunkCreator(deletedPost.id));
         router.push('/');
     }
 
-    const handleEditSubmit = (newPost) => dispatch(changePost(post.id, newPost));
+    const handleEditSubmit = (newPost) => dispatch(changePostThunkCreator(post.id, newPost));
 
     return post ? (
         <MainLayout user={auth.user}>

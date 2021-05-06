@@ -4,7 +4,7 @@ import {withAuth} from "../hof/withAuth";
 import {getUserPosts} from '../api/posts';
 import {postsActions} from "../store/posts";
 import {useDispatch, useSelector} from 'react-redux'
-import {deletePost,createPost} from "../store/posts/asyncAtions/asyncActions";
+import {deletePostThunkCreator,addPostThunkCreator} from "../store/posts/asyncAtions/asyncActions";
 
 import FormPosts from "../components/forms/FormPosts";
 import List from "../components/list/List";
@@ -23,11 +23,11 @@ export default function Home({postsList, auth}) {
         return () => dispatch(postsActions.clearPostsList());
     }, [postsList]);
 
-    const handleDeleteClick = (deletedPost) => dispatch(deletePost(deletedPost.id));
+    const handleDeleteClick = (deletedPost) => dispatch(deletePostThunkCreator(deletedPost.id));
 
 
     const handleCreateSumbit = (newPost, formikHelpers) => {
-        dispatch(createPost(newPost));
+        dispatch(addPostThunkCreator(newPost));
 
         formikHelpers.resetForm(true);
     }
