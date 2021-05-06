@@ -3,24 +3,24 @@ import {useEffect} from "react";
 import {withAuth} from "../hof/withAuth";
 import {getUserPosts} from '../api/posts';
 import {postsActions} from "../store/posts";
-import {useDispatch, useSelector} from 'react-redux'
-import {deletePostThunkCreator,addPostThunkCreator} from "../store/posts/asyncAtions/asyncActions";
+import {useDispatch} from 'react-redux'
+import {addPostThunkCreator, deletePostThunkCreator} from "../store/posts/asyncAtions/asyncActions";
 
 import FormPosts from "../components/forms/FormPosts";
-import List from "../components/list/List";
-import Post from "../components/post/Post";
+import PostsList from "../components/list/PostsList";
 import MainLayout from "../components/layout/MainLayout";
 import FormFilters from "../components/forms/FormFilters";
+import Profile from "../components/user/Profile";
+import {profileActions} from "../store/profile/actions";
 
 export default function Home({postsList, auth}) {
-    const {posts} = useSelector((state) => state.posts)
     const dispatch = useDispatch()
     const router = useRouter();
 
     useEffect(() => {
         dispatch(postsActions.addPostsList(postsList));
+        dispatch(profileActions.addProfile(auth.user));
 
-        return () => dispatch(postsActions.clearPostsList());
     }, [postsList]);
 
     const handleDeleteClick = (deletedPost) => dispatch(deletePostThunkCreator(deletedPost.id));
@@ -37,15 +37,11 @@ export default function Home({postsList, auth}) {
     }
 
     return (
-        <MainLayout user={auth.user}>
-            <div className="d-flex">
-                <h1>Hello, {auth.user.name}</h1>
-            </div>
+        <MainLayout>
+            <Profile/>
             <FormPosts onSubmit={handleCreateSumbit}/>
             <FormFilters onSubmit={handleFilterSubmit}/>
-            <List>
-                {posts.map(post => <Post user={auth.user} key={post.id} post={post} onDelete={handleDeleteClick}/>)}
-            </List>
+            <PostsList onDelete={handleDeleteClick}/>
         </MainLayout>
     )
 }

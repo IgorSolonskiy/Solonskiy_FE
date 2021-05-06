@@ -1,25 +1,26 @@
 import {useRouter} from "next/router";
 import {getPost} from '../../api/posts';
 import {withAuth} from "../../hof/withAuth";
-import {changePostThunkCreator,deletePostThunkCreator} from "../../store/posts/asyncAtions/asyncActions";
+import {changePostThunkCreator, deletePostThunkCreator} from "../../store/posts/asyncAtions/asyncActions";
 import {useDispatch, useSelector} from "react-redux";
 import {postsActions} from "../../store/posts";
-
-import Link from "next/link";
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
+import LinkSuccess from "../../components/link/LinkSuccess";
 import {useEffect} from "react";
+import {profileActions} from "../../store/profile";
 
 export default function Post({userPost, auth}) {
     const {post} = useSelector((state) => state.posts)
+    const {profile} = useSelector((state) => state.profile)
+
     const dispatch = useDispatch()
     const router = useRouter();
 
     useEffect(() => {
         dispatch(postsActions.addPost(userPost));
-
-        return () => dispatch(postsActions.clearPost())
+        dispatch(profileActions.addProfile(auth.user));
     }, [userPost])
 
     const handleDeleteClick = (deletedPost) => {
@@ -30,17 +31,15 @@ export default function Post({userPost, auth}) {
     const handleEditSubmit = (newPost) => dispatch(changePostThunkCreator(post.id, newPost));
 
     return post ? (
-        <MainLayout user={auth.user}>
+        <MainLayout>
             {
-                post.author.id === auth.user.id ?
-                    <FormPosts postData={post} onSubmit={handleEditSubmit}/>
+                post.author.id === profile.id ?
+                    <FormPosts postData={userPost} onSubmit={handleEditSubmit}/>
                     :
-                    <Link href={`/users/${post.author.username}`}>
-                        <span className='btn btn-outline-success mt-2'>{post.author.username}</span>
-                    </Link>
+                    <LinkSuccess src={`/users/${post.author.username}`} name={post.author.username}/>
             }
-            <Link href="/"><span className='btn btn-outline-success mt-2'>Home</span></Link>
-            <Posts user={auth.user} post={post} onDelete={handleDeleteClick}/>
+            <LinkSuccess src='/' name='HOME'/>
+            <Posts post={post} onDelete={handleDeleteClick}/>
         </MainLayout>) : <div>Loading...</div>
 }
 

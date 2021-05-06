@@ -1,7 +1,9 @@
 import Link from "next/link";
 import Btn from "../btn/Btn";
+import {useSelector} from "react-redux";
 
-export default function Post({post, onDelete, user}) {
+export default function Post({post, onDelete}) {
+    const {profile} = useSelector((state) => state.profile)
 
     return (
         <li className='d-flex align-items-center position-relative w-100 list-group-item list-group-item-action'>
@@ -14,7 +16,7 @@ export default function Post({post, onDelete, user}) {
                     </div>
                 </div>
             </Link>
-            {post.author.id === user.id ?
+            {post.author.id === profile.id ?
                 <Btn name='&times;'
                      type='button'
                         classBtn='badge bg-primary rounded-pill d-block position-absolute end-0'
