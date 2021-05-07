@@ -27,9 +27,11 @@ export default function Post({userPost, postComments, auth}) {
         dispatch(postsActions.addPost(userPost));
         dispatch(profileActions.addProfile(auth.user));
         dispatch(commentsActions.addCommentsList(postComments));
+
         if(userPost.author.id !== auth.user.id) {
             dispatch(userActions.addUser(userPost.author));
         }
+
         return ()=>dispatch(userActions.removeUser());
     }, [userPost])
 

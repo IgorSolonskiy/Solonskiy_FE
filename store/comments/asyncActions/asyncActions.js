@@ -8,7 +8,6 @@ export const addCommentThunkCreator = (id,comment) => async dispatch => {
 };
 
 export const deleteCommentThunkCreator = (id) => async dispatch => {
-    const {data: response} = await apiClient.delete(`comments/${id}`);
-
+    await apiClient.delete(`comments/${id}`);
     dispatch(commentsActions.removeComment(id));
 };

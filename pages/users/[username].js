@@ -19,6 +19,8 @@ export default function ProfileUser({postsList, user, auth}) {
         dispatch(postsActions.addPost(null));
         dispatch(userActions.addUser(user));
         dispatch(profileActions.addProfile(auth.user));
+
+        return ()=>dispatch(userActions.removeUser());
     }, [postsList]);
 
 
