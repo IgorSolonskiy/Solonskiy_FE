@@ -2,7 +2,7 @@ import {useRouter} from "next/router";
 import {getPost} from '../../api/posts';
 import {withAuth} from "../../hof/withAuth";
 import {changePostThunkCreator, deletePostThunkCreator} from "../../store/posts/asyncAtions/asyncActions";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {profileActions} from "../../store/profile";
 import {postsActions} from "../../store/posts";
@@ -14,8 +14,6 @@ import Posts from '../../components/post/Post';
 import UserProfile from "../../components/user/UserProfile";
 
 export default function Post({userPost, auth}) {
-    const {post} = useSelector((state) => state.posts)
-
     const dispatch = useDispatch()
     const router = useRouter();
 
@@ -32,16 +30,17 @@ export default function Post({userPost, auth}) {
 
     const handleEditSubmit = (newPost) => dispatch(changePostThunkCreator(post.id, newPost));
 
-    return post ? (
+    return (
         <MainLayout>
             {
-                post.author.id === auth.user.id ?
+                userPost.author.id === auth.user.id ?
                     <FormPosts postData={userPost} onSubmit={handleEditSubmit}/>
                     :
                     <UserProfile/>
             }
-            <Posts post={post} onDelete={handleDeleteClick}/>
-        </MainLayout>) : <div>Loading...</div>
+            <Posts post={userPost} onDelete={handleDeleteClick}/>
+        </MainLayout>
+    )
 }
 
 
