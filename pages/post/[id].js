@@ -2,7 +2,7 @@ import {useRouter} from "next/router";
 import {getPost} from '../../api/posts';
 import {withAuth} from "../../hof/withAuth";
 import {changePostThunkCreator, deletePostThunkCreator} from "../../store/posts/asyncAtions/asyncActions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {profileActions} from "../../store/profile";
 import {postsActions} from "../../store/posts";
@@ -14,6 +14,7 @@ import Posts from '../../components/post/Post';
 import UserProfile from "../../components/user/UserProfile";
 
 export default function Post({userPost, auth}) {
+    const {post} = useSelector(state => state.posts)
     const dispatch = useDispatch()
     const router = useRouter();
 
@@ -30,7 +31,7 @@ export default function Post({userPost, auth}) {
 
     const handleEditSubmit = (newPost) => dispatch(changePostThunkCreator(post.id, newPost));
 
-    return (
+    return (post &&
         <MainLayout>
             {
                 userPost.author.id === auth.user.id ?
@@ -38,7 +39,7 @@ export default function Post({userPost, auth}) {
                     :
                     <UserProfile/>
             }
-            <Posts post={userPost} onDelete={handleDeleteClick}/>
+            <Posts post={post} onDelete={handleDeleteClick}/>
         </MainLayout>
     )
 }
