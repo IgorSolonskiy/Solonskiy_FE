@@ -12,24 +12,40 @@ import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
 import UserProfile from "../../components/user/UserProfile";
+import {getComments} from "../../api/comments";
+import {commentsActions} from "../../store/comments";
+import CommentsList from "../../components/list/CommentsList";
+import FormComments from "../../components/forms/FormComments";
+import {addCommentThunkCreator, deleteCommentThunkCreator} from "../../store/comments/asyncActions/asyncActions";
 
-export default function Post({userPost, auth}) {
+export default function Post({userPost, postComments, auth}) {
     const {post} = useSelector(state => state.posts)
     const dispatch = useDispatch()
     const router = useRouter();
 
     useEffect(() => {
         dispatch(postsActions.addPost(userPost));
-        dispatch(userActions.addUser(userPost.author));
         dispatch(profileActions.addProfile(auth.user));
+        dispatch(commentsActions.addCommentsList(postComments));
+        if(userPost.author.id !== auth.user.id) {
+            dispatch(userActions.addUser(userPost.author));
+        }
+        return ()=>dispatch(userActions.removeUser());
     }, [userPost])
 
-    const handleDeleteClick = (deletedPost) => {
+    const handleDeletePost = (deletedPost) => {
         dispatch(deletePostThunkCreator(deletedPost.id));
         router.push('/');
     }
 
+    const handleDeleteComment = (deletedComment) => dispatch(deleteCommentThunkCreator(deletedComment.id));
+
     const handleEditSubmit = (newPost) => dispatch(changePostThunkCreator(post.id, newPost));
+
+    const handleCreateComment = (newComment, formikHelpers) => {
+        dispatch(addCommentThunkCreator(post.id, newComment))
+        formikHelpers.resetForm(true);
+    };
 
     return (post &&
         <MainLayout>
@@ -37,9 +53,13 @@ export default function Post({userPost, auth}) {
                 userPost.author.id === auth.user.id ?
                     <FormPosts postData={post} onSubmit={handleEditSubmit}/>
                     :
-                    <UserProfile/>
+                    <>
+                        <UserProfile/>
+                        <FormComments onSubmit={handleCreateComment}/>
+                    </>
             }
-            <Posts post={post} onDelete={handleDeleteClick}/>
+            <Posts post={post} onDelete={handleDeletePost}/>
+            <CommentsList onDelete={handleDeleteComment}/>
         </MainLayout>
     )
 }
@@ -48,8 +68,9 @@ export default function Post({userPost, auth}) {
 export const getServerSideProps = withAuth(async (ctx) => {
         try {
             const userPost = await getPost(ctx.query.id);
+            const postComments = await getComments(ctx.query.id);
 
-            return {props: {userPost}};
+            return {props: {userPost, postComments}};
         } catch (e) {
             return {
                 notFound: true,
