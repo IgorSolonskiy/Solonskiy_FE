@@ -35,7 +35,7 @@ export default function Post({userPost, auth}) {
         <MainLayout>
             {
                 userPost.author.id === auth.user.id ?
-                    <FormPosts postData={userPost} onSubmit={handleEditSubmit}/>
+                    <FormPosts postData={post} onSubmit={handleEditSubmit}/>
                     :
                     <UserProfile/>
             }

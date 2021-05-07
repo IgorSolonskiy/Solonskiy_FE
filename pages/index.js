@@ -3,14 +3,14 @@ import {useEffect} from "react";
 import {withAuth} from "../hof/withAuth";
 import {getUserPosts} from '../api/posts';
 import {postsActions} from "../store/posts";
-import {useDispatch} from 'react-redux'
+import {useDispatch} from 'react-redux';
+import {profileActions} from "../store/profile/actions";
 import {addPostThunkCreator, deletePostThunkCreator} from "../store/posts/asyncAtions/asyncActions";
 
 import FormPosts from "../components/forms/FormPosts";
 import PostsList from "../components/list/PostsList";
 import MainLayout from "../components/layout/MainLayout";
 import FormFilters from "../components/forms/FormFilters";
-import {profileActions} from "../store/profile/actions";
 
 export default function Home({postsList, auth}) {
     const dispatch = useDispatch()

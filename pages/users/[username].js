@@ -1,15 +1,14 @@
 import {getUserInformation} from "../../api/users";
 import {getUserPosts} from "../../api/posts";
 import {withAuth} from "../../hof/withAuth";
-
-
-import PostsList from "../../components/list/PostsList";
-import MainLayout from "../../components/layout/MainLayout";
 import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {postsActions} from "../../store/posts";
 import {userActions} from "../../store/user";
 import {profileActions} from "../../store/profile";
+
+import PostsList from "../../components/list/PostsList";
+import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 
 export default function ProfileUser({postsList, user, auth}) {
