@@ -37,8 +37,10 @@ export default function Home({postsList, auth}) {
 
     return (
         <MainLayout>
-            <FormPosts onSubmit={handleCreateSumbit}/>
-            <FormFilters onSubmit={handleFilterSubmit}/>
+            <div className='d-flex align-items-start justify-content-between w-100'>
+                <FormPosts onSubmit={handleCreateSumbit}/>
+                <FormFilters onSubmit={handleFilterSubmit}/>
+            </div>
             <PostsList onDelete={handleDeleteClick}/>
         </MainLayout>
     )

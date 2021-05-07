@@ -17,7 +17,7 @@ export default function FormFilters({ onSubmit}) {
         },
     });
     return (
-        <form onSubmit={formik.handleSubmit} className='d-flex flex-column justify-content-center mt-3 w-50'>
+        <form onSubmit={formik.handleSubmit} className='d-flex flex-column align-items-center justify-content-center mt-3 w-50'>
             <div className="mb-3">
                 <label htmlFor="username" className='form-label'>User search</label>
                 <input type="text"
