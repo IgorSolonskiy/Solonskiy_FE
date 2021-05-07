@@ -10,7 +10,6 @@ import FormPosts from "../components/forms/FormPosts";
 import PostsList from "../components/list/PostsList";
 import MainLayout from "../components/layout/MainLayout";
 import FormFilters from "../components/forms/FormFilters";
-import Profile from "../components/user/Profile";
 import {profileActions} from "../store/profile/actions";
 
 export default function Home({postsList, auth}) {
@@ -28,17 +27,16 @@ export default function Home({postsList, auth}) {
 
     const handleCreateSumbit = (newPost, formikHelpers) => {
         dispatch(addPostThunkCreator(newPost));
-
         formikHelpers.resetForm(true);
     }
 
-    const handleFilterSubmit = async (username) => {
+    const handleFilterSubmit = async (username, formikHelpers) => {
         router.push(`/users/${username}`);
+        formikHelpers.resetForm(true);
     }
 
     return (
         <MainLayout>
-            <Profile/>
             <FormPosts onSubmit={handleCreateSumbit}/>
             <FormFilters onSubmit={handleFilterSubmit}/>
             <PostsList onDelete={handleDeleteClick}/>

@@ -2,10 +2,9 @@ import Btn from "../btn/Btn";
 import {logoutUser} from "../../api/users";
 import {useRouter} from "next/router";
 import Cookies from 'js-cookie';
-import {useSelector} from "react-redux";
+import Profile from "../user/Profile";
 
 export default function MainLayout({children}) {
-    const {profile} = useSelector((state) => state.profile)
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -15,11 +14,14 @@ export default function MainLayout({children}) {
     }
 
     return (
-        <div className="container d-flex align-items-start">
-            <main className="min-vh-100 d-flex flex-column align-items-center justify-content-start w-75 m-auto">
-                {children}
+        <div className="container-fluid justify-content-center d-flex align-items-start">
+            <main className="min-vh-100 d-flex align-items-start justify-content-between w-75 m-auto">
+                <Profile/>
+                <div className='d-flex flex-column w-100 align-items-center'>
+                    {children}
+                </div>
             </main>
-            {profile && <Btn type='button' name='Sign out' classBtn='btn btn-outline-secondary mt-3' onClick={handleLogout}/>}
+            <Btn type='button' name='Sign out' classBtn='btn btn-outline-secondary mt-3' onClick={handleLogout}/>
         </div>
     )
 }

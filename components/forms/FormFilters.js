@@ -12,12 +12,12 @@ export default function FormFilters({ onSubmit}) {
                 .max(15, 'Must be 15 characters or less')
                 .required('Required'),
         }),
-        onSubmit: values => {
-            onSubmit(values.username);
+        onSubmit: (values,formikHelpers) => {
+            onSubmit(values.username, formikHelpers);
         },
     });
     return (
-        <form onSubmit={formik.handleSubmit} className='d-flex flex-column justify-content-center mt-3'>
+        <form onSubmit={formik.handleSubmit} className='d-flex flex-column justify-content-center mt-3 w-50'>
             <div className="mb-3">
                 <label htmlFor="username" className='form-label'>User search</label>
                 <input type="text"

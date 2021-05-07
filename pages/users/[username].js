@@ -5,18 +5,19 @@ import {withAuth} from "../../hof/withAuth";
 
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
-import User from '../../components/user/User';
 import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {postsActions} from "../../store/posts";
 import {userActions} from "../../store/user";
 import {profileActions} from "../../store/profile";
+import UserProfile from "../../components/user/UserProfile";
 
-export default function ProfileUser({postsList, user,auth}) {
+export default function ProfileUser({postsList, user, auth}) {
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(postsActions.addPostsList(postsList));
+        dispatch(postsActions.addPost(null));
         dispatch(userActions.addUser(user));
         dispatch(profileActions.addProfile(auth.user));
     }, [postsList]);
@@ -24,18 +25,25 @@ export default function ProfileUser({postsList, user,auth}) {
 
     return (
         <MainLayout>
-            <div className='d-flex justify-content-start w-100'>
-                <User/>
-                <PostsList />
-            </div>
+            <UserProfile/>
+            <PostsList/>
         </MainLayout>
     )
 }
 
-export const getServerSideProps = withAuth(async (ctx) => {
+export const getServerSideProps = withAuth(async (ctx, auth) => {
         try {
             const user = await getUserInformation(ctx.query.username);
             const postsList = await getUserPosts(ctx.query.username);
+
+            if (user.id === auth.user.id) {
+                return {
+                    redirect: {
+                        destination: '/',
+                        permanent: false,
+                    }
+                }
+            }
 
             return {props: {postsList, user}};
         } catch (e) {

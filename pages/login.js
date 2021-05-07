@@ -2,10 +2,10 @@ import {useRouter} from "next/router";
 import {loginUser} from "../api/users";
 import {withoutAuth} from "../hof/withoutAuth";
 
-import MainLayout from "../components/layout/MainLayout";
 import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
 import Cookies from 'js-cookie'
+import AuthLayout from "../components/layout/AuthLayout";
 
 export default function Login() {
     const router = useRouter();
@@ -18,12 +18,12 @@ export default function Login() {
     }
 
     return (
-        <MainLayout>
+        <AuthLayout>
             <div className='min-vh-100 d-flex flex-column justify-content-center'>
                 <FormLogin onSubmit={handleSubmitForm}/>
                 <Link href="/signup"><span className='btn btn-primary mt-2'>Sign up</span></Link>
             </div>
-        </MainLayout>
+        </AuthLayout>
     )
 }
 

@@ -3,23 +3,25 @@ import {getPost} from '../../api/posts';
 import {withAuth} from "../../hof/withAuth";
 import {changePostThunkCreator, deletePostThunkCreator} from "../../store/posts/asyncAtions/asyncActions";
 import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {profileActions} from "../../store/profile";
 import {postsActions} from "../../store/posts";
+import {userActions} from "../../store/user";
+
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
-import LinkSuccess from "../../components/link/LinkSuccess";
-import {useEffect} from "react";
-import {profileActions} from "../../store/profile";
+import UserProfile from "../../components/user/UserProfile";
 
 export default function Post({userPost, auth}) {
     const {post} = useSelector((state) => state.posts)
-    const {profile} = useSelector((state) => state.profile)
 
     const dispatch = useDispatch()
     const router = useRouter();
 
     useEffect(() => {
         dispatch(postsActions.addPost(userPost));
+        dispatch(userActions.addUser(userPost.author));
         dispatch(profileActions.addProfile(auth.user));
     }, [userPost])
 
@@ -33,12 +35,11 @@ export default function Post({userPost, auth}) {
     return post ? (
         <MainLayout>
             {
-                post.author.id === profile.id ?
+                post.author.id === auth.user.id ?
                     <FormPosts postData={userPost} onSubmit={handleEditSubmit}/>
                     :
-                    <LinkSuccess src={`/users/${post.author.username}`} name={post.author.username}/>
+                    <UserProfile/>
             }
-            <LinkSuccess src='/' name='HOME'/>
             <Posts post={post} onDelete={handleDeleteClick}/>
         </MainLayout>) : <div>Loading...</div>
 }
