@@ -44,16 +44,11 @@ export default function Post() {
         <MainLayout>
             {
                 post.author.id === profile.id ?
-                    <div className='d-flex w-100 justify-content-between align-items-start'>
                         <FormPosts postData={post} onSubmit={handleEditSubmit}/>
-                        <FormComments onSubmit={handleCreateComment}/>
-                    </div>
                     :
-                    <>
                         <UserProfile/>
-                        <FormComments onSubmit={handleCreateComment}/>
-                    </>
             }
+            <FormComments onSubmit={handleCreateComment}/>
             <Posts post={post} onDelete={handleDeletePost}/>
             <CommentsList onDelete={handleDeleteComment}/>
         </MainLayout>
