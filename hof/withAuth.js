@@ -1,5 +1,7 @@
 import apiServer from '../libs/apiServer';
-import {getProfile} from "../api/users";
+
+import {initializeStore} from "../store";
+import {addProfileThunkCreator} from "../store/profile/asyncActions/asyncActions";
 
 export const withAuth = (getServerSideProps) => {
     return async (ctx) => {
@@ -7,20 +9,33 @@ export const withAuth = (getServerSideProps) => {
         if (token) {
             try {
                 apiServer.defaults.headers['Authorization'] = `Bearer ${token}`
-                const user = await getProfile();
-                const auth = {token, user}
+                const reduxStore = initializeStore();
+                const {dispatch} = reduxStore;
+
+                await dispatch(addProfileThunkCreator());
+
+                const {profile: {profile: user}} = reduxStore.getState();
+                const auth = {token,user}
+
                 if (getServerSideProps) {
-                    const result = await getServerSideProps(ctx, auth)
+                    const result = await getServerSideProps(ctx, auth, dispatch, reduxStore)
                     return {
                         ...result,
                         props: {
+                            initialReduxState: reduxStore.getState(),
                             auth,
                             ...result.props
                         }
                     }
                 }
-                return {props: {auth}}
+                return {
+                    props: {
+                        auth,
+                        initialReduxState: reduxStore.getState()
+                    }
+                }
             } catch (e) {
+                console.log(e)
                 return {
                     redirect: {
                         destination: '/login',

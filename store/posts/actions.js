@@ -8,7 +8,7 @@ export const postsActionTypes = {
 
 export const postsActions = {
     addPostsList: (payload) => ({type: postsActionTypes.ADD_POSTS_LIST, payload}),
-    addPostList: (payload) => ({type: postsActionTypes.ADD_ONE_POST_LIST, payload}),
+    addOnePostList: (payload) => ({type: postsActionTypes.ADD_ONE_POST_LIST, payload}),
     addPost: (payload) => ({type: postsActionTypes.ADD_POST, payload}),
     removePost: (payload) => ({type: postsActionTypes.REMOVE_POST, payload}),
     changePost: (payload) => ({type: postsActionTypes.CHANGE_POST, payload}),

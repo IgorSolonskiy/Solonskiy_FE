@@ -14,7 +14,7 @@ export default function Comment({comment, onDelete}) {
                         <p className="mt-3">{comment.content}</p>
                     </div>
                 </div>
-            {(!user.id ||profile.id === comment.author.id ) &&
+            {(!user ||profile.id === comment.author.id ) &&
                 <Btn name='Delete'
                      type='button'
                      classBtn=' btn btn-outline-danger position-absolute end-0'
