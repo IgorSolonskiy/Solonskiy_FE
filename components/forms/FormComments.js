@@ -20,7 +20,7 @@ export default function FormComments({onSubmit}) {
     });
 
     return (
-        <form className="d-flex flex-column justify-content-center align-items-center w-50 mb-3" onSubmit={formik.handleSubmit}>
+        <form className="d-flex flex-column justify-content-center align-items-center w-50 ms-3 mt-3 mb-3" onSubmit={formik.handleSubmit}>
             <label htmlFor="content" className='form-label text-center'>Comment</label>
             <input type="text" id="content" className="form-control"
                    value={formik.values.content}

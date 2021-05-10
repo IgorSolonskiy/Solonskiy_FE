@@ -21,9 +21,9 @@ import CommentsList from "../../components/list/CommentsList";
 import FormComments from "../../components/forms/FormComments";
 
 export default function Post() {
-    const {post} = useSelector(state => state.posts)
-    const {profile} = useSelector(state => state.profile)
-    const dispatch = useDispatch()
+    const {post} = useSelector(state => state.posts);
+    const {profile} = useSelector(state => state.profile);
+    const dispatch = useDispatch();
     const router = useRouter();
 
     const handleDeletePost = (deletedPost) => {
@@ -44,7 +44,10 @@ export default function Post() {
         <MainLayout>
             {
                 post.author.id === profile.id ?
-                    <FormPosts postData={post} onSubmit={handleEditSubmit}/>
+                    <div className='d-flex w-100 justify-content-between align-items-start'>
+                        <FormPosts postData={post} onSubmit={handleEditSubmit}/>
+                        <FormComments onSubmit={handleCreateComment}/>
+                    </div>
                     :
                     <>
                         <UserProfile/>
