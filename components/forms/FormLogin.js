@@ -2,7 +2,7 @@ import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import Btn from "../btn/Btn";
 
-export default function FormLogin({user, onChange, onSubmit}) {
+export default function FormLogin({onSubmit}) {
     const formik = useFormik({
         initialValues: {
             email: '',

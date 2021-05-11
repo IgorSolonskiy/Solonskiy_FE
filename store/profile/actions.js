@@ -1,7 +1,15 @@
+import apiServer from "../../libs/apiServer";
+
 export const profileActionTypes = {
-    ADD_PROFILE: 'PROFILE.ADD_PROFILE',
+    SET_PROFILE: 'PROFILE.SET_PROFILE',
 }
 
 export const profileActions = {
-    addProfile: (payload) => ({type: profileActionTypes.ADD_PROFILE, payload}),
+    setProfile: (payload) => ({type: profileActionTypes.SET_PROFILE, payload}),
 }
+
+export const addProfileAsync = () => async dispatch => {
+    const {data: response} = await apiServer.get('profile');
+
+    dispatch(profileActions.setProfile(response));
+};

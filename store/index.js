@@ -10,7 +10,7 @@ const initialState = {
     comments: {},
     posts: {},
     profile: {},
-    user: {},
+    users: {},
 }
 
 function initStore(preloadedState = initialState) {

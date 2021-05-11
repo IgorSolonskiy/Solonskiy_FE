@@ -1,7 +1,7 @@
 import apiServer from '../libs/apiServer';
 
 import {initializeStore} from "../store";
-import {addProfileThunkCreator} from "../store/profile/asyncActions/asyncActions";
+import {addProfileAsync} from "../store/profile";
 
 export const withAuth = (getServerSideProps) => {
     return async (ctx) => {
@@ -12,7 +12,7 @@ export const withAuth = (getServerSideProps) => {
                 const reduxStore = initializeStore();
                 const {dispatch} = reduxStore;
 
-                await dispatch(addProfileThunkCreator());
+                await dispatch(addProfileAsync());
 
                 const {profile: {profile: user}} = reduxStore.getState();
                 const auth = {token,user}
@@ -35,10 +35,9 @@ export const withAuth = (getServerSideProps) => {
                     }
                 }
             } catch (e) {
-                console.log(e)
                 return {
                     redirect: {
-                        destination: '/login',
+                        destination: '/',
                         permanent: false,
                     },
                 }
@@ -46,7 +45,7 @@ export const withAuth = (getServerSideProps) => {
         }
         return {
             redirect: {
-                destination: '/login',
+                destination: '/',
                 permanent: false,
             },
         }

@@ -1,47 +1,20 @@
-import {useRouter} from "next/router";
-import {useDispatch} from 'react-redux';
-import {
-    addPostsListThunkCreator,
-    addOnePostListThunkCreator,
-    deletePostThunkCreator
-} from "../store/posts/asyncAtions/asyncActions";
+import {withoutAuth} from "../hof/withoutAuth";
 
-import FormPosts from "../components/forms/FormPosts";
-import PostsList from "../components/list/PostsList";
-import MainLayout from "../components/layout/MainLayout";
-import FormFilters from "../components/forms/FormFilters";
-import {withAuth} from "../hof/withAuth";
+import AuthLayout from "../components/layout/AuthLayout";
+import Link from "next/link";
 
 export default function Home() {
-    const dispatch = useDispatch()
-    const router = useRouter();
-
-    const handleDeleteClick = (deletedPost) => dispatch(deletePostThunkCreator(deletedPost.id));
-
-    const handleCreateSumbit = (newPost, formikHelpers) => {
-        dispatch(addOnePostListThunkCreator(newPost));
-        formikHelpers.resetForm(true);
-    }
-
-    const handleFilterSubmit = async (username, formikHelpers) => {
-        router.push(`/users/${username}`);
-        formikHelpers.resetForm(true);
-    }
-
-    return (
-        <MainLayout>
-            <div className='d-flex align-items-start justify-content-between w-100'>
-                <FormPosts onSubmit={handleCreateSumbit}/>
-                <FormFilters onSubmit={handleFilterSubmit}/>
-            </div>
-            <PostsList onDelete={handleDeleteClick}/>
-        </MainLayout>
-    )
+ return <AuthLayout>
+     <div className='min-vh-100 d-flex flex-column justify-content-center align-items-center'>
+         <h1 className='text-info'>In the course of what is happening</h1>
+         <p className='h3 text-info'>Join Twitter now!</p>
+         <Link href="/signup"><span className='btn btn-primary mt-2'>Register now</span></Link>
+         <Link href="/login"><span className='btn btn-outline-primary mt-2'>To come in</span></Link>
+     </div>
+ </AuthLayout>
 }
 
-export const getServerSideProps = withAuth(async (ctx, auth, dispatch) => {
-        await dispatch(addPostsListThunkCreator(auth.user.username));
-
+export const getServerSideProps = withoutAuth(async (ctx) => {
         return {props: {}}
     }
 )

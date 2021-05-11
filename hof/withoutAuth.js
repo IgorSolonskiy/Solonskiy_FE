@@ -1,6 +1,6 @@
 import apiServer from "../libs/apiServer";
 import {initializeStore} from "../store";
-import {addProfileThunkCreator} from "../store/profile/asyncActions/asyncActions";
+import {addProfileAsync} from "../store/profile";
 
 export const withoutAuth = (getServerSideProps) => {
     return async (ctx) => {
@@ -10,11 +10,13 @@ export const withoutAuth = (getServerSideProps) => {
             const {dispatch} = reduxStore;
 
             apiServer.defaults.headers['Authorization'] = `Bearer ${token}`;
-            await dispatch(addProfileThunkCreator());
+            await dispatch(addProfileAsync());
+
+            const {profile: {profile: user}} = reduxStore.getState();
 
             return {
                     redirect: {
-                        destination: '/',
+                        destination: `/users/${user.username}`,
                         permanent: false,
                     }
             }

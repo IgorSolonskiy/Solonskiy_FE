@@ -1,25 +1,42 @@
 import {useSelector} from "react-redux";
-import Btn from "../btn/Btn";
 
-export default function Comment({comment, onDelete}) {
-    const {user} = useSelector((state) => state.user)
-    const {profile} = useSelector((state) => state.profile)
+import Btn from "../btn/Btn";
+import FormComments from "../forms/FormComments";
+
+export default function Comment({comment, onDelete, onChange, onSubmit}) {
+    const {users: {user}, comments: {idComment}, profile: {profile}} = useSelector(state => state);
 
     return (
-        <li className='d-flex align-items-center position-relative border list-group-item list-group-item-action'>
-                <div className="w-100">
-                    <div className='text-uppercase fw-bold text-info'>comment</div>
-                    <div className=" ms-2 me-auto">
-                        <div className="fw-bold mt-2 w-100 text-center text-uppercase ">{comment.author.username}</div>
-                        <p className="mt-3">{comment.content}</p>
-                    </div>
+        <li className='d-flex align-items-center position-relative border
+        card border-secondary list-group-item list-group-item-action '>
+            <div className="w-100">
+                <div className=" ms-2 me-auto">
+                    <div
+                        className="fw-bold mt-2 w-100 text-center text-uppercase card-header p-0">{comment.author.username}</div>
+                    <p className="mt-3 mb-0">{comment.content}</p>
                 </div>
-            {(!user ||profile.id === comment.author.id ) &&
-                <Btn name='Delete'
-                     type='button'
-                     classBtn=' btn btn-outline-danger position-absolute end-0'
-                     onClick={() => onDelete(comment)}/>
-                }
+            </div>
+            {
+                (!user || profile.id === comment.author.id) &&
+                <div className='w-100 d-flex justify-content-end align-items-center'>
+                    {
+                        idComment === comment.id
+                            ? <FormComments onSubmit={onSubmit} comment={comment}/>
+                            : ''
+                    }
+                    {
+                        profile.id === comment.author.id &&
+                        <Btn name='Change'
+                             type='button'
+                             onClick={() => onChange(comment)}
+                             classBtn=' btn btn-outline-info btn-sm ms-3'/>
+                    }
+                    <Btn name='Delete'
+                         type='button'
+                         classBtn=' btn btn-outline-danger btn-sm ms-3'
+                         onClick={() => onDelete(comment)}/>
+                </div>
+            }
         </li>
     )
 }

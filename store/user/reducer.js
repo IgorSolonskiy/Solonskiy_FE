@@ -1,13 +1,21 @@
 import {userActionTypes} from "./actions";
 
 const initialState = {
-    user: {}
+    users: [],
+    user: {},
+    isVisible: false
 }
 
 export const userReducer = (state = initialState, action) => {
     switch (action.type) {
-        case userActionTypes.ADD_USER:
+        case userActionTypes.SET_USERS_LIST:
+            return {...state, users: [...action.payload]}
+
+        case userActionTypes.SET_USER:
             return {...state, user: action.payload}
+
+        case userActionTypes.SET_VISIBLE:
+            return {...state, isVisible: action.payload}
 
         default:
             return state
