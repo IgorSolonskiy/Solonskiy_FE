@@ -2,7 +2,7 @@ import {userActionTypes} from "./actions";
 
 const initialState = {
     users: [],
-    user: {},
+    user: null,
     isVisible: false
 }
 

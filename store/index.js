@@ -6,12 +6,7 @@ import thunk from "redux-thunk";
 
 let store;
 
-const initialState = {
-    comments: {},
-    posts: {},
-    profile: {},
-    users: {},
-}
+const initialState = {}
 
 function initStore(preloadedState = initialState) {
     return createStore(
