@@ -11,10 +11,10 @@ import FormSearch from "../../components/forms/FormSearch";
 import UsersList from "../../components/list/UsersList";
 
 export default function Profile() {
-    const { user,searchUsers} = useSelector((state) => state.users);
+    const { users:{user,searchUsers}, posts:{posts}} = useSelector((state) => state);
     const dispatch = useDispatch();
 
-    useEffect( ()=>dispatch(setUsersListAsync()),[user])
+    useEffect( ()=>dispatch(setUsersListAsync()),[posts])
 
     const handleDeleteClick = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
 
