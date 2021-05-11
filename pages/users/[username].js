@@ -11,10 +11,10 @@ import FormSearch from "../../components/forms/FormSearch";
 import UsersList from "../../components/list/UsersList";
 
 export default function Profile() {
-    const {user,searchUsers} = useSelector((state) => state.users);
+    const { user,searchUsers} = useSelector((state) => state.users);
     const dispatch = useDispatch();
 
-    useEffect( ()=>dispatch(setUsersListAsync()),[])
+    useEffect( ()=>dispatch(setUsersListAsync()),[user])
 
     const handleDeleteClick = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
 
@@ -24,7 +24,7 @@ export default function Profile() {
     }
 
     const handleSearchUsers = (e) => {
-        const newUsers = searchUsers.filter(({username}) => username.includes(e.target.value))
+        const newUsers = searchUsers.filter(({username}) => username.includes(e.target.value) )
 
         if (!e.target.value.length) {
             return dispatch(userActions.setVisible(false));
