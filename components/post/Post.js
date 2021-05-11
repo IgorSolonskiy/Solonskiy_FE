@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import FormComments from "../forms/FormComments";
 
 export default function Post({post, onDelete, onSubmit, createComment = false}) {
-    const {profile} = useSelector((state) => state.profile)
+    const {profile :{profile}, posts:{postId}} = useSelector((state) => state)
 
     return (
         <li className='d-flex align-items-center position-relative w-100 list-group-item list-group-item-action'>
@@ -18,7 +18,7 @@ export default function Post({post, onDelete, onSubmit, createComment = false}) 
                         </div>
                     </div>
                 </Link>
-                {createComment &&
+                {postId &&
                 <div className='w-100 d-flex justify-content-center'>
                     <FormComments onSubmit={onSubmit} />
                 </div>

@@ -7,6 +7,7 @@ export const postsActionTypes = {
     REMOVE_POST: 'POSTS.REMOVE_POST',
     SET_POST: 'POST.SET_POST',
     CHANGE_POST: 'POST.CHANGE_POST',
+    SET_POST_ID: 'ID.SET_POST_ID'
 }
 
 export const postsActions = {
@@ -15,6 +16,7 @@ export const postsActions = {
     setPost: (payload) => ({type: postsActionTypes.SET_POST, payload}),
     removePost: (payload) => ({type: postsActionTypes.REMOVE_POST, payload}),
     changePost: (payload) => ({type: postsActionTypes.CHANGE_POST, payload}),
+    setPostId: (payload) => ({type: postsActionTypes.SET_POST_ID, payload}),
 }
 
 export const setPostsListAsync = (username) => async dispatch => {
