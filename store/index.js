@@ -6,9 +6,7 @@ import thunk from "redux-thunk";
 
 let store;
 
-const initialState = {}
-
-function initStore(preloadedState = initialState) {
+function initStore(preloadedState = {}) {
     return createStore(
         reducers,
         preloadedState,
