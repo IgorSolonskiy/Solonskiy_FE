@@ -8,7 +8,7 @@ export const profileActions = {
     setProfile: (payload) => ({type: profileActionTypes.SET_PROFILE, payload}),
 }
 
-export const addProfileAsync = () => async dispatch => {
+export const setProfileAsync = () => async dispatch => {
     const {data: response} = await apiServer.get('profile');
 
     dispatch(profileActions.setProfile(response));

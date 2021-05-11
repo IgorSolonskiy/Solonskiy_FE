@@ -1,6 +1,6 @@
 import apiServer from "../libs/apiServer";
 import {initializeStore} from "../store";
-import {addProfileAsync} from "../store/profile";
+import {setProfileAsync} from "../store/profile";
 
 export const withoutAuth = (getServerSideProps) => {
     return async (ctx) => {
@@ -10,7 +10,7 @@ export const withoutAuth = (getServerSideProps) => {
             const {dispatch} = reduxStore;
 
             apiServer.defaults.headers['Authorization'] = `Bearer ${token}`;
-            await dispatch(addProfileAsync());
+            await dispatch(setProfileAsync());
 
             const {profile: {profile: user}} = reduxStore.getState();
 

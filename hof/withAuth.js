@@ -1,7 +1,7 @@
 import apiServer from '../libs/apiServer';
 
 import {initializeStore} from "../store";
-import {addProfileAsync} from "../store/profile";
+import {setProfileAsync} from "../store/profile";
 
 export const withAuth = (getServerSideProps) => {
     return async (ctx) => {
@@ -12,7 +12,7 @@ export const withAuth = (getServerSideProps) => {
                 const reduxStore = initializeStore();
                 const {dispatch} = reduxStore;
 
-                await dispatch(addProfileAsync());
+                await dispatch(setProfileAsync());
 
                 const {profile: {profile: user}} = reduxStore.getState();
                 const auth = {token,user}
