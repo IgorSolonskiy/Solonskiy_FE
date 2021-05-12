@@ -2,7 +2,7 @@ import {withAuth} from "../../hof/withAuth";
 import {addUserAsync, setUsersListAsync, userActions} from "../../store/user";
 import {addOnePostListAsync, deletePostAsync, setPostsListAsync} from "../../store/posts";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
+
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
@@ -11,10 +11,8 @@ import FormSearch from "../../components/forms/FormSearch";
 import UsersList from "../../components/list/UsersList";
 
 export default function Profile() {
-    const { users:{user,searchUsers}, posts:{posts}} = useSelector((state) => state);
+    const { user} = useSelector((state) => state.users);
     const dispatch = useDispatch();
-
-    useEffect( ()=>dispatch(setUsersListAsync()),[posts])
 
     const handleDeleteClick = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
 
@@ -24,15 +22,13 @@ export default function Profile() {
     }
 
     const handleSearchUsers = (e) => {
-        const newUsers = searchUsers.filter(({username}) => username.includes(e.target.value) )
-
-        if (!e.target.value.length) {
-            return dispatch(userActions.setVisible(false));
+        if(!e.target.value){
+           return dispatch(userActions.setVisible(false))
         }
 
-        dispatch(userActions.setVisible(true));
-        return dispatch(userActions.setUsersList(newUsers))
-    }
+        dispatch(userActions.setVisible(true))
+        dispatch(setUsersListAsync(e.target.value))
+    };
 
     return (
         <MainLayout>

@@ -17,7 +17,7 @@ export default function MainLayout({children}) {
     }
 
     return (
-        <div className="container-fluid justify-content-center d-flex align-items-start overflow-hidden pb-3 vh-100">
+        <div className="container-fluid justify-content-center d-flex align-items-start overflow-hidden p-0 pb-3 vh-100">
             <main className="d-flex align-items-start justify-content-between w-75 m-auto">
                 <div className='mx-3 w-25'>
                     <Link href={`/users/${profile.username}`}><span
