@@ -47,7 +47,7 @@ export default function Profile() {
     )
 }
 
-export const getServerSideProps = withAuth(async (ctx, auth, dispatch, reduxStore) => {
+export const getServerSideProps = withAuth(async (ctx, auth, dispatch) => {
         try {
             await dispatch(setPostsListAsync(ctx.query.username));
 

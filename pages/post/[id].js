@@ -1,6 +1,6 @@
 import {useRouter} from "next/router";
 import {withAuth} from "../../hof/withAuth";
-import {addUserAsync, userActions} from "../../store/user";
+import {addUserAsync} from "../../store/user";
 import {useDispatch, useSelector} from "react-redux";
 import {
     addCommentAsync,
@@ -65,7 +65,7 @@ export default function Post() {
 }
 
 
-export const getServerSideProps = withAuth(async (ctx, auth, dispatch, reduxStore) => {
+export const getServerSideProps = withAuth(async (ctx, {user}, dispatch, reduxStore) => {
         try {
             await Promise.all([
                 dispatch(setPostAsync(ctx.query.id)),
@@ -73,10 +73,10 @@ export const getServerSideProps = withAuth(async (ctx, auth, dispatch, reduxStor
                 dispatch(postsActions.setPostId(ctx.query.id)),
             ])
 
-            const {posts: {post}} = reduxStore.getState();
+            const {posts: {post:{author}}} = reduxStore.getState();
 
-            if (post.author.id !== auth.user.id) {
-                await dispatch(addUserAsync(post.author.username))
+            if (author.id !== user.id) {
+                await dispatch(addUserAsync(author.username))
             }
 
             return {props: {}};
