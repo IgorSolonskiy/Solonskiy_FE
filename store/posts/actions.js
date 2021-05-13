@@ -5,46 +5,44 @@ export const postsActionTypes = {
     SET_POSTS_LIST: 'POSTS.SET_POSTS_LIST',
     ADD_ONE_POST_LIST: 'POSTS.ADD_POST_LIST',
     REMOVE_POST: 'POSTS.REMOVE_POST',
-    SET_POST: 'POST.SET_POST',
-    CHANGE_POST: 'POST.CHANGE_POST',
-    SET_POST_ID: 'ID.SET_POST_ID'
+    SET_POST: 'POSTS.SET_POST',
+    CHANGE_POST: 'POSTS.CHANGE_POST',
+    SET_POST_ID: 'POSTS.SET_POST_ID'
 }
 
-export const postsActions = {
-    setPostsList: (payload) => ({type: postsActionTypes.SET_POSTS_LIST, payload}),
-    addOnePostList: (payload) => ({type: postsActionTypes.ADD_ONE_POST_LIST, payload}),
-    setPost: (payload) => ({type: postsActionTypes.SET_POST, payload}),
-    removePost: (payload) => ({type: postsActionTypes.REMOVE_POST, payload}),
-    changePost: (payload) => ({type: postsActionTypes.CHANGE_POST, payload}),
-    setPostId: (payload) => ({type: postsActionTypes.SET_POST_ID, payload}),
-}
+export const setPostsList = (payload) => ({type: postsActionTypes.SET_POSTS_LIST, payload});
+export const addOnePostList = (payload) => ({type: postsActionTypes.ADD_ONE_POST_LIST, payload});
+export const setPost = (payload) => ({type: postsActionTypes.SET_POST, payload});
+export const removePost = (payload) => ({type: postsActionTypes.REMOVE_POST, payload});
+export const changePost = (payload) => ({type: postsActionTypes.CHANGE_POST, payload});
+export const setPostId = (payload) => ({type: postsActionTypes.SET_POST_ID, payload});
 
 export const setPostsListAsync = (username) => async dispatch => {
     const {data: response} = await apiServer.get(`users/${username}/posts`)
 
-    dispatch(postsActions.setPostsList(response));
+    dispatch(setPostsList(response));
 };
 
-export const addOnePostListAsync= (post) => async dispatch => {
+export const addOnePostListAsync = (post) => async dispatch => {
     const {data: response} = await apiClient.post('posts', post);
 
-    dispatch(postsActions.addOnePostList(response));
+    dispatch(addOnePostList(response));
 };
 
 export const setPostAsync = (id) => async dispatch => {
     const {data: response} = await apiServer.get(`posts/${id}`);
 
-    dispatch(postsActions.setPost(response));
+    dispatch(setPost(response));
 };
 
 export const changePostAsync = (id, post) => async dispatch => {
     const {data: response} = await apiClient.put(`posts/${id}`, post);
 
-    dispatch(postsActions.changePost(response))
+    dispatch(changePost(response))
 };
 
 
 export const deletePostAsync = (id) => async dispatch => {
     await apiClient.delete(`posts/${id}`);
-    dispatch(postsActions.removePost(id))
+    dispatch(removePost(id))
 };

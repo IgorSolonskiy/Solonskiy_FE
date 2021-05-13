@@ -1,18 +1,18 @@
-import {logoutUser} from "../../api/users";
 import {useRouter} from "next/router";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {logoutUserAsync} from "../../store/profile";
 
-import Cookies from 'js-cookie';
 import Link from "next/link";
 import Btn from "../btn/Btn";
 
 export default function MainLayout({children}) {
     const {profile} = useSelector(state => state.profile);
     const router = useRouter();
+    const dispatch = useDispatch();
 
     const handleLogout = async () => {
-        await logoutUser();
-        Cookies.remove('token');
+        await dispatch(logoutUserAsync());
+
         router.push('/login');
     }
 

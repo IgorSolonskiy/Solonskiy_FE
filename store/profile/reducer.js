@@ -9,6 +9,9 @@ export const profileReducer = (state = initialState, action) => {
         case profileActionTypes.SET_PROFILE:
             return {...state, profile: action.payload}
 
+        case profileActionTypes.REMOVE_PROFILE:
+            return {...state, profile: {}}
+
         default:
             return state
     }

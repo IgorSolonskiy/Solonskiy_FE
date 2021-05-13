@@ -4,7 +4,9 @@ import Btn from "../btn/Btn";
 import FormComments from "../forms/FormComments";
 
 export default function Comment({comment, onDelete, onChange, onSubmit}) {
-    const {users: {user}, comments: {idComment}, profile: {profile}} = useSelector(state => state);
+    const {profile} = useSelector(state => state.profile);
+    const {idComment} = useSelector(state => state.comments);
+    const {user} = useSelector(state => state.users);
 
     return (
         <li className='d-flex align-items-center position-relative border

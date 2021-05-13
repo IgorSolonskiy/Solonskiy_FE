@@ -2,7 +2,9 @@ import {useSelector} from "react-redux";
 import Link from "next/link";
 
 export default function UserProfile() {
-    const {users: {user}, posts: {post}, profile: {profile}} = useSelector(state => state);
+    const {profile} = useSelector(state => state.profile);
+    const {user} = useSelector(state => state.users);
+    const {post} = useSelector(state => state.posts);
 
     return (
         <div className="d-flex align-items-center justify-content-center mt-3">

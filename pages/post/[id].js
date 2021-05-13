@@ -5,11 +5,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     addCommentAsync,
     changeCommentAsync,
-    commentsActions,
+    setIdComment,
     deleteCommentAsync,
     setCommentsListAsync
 } from "../../store/comments";
-import {changePostAsync, deletePostAsync, postsActions, setPostAsync,} from "../../store/posts";
+import {changePostAsync, deletePostAsync, setPostId, setPostAsync,} from "../../store/posts";
 
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
@@ -18,29 +18,31 @@ import UserProfile from "../../components/user/UserProfile";
 import CommentsList from "../../components/list/CommentsList";
 
 export default function Post() {
-    const {posts: {post}, comments: {idComment}, profile: {profile}} = useSelector(state => state);
+    const {profile} = useSelector(state => state.profile);
+    const {idComment} = useSelector(state => state.comments);
+    const {post} = useSelector(state => state.posts);
     const dispatch = useDispatch();
     const router = useRouter();
 
     const handleDeletePost = (deletedPost) => {
         dispatch(deletePostAsync(deletedPost.id));
-        router.push('/');
+        router.push(`/users/${profile.username}`);
     }
 
     const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment.id));
 
     const handleSetCommentID = (comment) => {
         if (idComment === comment.id) {
-            return dispatch(commentsActions.setIdComment(null))
+            return dispatch(setIdComment(null))
         }
 
-        return dispatch(commentsActions.setIdComment(comment.id))
+        return dispatch(setIdComment(comment.id))
     };
 
     const handleChangeComment = (changeComment) => {
         dispatch(changeCommentAsync(idComment, changeComment))
 
-        return dispatch(commentsActions.setIdComment(null))
+        return dispatch(setIdComment(null))
     };
 
     const handleEditSubmit = (newPost) => dispatch(changePostAsync(post.id, newPost));
@@ -70,7 +72,7 @@ export const getServerSideProps = withAuth(async (ctx, {user}, dispatch, reduxSt
             await Promise.all([
                 dispatch(setPostAsync(ctx.query.id)),
                 dispatch(setCommentsListAsync(ctx.query.id)),
-                dispatch(postsActions.setPostId(ctx.query.id)),
+                dispatch(setPostId(ctx.query.id)),
             ])
 
             const {posts: {post:{author}}} = reduxStore.getState();

@@ -1,20 +1,17 @@
 import {useRouter} from "next/router";
-import {registerUser} from "../api/users";
 import {withoutAuth} from "../hof/withoutAuth";
+import {registerUserAsync} from "../store/profile";
 
 import FormSignup from "../components/forms/FormSignup";
 import Link from "next/link";
-import Cookies from 'js-cookie';
 import AuthLayout from "../components/layout/AuthLayout";
 
 export default function Signup() {
     const router = useRouter();
 
     const handleSubmitForm = async (user) => {
-        const token = await registerUser(user);
-
-        Cookies.set('token', token);
-        router.push('/');
+        await registerUserAsync(user);
+        router.push(`/`);
     }
 
     return (

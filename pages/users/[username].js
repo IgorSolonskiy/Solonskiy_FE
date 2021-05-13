@@ -1,5 +1,5 @@
 import {withAuth} from "../../hof/withAuth";
-import {addUserAsync, setUsersListAsync, userActions} from "../../store/user";
+import {addUserAsync, setUsersListAsync,setUsersList} from "../../store/user";
 import {addOnePostListAsync, deletePostAsync, setPostsListAsync} from "../../store/posts";
 import {useDispatch, useSelector} from "react-redux";
 
@@ -23,10 +23,9 @@ export default function Profile() {
 
     const handleSearchUsers = (e) => {
         if(!e.target.value){
-           return dispatch(userActions.setVisible(false))
+           return dispatch(setUsersList([]))
         }
 
-        dispatch(userActions.setVisible(true))
         dispatch(setUsersListAsync(e.target.value))
     };
 

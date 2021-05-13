@@ -1,26 +1,23 @@
 import apiServer from "../../libs/apiServer";
 import apiClient from "../../libs/apiClient";
 
-export const userActionTypes = {
+export const usersActionTypes = {
     SET_USERS_LIST: 'USERS.SET_USERS_LIST',
-    SET_USER: 'USER.SET_USER',
-    SET_VISIBLE: 'VISIBLE.SET_VISIBLE',
+    SET_USER: 'USERS.SET_USER',
 }
 
-export const userActions = {
-    setUsersList: (payload) => ({type: userActionTypes.SET_USERS_LIST, payload}),
-    setUser: (payload) => ({type: userActionTypes.SET_USER, payload}),
-    setVisible: (payload) => ({type: userActionTypes.SET_VISIBLE, payload}),
-}
+export const setUsersList = (payload) => ({type: usersActionTypes.SET_USERS_LIST, payload});
+export const setUser = (payload) => ({type: usersActionTypes.SET_USER, payload});
+export const setVisible = (payload) => ({type: usersActionTypes.SET_VISIBLE, payload});
 
 export const setUsersListAsync = (username) => async dispatch => {
-        const {data: response} = await apiClient.get(`users?username=${username}`);
+    const {data: response} = await apiClient.get(`users?username=${username}`);
 
-        dispatch(userActions.setUsersList(response));
+    dispatch(setUsersList(response));
 };
 
 export const addUserAsync = username => async dispatch => {
     const {data: response} = await apiServer.get(`users/${username}`);
 
-    dispatch(userActions.setUser(response));
+    dispatch(setUser(response));
 };
