@@ -1,40 +1,66 @@
-import {getUserInformation} from "../../api/users";
-import {getUserPosts} from "../../api/posts";
 import {withAuth} from "../../hof/withAuth";
+import {withRedux} from "../../hof/withRedux";
+import {addUserAsync, setUsersList, setUsersListAsync} from "../../store/user";
+import {addOnePostListAsync, deletePostAsync, setPostsListAsync} from "../../store/posts";
+import {useDispatch, useSelector} from "react-redux";
 
-import Link from "next/link";
-import List from "../../components/list/List";
-import Post from "../../components/post/Post";
+import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
+import UserProfile from "../../components/user/UserProfile";
+import FormPosts from "../../components/forms/FormPosts";
+import FormSearch from "../../components/forms/FormSearch";
+import UsersList from "../../components/list/UsersList";
 
-export default function User({postsList, user}) {
+export default function Profile() {
+    const {user} = useSelector((state) => state.users);
+    const dispatch = useDispatch();
+
+    const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
+
+    const handlePostCreate = (newPost, formikHelpers) => {
+        dispatch(addOnePostListAsync(newPost));
+        formikHelpers.resetForm(true);
+    }
+
+    const handleSearchUsers = (e) => {
+        if (!e.target.value) {
+            return dispatch(setUsersList([]))
+        }
+
+        dispatch(setUsersListAsync(e.target.value))
+    };
+
     return (
-        <MainLayout user={user}>
-            <div className='d-flex justify-content-start w-100'>
-                <div className="d-flex flex-column   w-50">
-                    <Link href="/"><span className='btn btn-outline-success mt-2 w-25'>Home</span></Link>
-                    <h1 className='fs-3 m-0 mt-3'> {user.name}</h1>
-                    <div className='fs-3'>Number of posts: {postsList.length}</div>
-                </div>
-                <List>
-                    {postsList.map(post => <Post user={!user} key={post.id} post={post}/>)}
-                </List>
-            </div>
+        <MainLayout>
+            <UserProfile/>
+            {!user ?
+                <div className='d-flex align-items-start justify-content-between w-100'>
+                    <FormPosts onSubmit={handlePostCreate}/>
+                    <div>
+                        <FormSearch onChange={handleSearchUsers}/>
+                        <UsersList/>
+                    </div>
+                </div> : ''
+            }
+            <PostsList onDelete={handlePostDelete}/>
         </MainLayout>
     )
 }
 
-export const getServerSideProps = withAuth(async (ctx) => {
+export const getServerSideProps = withRedux(withAuth(async (ctx, auth, {dispatch}) => {
         try {
-            const user = await getUserInformation(ctx.query.username);
-            const postsList = await getUserPosts(ctx.query.username);
+            await dispatch(setPostsListAsync(ctx.query.username));
 
-            return {props: {postsList, user}};
+            if (ctx.query.username !== auth.user.username) {
+                await dispatch(addUserAsync(ctx.query.username))
+            }
+
+            return {props: {}};
         } catch (e) {
             return {
-                notFound: true,
+                props: {}
             }
         }
+        return {props: {}}
     }
-)
-
+))

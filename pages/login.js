@@ -1,29 +1,26 @@
 import {useRouter} from "next/router";
-import {loginUser} from "../api/users";
 import {withoutAuth} from "../hof/withoutAuth";
+import {loginUserAsync} from "../store/profile";
 
-import MainLayout from "../components/layout/MainLayout";
 import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
-import Cookies from 'js-cookie'
+import AuthLayout from "../components/layout/AuthLayout";
 
 export default function Login() {
     const router = useRouter();
 
-    const handleSubmitForm = async (user) => {
-        const token = await loginUser(user);
-
-        Cookies.set('token', token);
-        router.push('/');
-    }
+    const handleLoginUser = async (user) => {
+      await  loginUserAsync(user);
+      router.push(`/`);
+    };
 
     return (
-        <MainLayout>
+        <AuthLayout>
             <div className='min-vh-100 d-flex flex-column justify-content-center'>
-                <FormLogin onSubmit={handleSubmitForm}/>
+                <FormLogin onSubmit={handleLoginUser}/>
                 <Link href="/signup"><span className='btn btn-primary mt-2'>Sign up</span></Link>
             </div>
-        </MainLayout>
+        </AuthLayout>
     )
 }
 

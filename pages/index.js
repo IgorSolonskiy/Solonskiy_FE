@@ -1,51 +1,20 @@
-import {useState} from 'react';
-import {useRouter} from "next/router";
-import {createPost, deletePost, getUserPosts} from '../api/posts';
-import {withAuth} from "../hof/withAuth";
+import {withoutAuth} from "../hof/withoutAuth";
 
-import FormPosts from "../components/forms/FormPosts";
-import List from "../components/list/List";
-import Post from "../components/post/Post";
-import MainLayout from "../components/layout/MainLayout";
-import FormFilters from "../components/forms/FormFilters";
+import AuthLayout from "../components/layout/AuthLayout";
+import Link from "next/link";
 
-export default function Home({postsList, auth}) {
-    const [posts, setPosts] = useState(postsList);
-    const router = useRouter();
-
-    const handleDeleteClick = async (deletedPost) => {
-        await deletePost(deletedPost.id);
-        setPosts(prevPosts => prevPosts.filter((post) => post.id !== deletedPost.id));
-    }
-
-    const handleCreateSumbit = async (newPost, formikHelpers) => {
-        const post = await createPost(newPost);
-
-        setPosts(prevPosts => [...prevPosts, post]);
-        formikHelpers.resetForm(true);
-    }
-
-    const handleFilterSubmit = async (username) => {
-        router.push(`/users/${username}`);
-    }
-
-    return (
-        <MainLayout user={auth.user}>
-            <div className="d-flex">
-                <h1>Hello, {auth.user.name}</h1>
-            </div>
-            <FormPosts onSubmit={handleCreateSumbit}/>
-            <FormFilters onSubmit={handleFilterSubmit}/>
-            <List>
-                {posts.map(post => <Post user={auth.user} key={post.id} post={post} onDelete={handleDeleteClick}/>)}
-            </List>
-        </MainLayout>
-    )
+export default function Home() {
+ return <AuthLayout>
+     <div className='min-vh-100 d-flex flex-column justify-content-center align-items-center'>
+         <h1 className='text-info'>In the course of what is happening</h1>
+         <p className='h3 text-info'>Join Twitter now!</p>
+         <Link href="/signup"><span className='btn btn-primary mt-2'>Register now</span></Link>
+         <Link href="/login"><span className='btn btn-outline-primary mt-2'>To come in</span></Link>
+     </div>
+ </AuthLayout>
 }
 
-export const getServerSideProps = withAuth(async (ctx, auth) => {
-        const postsList = await getUserPosts(auth.user.username);
-
-        return {props: {postsList}};
+export const getServerSideProps = withoutAuth(async (ctx) => {
+        return {props: {}}
     }
 )

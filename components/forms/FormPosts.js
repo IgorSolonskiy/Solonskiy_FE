@@ -24,7 +24,9 @@ export default function FormPosts({onSubmit, postData={title:'',content:''}}) {
     });
 
     return (
-        <form className="d-flex flex-column justify-content-center" onSubmit={formik.handleSubmit}>
+        <form className="d-flex flex-column justify-content-center align-items-center mt-3 w-50 mb-3"
+              autoComplete="off"
+              onSubmit={formik.handleSubmit}>
             <label htmlFor="title" className='form-label text-center'>Title</label>
             <input type="text" id="title" className="form-control"
                    value={formik.values.title}
