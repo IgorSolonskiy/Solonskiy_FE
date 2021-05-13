@@ -8,7 +8,6 @@ export const usersActionTypes = {
 
 export const setUsersList = (payload) => ({type: usersActionTypes.SET_USERS_LIST, payload});
 export const setUser = (payload) => ({type: usersActionTypes.SET_USER, payload});
-export const setVisible = (payload) => ({type: usersActionTypes.SET_VISIBLE, payload});
 
 export const setUsersListAsync = (username) => async dispatch => {
     const {data: response} = await apiClient.get(`users?username=${username}`);
