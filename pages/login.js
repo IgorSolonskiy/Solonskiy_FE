@@ -9,7 +9,7 @@ import AuthLayout from "../components/layout/AuthLayout";
 export default function Login() {
     const router = useRouter();
 
-    const handleSubmitForm = async (user) => {
+    const handleLoginUser = async (user) => {
       await  loginUserAsync(user);
       router.push(`/`);
     };
@@ -17,7 +17,7 @@ export default function Login() {
     return (
         <AuthLayout>
             <div className='min-vh-100 d-flex flex-column justify-content-center'>
-                <FormLogin onSubmit={handleSubmitForm}/>
+                <FormLogin onSubmit={handleLoginUser}/>
                 <Link href="/signup"><span className='btn btn-primary mt-2'>Sign up</span></Link>
             </div>
         </AuthLayout>

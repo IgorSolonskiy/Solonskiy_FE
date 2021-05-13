@@ -5,11 +5,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     addCommentAsync,
     changeCommentAsync,
-    setIdComment,
     deleteCommentAsync,
-    setCommentsListAsync
+    setCommentsListAsync,
+    setIdComment
 } from "../../store/comments";
-import {changePostAsync, deletePostAsync, setPostId, setPostAsync,} from "../../store/posts";
+import {changePostAsync, deletePostAsync, setPostAsync, setPostId,} from "../../store/posts";
 
 import MainLayout from "../../components/layout/MainLayout";
 import FormPosts from "../../components/forms/FormPosts";
@@ -45,7 +45,7 @@ export default function Post() {
         return dispatch(setIdComment(null))
     };
 
-    const handleEditSubmit = (newPost) => dispatch(changePostAsync(post.id, newPost));
+    const handleEditPost = (newPost) => dispatch(changePostAsync(post.id, newPost));
 
     const handleCreateComment = (newComment, formikHelpers) => {
         dispatch(addCommentAsync(post.id, newComment))
@@ -56,7 +56,7 @@ export default function Post() {
         <MainLayout>
             {
                 post.author.id === profile.id ?
-                    <FormPosts postData={post} onSubmit={handleEditSubmit}/>
+                    <FormPosts postData={post} onSubmit={handleEditPost}/>
                     :
                     <UserProfile/>
             }
@@ -67,7 +67,7 @@ export default function Post() {
 }
 
 
-export const getServerSideProps = withAuth(async (ctx, {user}, dispatch, reduxStore) => {
+export const getServerSideProps = withAuth(async (ctx, {user}, {dispatch, getState}) => {
         try {
             await Promise.all([
                 dispatch(setPostAsync(ctx.query.id)),
@@ -75,7 +75,7 @@ export const getServerSideProps = withAuth(async (ctx, {user}, dispatch, reduxSt
                 dispatch(setPostId(ctx.query.id)),
             ])
 
-            const {posts: {post:{author}}} = reduxStore.getState();
+            const {posts: {post: {author}}} = getState();
 
             if (author.id !== user.id) {
                 await dispatch(addUserAsync(author.username))

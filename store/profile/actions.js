@@ -4,11 +4,9 @@ import Cookies from 'js-cookie'
 
 export const profileActionTypes = {
     SET_PROFILE: 'PROFILE.SET_PROFILE',
-    REMOVE_PROFILE: 'PROFILE.REMOVE_PROFILE',
 }
 
 export const setProfile = (payload) => ({type: profileActionTypes.SET_PROFILE, payload});
-export const removeProfile = (payload) => ({type: profileActionTypes.REMOVE_PROFILE, payload});
 
 export const setProfileAsync = () => async dispatch => {
     const {data: response} = await apiServer.get('profile');
@@ -31,5 +29,5 @@ export const registerUserAsync = async (user) =>{
 export const logoutUserAsync = () => async dispatch  =>{
     await apiClient.get('logout');
     Cookies.remove('token');
-    dispatch(removeProfile());
+    dispatch(setProfile({}));
 }

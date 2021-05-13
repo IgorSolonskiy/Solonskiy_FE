@@ -1,28 +1,23 @@
 import apiServer from '../libs/apiServer';
 
-import {initializeStore} from "../store";
 import {setProfileAsync} from "../store/profile";
+import {withRedux} from "./withRedux";
 
-export const withAuth = (getServerSideProps) => {
-    return async (ctx) => {
+export const withAuth = (getServerSideProps =>  withRedux(async(ctx,storeData) => {
         const {token} = ctx.req.cookies
         if (token) {
             try {
                 apiServer.defaults.headers['Authorization'] = `Bearer ${token}`
-                const reduxStore = initializeStore();
-                const {dispatch} = reduxStore;
+                await storeData.dispatch(setProfileAsync());
 
-                await dispatch(setProfileAsync());
-
-                const {profile: {profile: user}} = reduxStore.getState();
+                const {profile: {profile: user}} = storeData.getState();
                 const auth = {token,user}
 
                 if (getServerSideProps) {
-                    const result = await getServerSideProps(ctx, auth, dispatch, reduxStore)
+                    const result = await getServerSideProps(ctx, auth,storeData)
                     return {
                         ...result,
                         props: {
-                            initialReduxState: reduxStore.getState(),
                             auth,
                             ...result.props
                         }
@@ -31,7 +26,6 @@ export const withAuth = (getServerSideProps) => {
                 return {
                     props: {
                         auth,
-                        initialReduxState: reduxStore.getState()
                     }
                 }
             } catch (e) {
@@ -49,5 +43,5 @@ export const withAuth = (getServerSideProps) => {
                 permanent: false,
             },
         }
-    }
-}
+    })
+)

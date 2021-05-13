@@ -9,14 +9,15 @@ import UserProfile from "../../components/user/UserProfile";
 import FormPosts from "../../components/forms/FormPosts";
 import FormSearch from "../../components/forms/FormSearch";
 import UsersList from "../../components/list/UsersList";
+import {withRedux} from "../../hof/withRedux";
 
 export default function Profile() {
     const { user} = useSelector((state) => state.users);
     const dispatch = useDispatch();
 
-    const handleDeleteClick = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
+    const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
 
-    const handleCreateSumbit = (newPost, formikHelpers) => {
+    const handlePostCreate = (newPost, formikHelpers) => {
         dispatch(addOnePostListAsync(newPost));
         formikHelpers.resetForm(true);
     }
@@ -34,19 +35,19 @@ export default function Profile() {
             <UserProfile/>
             {!user ?
                 <div className='d-flex align-items-start justify-content-between w-100'>
-                    <FormPosts onSubmit={handleCreateSumbit}/>
+                    <FormPosts onSubmit={handlePostCreate}/>
                     <div>
                         <FormSearch onChange={handleSearchUsers}/>
                         <UsersList/>
                     </div>
                 </div> : ''
             }
-            <PostsList onDelete={handleDeleteClick}/>
+            <PostsList onDelete={handlePostDelete}/>
         </MainLayout>
     )
 }
 
-export const getServerSideProps = withAuth(async (ctx, auth, dispatch) => {
+export const getServerSideProps = withAuth(async (ctx, auth, {dispatch}) => {
         try {
             await dispatch(setPostsListAsync(ctx.query.username));
 
@@ -62,4 +63,3 @@ export const getServerSideProps = withAuth(async (ctx, auth, dispatch) => {
         }
     }
 )
-
