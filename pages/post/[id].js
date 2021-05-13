@@ -1,5 +1,6 @@
 import {useRouter} from "next/router";
 import {withAuth} from "../../hof/withAuth";
+import {withRedux} from "../../hof/withRedux";
 import {addUserAsync} from "../../store/user";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -67,7 +68,7 @@ export default function Post() {
 }
 
 
-export const getServerSideProps = withAuth(async (ctx, {user}, {dispatch, getState}) => {
+export const getServerSideProps = withRedux(withAuth(async (ctx, {user}, {dispatch, getState}) => {
         try {
             await Promise.all([
                 dispatch(setPostAsync(ctx.query.id)),
@@ -88,4 +89,4 @@ export const getServerSideProps = withAuth(async (ctx, {user}, {dispatch, getSta
             }
         }
     }
-)
+))

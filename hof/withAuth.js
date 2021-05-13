@@ -1,9 +1,8 @@
 import apiServer from '../libs/apiServer';
 
 import {setProfileAsync} from "../store/profile";
-import {withRedux} from "./withRedux";
 
-export const withAuth = (getServerSideProps =>  withRedux(async(ctx,storeData) => {
+export const withAuth = (getServerSideProps =>  (async (ctx,storeData) => {
         const {token} = ctx.req.cookies
         if (token) {
             try {
@@ -14,7 +13,7 @@ export const withAuth = (getServerSideProps =>  withRedux(async(ctx,storeData) =
                 const auth = {token,user}
 
                 if (getServerSideProps) {
-                    const result = await getServerSideProps(ctx, auth,storeData)
+                    const result = await getServerSideProps(ctx, auth, storeData)
                     return {
                         ...result,
                         props: {

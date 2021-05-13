@@ -1,5 +1,6 @@
 import {withAuth} from "../../hof/withAuth";
-import {addUserAsync, setUsersListAsync,setUsersList} from "../../store/user";
+import {withRedux} from "../../hof/withRedux";
+import {addUserAsync, setUsersList, setUsersListAsync} from "../../store/user";
 import {addOnePostListAsync, deletePostAsync, setPostsListAsync} from "../../store/posts";
 import {useDispatch, useSelector} from "react-redux";
 
@@ -9,10 +10,9 @@ import UserProfile from "../../components/user/UserProfile";
 import FormPosts from "../../components/forms/FormPosts";
 import FormSearch from "../../components/forms/FormSearch";
 import UsersList from "../../components/list/UsersList";
-import {withRedux} from "../../hof/withRedux";
 
 export default function Profile() {
-    const { user} = useSelector((state) => state.users);
+    const {user} = useSelector((state) => state.users);
     const dispatch = useDispatch();
 
     const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
@@ -23,8 +23,8 @@ export default function Profile() {
     }
 
     const handleSearchUsers = (e) => {
-        if(!e.target.value){
-           return dispatch(setUsersList([]))
+        if (!e.target.value) {
+            return dispatch(setUsersList([]))
         }
 
         dispatch(setUsersListAsync(e.target.value))
@@ -47,7 +47,7 @@ export default function Profile() {
     )
 }
 
-export const getServerSideProps = withAuth(async (ctx, auth, {dispatch}) => {
+export const getServerSideProps = withRedux(withAuth(async (ctx, auth, {dispatch}) => {
         try {
             await dispatch(setPostsListAsync(ctx.query.username));
 
@@ -58,8 +58,9 @@ export const getServerSideProps = withAuth(async (ctx, auth, {dispatch}) => {
             return {props: {}};
         } catch (e) {
             return {
-                notFound: true,
+                props: {}
             }
         }
+        return {props: {}}
     }
-)
+))
