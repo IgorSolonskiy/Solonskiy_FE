@@ -7,7 +7,7 @@ export default function UserInfo({user}) {
             <li className="btn d-flex text-primary list-group-item list-group-item-action
             flex-column align-items-start justify-content-start border-bottom">
                 <div className='d-flex align-items-center justify-content-center'>
-                    <ImageAvatar user={user} width={35} height={35} className={'rounded-circle'} />
+                    <ImageAvatar user={user} size={35}/>
                     <div className='ms-3'>
                         <div className='mb-3'>Name: {user.name}</div>
                         <div className='mb-3'>Login: {user.username}</div>
