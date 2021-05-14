@@ -1,5 +1,6 @@
 import {useSelector} from "react-redux";
-import Image from "next/image";
+import {ImageAvatar} from "../image/ImageAvatar";
+
 import Link from "next/link";
 
 export default function UserProfile() {
@@ -9,7 +10,7 @@ export default function UserProfile() {
 
     return (
         <div className="d-flex align-items-center justify-content-around w-100 mt-3">
-            <Image src={user ? user.avatar : profile.avatar} width={50} height={50} className='rounded-circle'/>
+            <ImageAvatar user={user} profile={profile} width={50} height={50} className={'rounded-circle'}/>
             <div className='mx-3 h3'>{user ? user.name : profile.name}</div>
             <div className='h3 mx-3'>Login: {user ? user.username : profile.username}</div>
             {

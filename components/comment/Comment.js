@@ -1,7 +1,7 @@
 import {useSelector} from "react-redux";
+import {ImageAvatar} from "../image/ImageAvatar";
 
 import FormComments from "../forms/FormComments";
-import Image from "next/image";
 import Link from "next/link";
 import Btn from "../btn/Btn";
 
@@ -16,8 +16,7 @@ export default function Comment({comment, onDelete, onChange, onSubmit}) {
             <div className="w-100">
                 <div className=" ms-2 me-auto">
                     <div className='d-flex justify-content-center'>
-                        <Image src={comment.author.avatar ?? '/defaultAvatar.png'} width={40} height={40}
-                               className='rounded-circle'/>
+                        <ImageAvatar user={comment.author} width={40} height={40} className={'rounded-circle'} />
                         <Link href={`../users/${comment.author.username}`}>
                             <div
                                 className=" btn fw-bold mt-2 mx-3 text-center text-uppercase card-header p-0">

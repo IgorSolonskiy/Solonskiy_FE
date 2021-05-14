@@ -18,6 +18,5 @@ export const setUsersListAsync = (username) => async dispatch => {
 export const addUserAsync = username => async dispatch => {
     const {data: response} = await apiServer.get(`users/${username}`);
 
-    response.avatar = response.avatar ? response.avatar : '/defaultAvatar.png';
     dispatch(setUser(response));
 };

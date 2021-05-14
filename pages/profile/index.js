@@ -1,11 +1,12 @@
 import {withAuth} from "../../hof/withAuth";
-import {useDispatch, useSelector} from "react-redux";
-import MainLayout from "../../components/layout/MainLayout";
-import {setPostsListAsync} from "../../store/posts";
-import FormProfile from "../../components/forms/FormProfile";
-import {changeProfileAsync, setProfileId} from "../../store/profile";
-import Image from "next/image";
 import {withRedux} from "../../hof/withRedux";
+import {ImageAvatar} from "../../components/image/ImageAvatar";
+import {setPostsListAsync} from "../../store/posts";
+import {useDispatch, useSelector} from "react-redux";
+import {changeProfileAsync, setProfileId} from "../../store/profile";
+
+import MainLayout from "../../components/layout/MainLayout";
+import FormProfile from "../../components/forms/FormProfile";
 
 export default function Profile() {
     const {profile: {profile, profileId}, posts: {posts}} = useSelector(state => state);
@@ -29,8 +30,10 @@ export default function Profile() {
                                 <div className="card-body" style={{backgroundColor: '#B3E5FC'}}>
                                     <div className="d-flex flex-column align-items-center text-center"
                                          style={{backgroundColor: '#B3E5FC'}}>
-                                        <Image src={profile.avatar} width={150}
-                                               height={150} className='rounded-circle'/>
+                                        <ImageAvatar profile={profile}
+                                                     width={150}
+                                                     height={150}
+                                                     className={'rounded-circle'}/>
                                         <div className="mt-3">
                                             <h4>{profile.username}</h4>
                                             <p className="text-secondary mb-1">Posts: {posts.length}</p>
@@ -75,14 +78,14 @@ export default function Profile() {
 }
 
 export const getServerSideProps = withRedux(withAuth(async (ctx, {user}, {dispatch}) => {
-    try {
-        await dispatch(setPostsListAsync(user.username));
+        try {
+            await dispatch(setPostsListAsync(user.username));
 
-        return {props: {}};
-    } catch (e) {
-        return {
-            notFound: true,
+            return {props: {}};
+        } catch (e) {
+            return {
+                notFound: true,
+            }
         }
-    }
     }
 ))
