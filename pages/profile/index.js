@@ -6,7 +6,6 @@ import FormProfile from "../../components/forms/FormProfile";
 import {changeProfileAsync, setProfileId} from "../../store/profile";
 import Image from "next/image";
 import {withRedux} from "../../hof/withRedux";
-import {addUserAsync} from "../../store/user";
 
 export default function Profile() {
     const {profile: {profile, profileId}, posts: {posts}} = useSelector(state => state);

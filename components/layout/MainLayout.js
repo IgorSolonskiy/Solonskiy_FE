@@ -10,11 +10,7 @@ export default function MainLayout({children}) {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const handleLogout = async () => {
-        await dispatch(logoutUserAsync());
-
-        router.push('/login');
-    }
+    const handleLogout = () => dispatch(logoutUserAsync(router));
 
     return (
         <div

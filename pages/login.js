@@ -1,4 +1,4 @@
-import {useRouter} from "next/router";
+import {withRouter} from "next/router";
 import {withoutAuth} from "../hof/withoutAuth";
 import {loginUserAsync} from "../store/profile";
 
@@ -6,13 +6,8 @@ import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
 import AuthLayout from "../components/layout/AuthLayout";
 
-export default function Login() {
-    const router = useRouter();
-
-    const handleLoginUser = async (user) => {
-      await  loginUserAsync(user);
-      router.push(`/`);
-    };
+export default withRouter(function Login({router}) {
+    const handleLoginUser = user => loginUserAsync(user, router);
 
     return (
         <AuthLayout>
@@ -22,6 +17,6 @@ export default function Login() {
             </div>
         </AuthLayout>
     )
-}
+})
 
 export const getServerSideProps = withoutAuth();
