@@ -2,6 +2,7 @@ import {withoutAuth} from "../hof/withoutAuth";
 
 import AuthLayout from "../components/layout/AuthLayout";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
  return <AuthLayout>

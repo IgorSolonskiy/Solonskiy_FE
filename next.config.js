@@ -3,7 +3,6 @@ module.exports = {
         API_URL: process.env.BASE_URL_API,
     },
     images: {
-        loader: 'imgix',
-        path: '',
+        domains: ['127.0.0.1'],
     },
 }

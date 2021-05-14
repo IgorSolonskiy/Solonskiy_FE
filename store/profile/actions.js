@@ -13,7 +13,7 @@ export const setProfileId = (payload) => ({type: profileActionTypes.SET_PROFILE_
 export const setProfileAsync = () => async dispatch => {
     const {data: response} = await apiServer.get('profile');
 
-    response.avatar = response.avatar ? response.avatar : '../defaultAvatar.png';
+    response.avatar = response.avatar ? response.avatar : '/defaultAvatar.png';
     dispatch(setProfile(response));
 };
 
@@ -24,7 +24,7 @@ export const changeProfileAsync = (updatedProfile) => async dispatch => {
         }
     });
 
-    response.avatar = response.avatar ? response.avatar : '../defaultAvatar.png';
+    response.avatar = response.avatar ? response.avatar : '/defaultAvatar.png';
     dispatch(setProfile(response));
 };
 
