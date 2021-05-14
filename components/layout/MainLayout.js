@@ -7,8 +7,8 @@ import Btn from "../btn/Btn";
 
 export default function MainLayout({children}) {
     const {profile} = useSelector(state => state.profile);
-    const router = useRouter();
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const handleLogout = async () => {
         await dispatch(logoutUserAsync());
@@ -17,11 +17,14 @@ export default function MainLayout({children}) {
     }
 
     return (
-        <div className="container-fluid justify-content-center d-flex align-items-start overflow-hidden p-0 pb-3 vh-100">
+        <div
+            className="container-fluid justify-content-center d-flex align-items-start overflow-hidden p-0 pb-3 vh-100">
             <main className="d-flex align-items-start justify-content-between w-75 m-auto">
-                <div className='mx-3 w-25'>
+                <div className='mx-3 w-25 d-flex flex-column align-items-center'>
                     <Link href={`/users/${profile.username}`}><span
                         className='btn btn-outline-secondary mt-2'>HOME</span></Link>
+                    <Link href='/profile'><span
+                        className='btn btn-outline-secondary mt-2'>Profile</span></Link>
                 </div>
                 <div className='d-flex flex-column w-100 align-items-center vh-100 pb-3'>
                     {children}

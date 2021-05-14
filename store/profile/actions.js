@@ -4,13 +4,27 @@ import Cookies from 'js-cookie'
 
 export const profileActionTypes = {
     SET_PROFILE: 'PROFILE.SET_PROFILE',
+    SET_PROFILE_ID: 'PROFILE.SET_PROFILE_ID',
 }
 
 export const setProfile = (payload) => ({type: profileActionTypes.SET_PROFILE, payload});
+export const setProfileId = (payload) => ({type: profileActionTypes.SET_PROFILE_ID, payload});
 
 export const setProfileAsync = () => async dispatch => {
     const {data: response} = await apiServer.get('profile');
 
+    response.avatar = response.avatar  ?  response.avatar :'../defaultAvatar.png';
+    dispatch(setProfile(response));
+};
+
+export const changeProfileAsync = (updatedProfile) => async dispatch => {
+    const {data: response} = await apiClient.post('profile', updatedProfile,  {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+
+    response.avatar = response.avatar  ?  response.avatar :'../defaultAvatar.png';
     dispatch(setProfile(response));
 };
 
