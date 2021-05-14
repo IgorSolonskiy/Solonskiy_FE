@@ -1,7 +1,8 @@
 import {useSelector} from "react-redux";
 
-import Btn from "../btn/Btn";
 import FormComments from "../forms/FormComments";
+import Image from "next/image";
+import Btn from "../btn/Btn";
 
 export default function Comment({comment, onDelete, onChange, onSubmit}) {
     const {profile} = useSelector(state => state.profile);
@@ -13,8 +14,14 @@ export default function Comment({comment, onDelete, onChange, onSubmit}) {
         card border-secondary list-group-item list-group-item-action '>
             <div className="w-100">
                 <div className=" ms-2 me-auto">
-                    <div
-                        className="fw-bold mt-2 w-100 text-center text-uppercase card-header p-0">{comment.author.username}</div>
+                    <div className='d-flex justify-content-center'>
+                        <Image src={comment.author.avatar ?? '../defaultAvatar.png'} width={40} height={40}
+                               className='rounded-circle'/>
+                        <div
+                            className="fw-bold mt-2 mx-3 text-center text-uppercase card-header p-0">
+                            {comment.author.username}
+                        </div>
+                    </div>
                     <p className="mt-3 mb-0">{comment.content}</p>
                 </div>
             </div>
