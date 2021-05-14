@@ -16,7 +16,7 @@ export default function Comment({comment, onDelete, onChange, onSubmit}) {
             <div className="w-100">
                 <div className=" ms-2 me-auto">
                     <div className='d-flex justify-content-center'>
-                        <ImageAvatar user={comment.author} width={40} height={40} className={'rounded-circle'} />
+                        <ImageAvatar user={comment.author} size={40} />
                         <Link href={`../users/${comment.author.username}`}>
                             <div
                                 className=" btn fw-bold mt-2 mx-3 text-center text-uppercase card-header p-0">

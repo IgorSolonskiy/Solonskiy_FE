@@ -31,9 +31,7 @@ export default function Profile() {
                                     <div className="d-flex flex-column align-items-center text-center"
                                          style={{backgroundColor: '#B3E5FC'}}>
                                         <ImageAvatar profile={profile}
-                                                     width={150}
-                                                     height={150}
-                                                     className={'rounded-circle'}/>
+                                                     size={150}/>
                                         <div className="mt-3">
                                             <h4>{profile.username}</h4>
                                             <p className="text-secondary mb-1">Posts: {posts.length}</p>

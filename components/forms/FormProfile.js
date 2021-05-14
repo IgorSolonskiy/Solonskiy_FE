@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import Btn from "../btn/Btn";
 import {useDispatch, useSelector} from "react-redux";
 import {setProfileId} from "../../store/profile";
+import {Avatar} from "antd";
 
 export default function FormProfile({onSubmit}) {
     const {profile} = useSelector(state => state.profile);
@@ -44,7 +45,7 @@ export default function FormProfile({onSubmit}) {
                        placeholder="Title?"/>
                 {formik.errors.name ? <div className='text-danger'>{formik.errors.name}</div> : null}
             </div>
-            <div className='d-flex w-100 align-items-center border justify-content-around mt-3'>
+            <div className='d-flex w-100 align-items-center border justify-content-around mt-3 mb-3'>
                 <label htmlFor="avatar"
                        className='btn btn-outline-success form-label text-center m-0  w-100'>Avatar</label>
                 <input type="file" id="avatar" className="d-none"
@@ -54,8 +55,7 @@ export default function FormProfile({onSubmit}) {
                        }}
                 />
             </div>
-            {formik.values.photo &&
-            <img src={formik.values.photo} className="rounded-circle m-3" width="150" alt="Prev"/>}
+            {formik.values.photo && <Avatar src={formik.values.photo} size={150}/>}
             <div className='w-100 d-flex'>
                 <Btn name='Save' classBtn='btn btn-outline-info w-50 mt-3' type='submit'/>
                 <Btn name='Cancel' classBtn='btn btn-outline-danger w-50 mt-3 ms-3' type='button'

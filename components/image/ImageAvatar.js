@@ -1,8 +1,10 @@
-import Image from "next/image";
+import { Avatar } from 'antd';
 
-export const ImageAvatar= ({user = null,profile ={avatar:''} ,width = 50,height = 50, className})=>{
+export const ImageAvatar= ({user = null,profile ={avatar:''} ,size = 64, shape=''})=>{
     return(
-        <Image src={user ? (user.avatar || '/defaultAvatar.png') : (profile.avatar || '/defaultAvatar.png')}
-               width={width} height={height} className={className}/>
+        <Avatar size={size}
+                shape={shape}
+                src={user ? (user.avatar || '/defaultAvatar.png') : (profile.avatar || '/defaultAvatar.png')}
+               />
     )
 }

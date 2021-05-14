@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "antd": "^4.15.5",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0",
     "formik": "^2.2.6",
