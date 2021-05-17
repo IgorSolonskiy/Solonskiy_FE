@@ -18,7 +18,7 @@ export default function MainLayout({children}) {
             <main className="d-flex align-items-start justify-content-between w-75 m-auto">
                 <div className='mx-3 w-25 d-flex flex-column align-items-center'>
                     <Link href={`/users/${profile.username}`}><span
-                        className='btn btn-outline-secondary mt-2'>HOME</span></Link>
+                        className='btn btn-outline-secondary mt-2'>Home</span></Link>
                     <Link href='/profile'><span
                         className='btn btn-outline-secondary mt-2'>Profile</span></Link>
                 </div>

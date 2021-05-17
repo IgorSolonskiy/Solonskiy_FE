@@ -9,7 +9,8 @@ import MainLayout from "../../components/layout/MainLayout";
 import FormProfile from "../../components/forms/FormProfile";
 
 export default function Profile() {
-    const {profile: {profile, profileId}, posts: {posts}} = useSelector(state => state);
+    const {posts} = useSelector((state) => state.posts);
+    const {profile, profileId} = useSelector((state) => state.profile);
     const dispatch = useDispatch();
 
     const handleClickProfile = () => dispatch(setProfileId(profile.id));
@@ -30,8 +31,7 @@ export default function Profile() {
                                 <div className="card-body" style={{backgroundColor: '#B3E5FC'}}>
                                     <div className="d-flex flex-column align-items-center text-center"
                                          style={{backgroundColor: '#B3E5FC'}}>
-                                        <ImageAvatar profile={profile}
-                                                     size={150}/>
+                                        <ImageAvatar profile={profile} size={150}/>
                                         <div className="mt-3">
                                             <h4>{profile.username}</h4>
                                             <p className="text-secondary mb-1">Posts: {posts.length}</p>

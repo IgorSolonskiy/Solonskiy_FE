@@ -10,7 +10,7 @@ export default function UserProfile() {
 
     return (
         <div className="d-flex align-items-center justify-content-around w-100 mt-3">
-            <ImageAvatar user={user} profile={profile} size={100} preview={true}/>
+            <ImageAvatar user={user} profile={profile} size={80} preview={true}/>
             <div className='mx-3 h3'>{user ? user.name : profile.name}</div>
             <div className='h3 mx-3'>Login: {user ? user.username : profile.username}</div>
             {

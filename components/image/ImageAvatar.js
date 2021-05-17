@@ -1,20 +1,18 @@
-import {Avatar, Image} from 'antd';
-import {UserOutlined} from '@ant-design/icons';
+import {Avatar} from 'antd';
+import {useSelector} from "react-redux";
 
-export const ImageAvatar = ({
-                                user = null, profile = {avatar: ''},
-                                size = 64, shape = '', preview = false
-                            }) => {
-    return (user ?
-            user.avatar ?
-                preview ? <Avatar size={size} src={<Image src={user.avatar}/>}/>
-                    : <Avatar size={size} src={user.avatar}/>
-                : <Avatar size={size} shape={shape} icon={<UserOutlined/>}/>
+export const ImageAvatar = ({size = 64,user,profile }) => {
+    if (user) {
+        if (user.avatar) {
+            return <Avatar size={size} src={user.avatar}/>
+        }
+        return <Avatar size={size}>{user.name[0]}</Avatar>
+    }
 
-            :
-            profile.avatar ?
-                preview ? <Avatar size={size} src={<Image src={profile.avatar}/>}/>
-                    : <Avatar size={size} src={profile.avatar}/>
-                : <Avatar size={size} shape={shape} icon={<UserOutlined/>}/>
-    )
+
+    if (profile.avatar) {
+        return <Avatar size={size} src={profile.avatar}/>
+    }
+
+    return <Avatar size={size}>{profile.name[0]}</Avatar>
 }
