@@ -1,5 +1,4 @@
 import {Avatar} from 'antd';
-import {useSelector} from "react-redux";
 
 export const ImageAvatar = ({size = 64,user,profile }) => {
     if (user) {
