@@ -1,4 +1,5 @@
 import {withoutAuth} from "../hof/withoutAuth";
+import {withRedux} from "../hof/withRedux";
 
 import AuthLayout from "../components/layout/AuthLayout";
 import Link from "next/link";
@@ -14,7 +15,7 @@ export default function Home() {
  </AuthLayout>
 }
 
-export const getServerSideProps = withoutAuth(async (ctx) => {
+export const getServerSideProps = withRedux(withoutAuth(async (ctx) => {
         return {props: {}}
     }
-)
+))

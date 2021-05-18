@@ -1,11 +1,11 @@
 import {withRouter} from "next/router";
 import {withoutAuth} from "../hof/withoutAuth";
 import {registerUserAsync} from "../store/profile";
+import {withRedux} from "../hof/withRedux";
 
 import FormSignup from "../components/forms/FormSignup";
 import Link from "next/link";
 import AuthLayout from "../components/layout/AuthLayout";
-import {withRedux} from "../hof/withRedux";
 
 export default withRouter(function Signup({router}) {
     const handleRegisterUser = user => registerUserAsync(user, router);
