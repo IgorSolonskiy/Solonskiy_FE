@@ -5,6 +5,7 @@ import {loginUserAsync} from "../store/profile";
 import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
 import AuthLayout from "../components/layout/AuthLayout";
+import {withRedux} from "../hof/withRedux";
 
 export default withRouter(function Login({router}) {
     const handleLoginUser = user => loginUserAsync(user, router);
@@ -19,4 +20,4 @@ export default withRouter(function Login({router}) {
     )
 })
 
-export const getServerSideProps = withoutAuth();
+export const getServerSideProps = withRedux(withoutAuth());
