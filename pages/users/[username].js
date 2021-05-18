@@ -58,9 +58,8 @@ export const getServerSideProps = withRedux(withAuth(async (ctx, auth, {dispatch
             return {props: {}};
         } catch (e) {
             return {
-                props: {}
+                notFound: true,
             }
         }
-        return {props: {}}
     }
 ))
