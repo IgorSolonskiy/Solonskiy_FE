@@ -22,13 +22,9 @@ export default function Home() {
         formikHelpers.resetForm(true);
     }
 
-    const handleSearchUsers = (e) => {
-        if (!e.target.value) {
-            return dispatch(setUsersList([]))
-        }
-
-        dispatch(setUsersListAsync(e.target.value))
-    };
+    const handleSearchUsers = (e) => dispatch(e.target.value
+        ? setUsersListAsync(e.target.value)
+        : setUsersList([]));
 
     return (
         <MainLayout>
