@@ -1,13 +1,13 @@
+import {Avatar} from "../image/Avatar";
 import {useFormik} from 'formik';
+import {useSelector} from "react-redux";
+import {CloseSquareTwoTone} from '@ant-design/icons';
+
 import * as Yup from 'yup';
 import Btn from "../btn/Btn";
-import {useDispatch, useSelector} from "react-redux";
-import {setProfileId} from "../../store/profile";
-import {Avatar} from "antd";
 
 export default function FormProfile({onSubmit}) {
     const {profile} = useSelector(state => state.profile);
-    const dispatch = useDispatch();
 
     const formik = useFormik({
         initialValues: {
@@ -29,6 +29,7 @@ export default function FormProfile({onSubmit}) {
 
             formData.append("name", values.name);
             formData.append("_method", "PUT");
+            formik.setFieldValue("photo", '');
             onSubmit(formData)
         },
     });
@@ -37,6 +38,21 @@ export default function FormProfile({onSubmit}) {
         <form className="d-flex flex-column justify-content-center align-items-center mt-3 w-100"
               autoComplete="off"
               onSubmit={formik.handleSubmit}>
+            <div className="col-md-4 w-100 mb-3">
+                <div className="card">
+                    <div className="card-body" style={{backgroundColor: '#B3E5FC'}}>
+                        <div className="d-flex flex-column align-items-center text-center"
+                             style={{backgroundColor: '#B3E5FC'}}>
+                            <label htmlFor="avatar" className='btn' title='Change your avatar'>
+                                <Avatar avatar={profile.avatar} name={profile.name} size={150}/>
+                            </label>
+                            <div className="mt-3">
+                                <h4>{profile.username}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className='d-flex w-100 align-items-center border justify-content-around'>
                 <label htmlFor="name" className='form-label text-center m-0  w-25'>Full Name</label>
                 <input type="text" id="name" className="form-control w-100"
@@ -46,21 +62,33 @@ export default function FormProfile({onSubmit}) {
                 {formik.errors.name ? <div className='text-danger'>{formik.errors.name}</div> : null}
             </div>
             <div className='d-flex w-100 align-items-center border justify-content-around mt-3 mb-3'>
-                <label htmlFor="avatar"
-                       className='btn btn-outline-success form-label text-center m-0  w-100'>Avatar</label>
                 <input type="file" id="avatar" className="d-none"
                        onChange={(event) => {
                            formik.setFieldValue("avatar", event.currentTarget.files[0])
+                           event.currentTarget.files[0] &&
                            formik.setFieldValue("photo", URL.createObjectURL(event.currentTarget.files[0]));
                        }}
                 />
             </div>
-            {formik.values.photo && <Avatar src={formik.values.photo} size={150}/>}
-            <div className='w-100 d-flex'>
-                <Btn name='Save' classBtn='btn btn-outline-info w-50 mt-3' type='submit'/>
-                <Btn name='Cancel' classBtn='btn btn-outline-danger w-50 mt-3 ms-3' type='button'
-                     onClick={() => dispatch(setProfileId(null))}
-                />
+            {formik.values.photo &&
+            <div className='d-flex flex-column align-items-end'>
+                <label htmlFor="closeBtn" className='form-label text-center p-0 m-0 btn'>
+                    <CloseSquareTwoTone
+                        style={{fontSize: '26px'}}
+                        twoToneColor="red"/>
+                </label>
+                <input type="button"
+                       className='d-none'
+                       id='closeBtn'
+                       onClick={(event) => {
+                           formik.setFieldValue("avatar", '')
+                           formik.setFieldValue("photo", '');
+                       }}/>
+                <Avatar avatar={formik.values.photo} size={150}/>
+            </div>
+            }
+            <div className='w-100 d-flex justify-content-center'>
+                <Btn name='Save' classBtn='btn btn-outline-info w-100 mt-3' type='submit'/>
             </div>
         </form>
     )

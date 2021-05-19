@@ -3,12 +3,10 @@ import apiClient from "../../libs/apiClient";
 import Cookies from 'js-cookie';
 
 export const profileActionTypes = {
-    SET_PROFILE: 'PROFILE.SET_PROFILE',
-    SET_PROFILE_ID: 'PROFILE.SET_PROFILE_ID',
+    SET_PROFILE: 'PROFILE.SET_PROFILE'
 };
 
 export const setProfile = (payload) => ({type: profileActionTypes.SET_PROFILE, payload});
-export const setProfileId = (payload) => ({type: profileActionTypes.SET_PROFILE_ID, payload});
 
 export const setProfileAsync = () => async dispatch => {
     const {data: response} = await apiServer.get('profile');
@@ -26,23 +24,20 @@ export const changeProfileAsync = (updatedProfile) => async dispatch => {
     dispatch(setProfile(response));
 };
 
-export const loginUserAsync = async (user, router) => {
+export const loginUserAsync = user => async dispatch =>  {
     const {data: {token: response}} = await apiClient.post('login', user);
 
-    Cookies.set('token', response);
-    router.push('/');
+    await Cookies.set('token', response);
 };
 
-export const registerUserAsync = async (user, router) => {
+export const registerUserAsync = (user) => async dispatch => {
     const {data: {token: response}} = await apiClient.post('register', user);
 
-    Cookies.set('token', response);
-    router.push('/');
+    await Cookies.set('token', response);
 };
 
-export const logoutUserAsync = (router) => async dispatch => {
+export const logoutUserAsync = () => async dispatch => {
     await apiClient.get('logout');
-    await router.push('/login');
-    Cookies.remove('token');
+    await Cookies.remove('token');
     dispatch(setProfile({}));
 };

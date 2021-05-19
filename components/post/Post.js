@@ -1,5 +1,5 @@
 import {useSelector} from "react-redux";
-import {ImageAvatar} from "../image/ImageAvatar";
+import {Avatar} from "../image/Avatar";
 
 import FormComments from "../forms/FormComments";
 import Link from "next/link";
@@ -16,7 +16,7 @@ export default function Post({post, onDelete, onSubmit, createComment = false}) 
                     <div className="w-100">
                         <div className=" ms-2 me-auto">
                             <div className='d-flex justify-content-center align-items-center '>
-                                <ImageAvatar user={post.author} size={40} />
+                                <Avatar avatar={post.author.avatar} name={post.author.name} size={40} />
                                 <div
                                     className="fw-bold mt-2 mx-3 text-center text-uppercase ">{post.author.username}</div>
                             </div>

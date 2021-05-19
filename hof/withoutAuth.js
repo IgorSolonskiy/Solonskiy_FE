@@ -1,25 +1,22 @@
 import apiServer from "../libs/apiServer";
 
-import {setProfileAsync} from "../store/profile";
-
-export const withoutAuth = getServerSideProps => async (ctx, storeData) => {
+export const withoutAuth = getServerSideProps => async (ctx) => {
     try {
         const {token} = ctx.req.cookies;
 
         apiServer.defaults.headers['Authorization'] = `Bearer ${token}`;
-        await storeData.dispatch(setProfileAsync());
 
-        const {profile: {profile: user}} = storeData.getState();
+        const {data: response} = await apiServer.get('profile');
 
         return {
             redirect: {
-                destination: `/users/${user.username}`,
+                destination: `/users/${response.username}`,
                 permanent: false,
             }
         }
     } catch (e) {
         if (getServerSideProps) {
-            const result = await getServerSideProps(ctx,storeData)
+            const result = await getServerSideProps(ctx)
             return {
                 ...result,
                 props: {}

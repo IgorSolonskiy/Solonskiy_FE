@@ -1,14 +1,20 @@
-import {withRouter} from "next/router";
+import {useRouter} from "next/router";
 import {withoutAuth} from "../hof/withoutAuth";
 import {registerUserAsync} from "../store/profile";
-import {withRedux} from "../hof/withRedux";
+import {useDispatch} from "react-redux";
 
 import FormSignup from "../components/forms/FormSignup";
 import Link from "next/link";
 import AuthLayout from "../components/layout/AuthLayout";
 
-export default withRouter(function Signup({router}) {
-    const handleRegisterUser = user => registerUserAsync(user, router);
+export default function Signup() {
+    const router = useRouter();
+    const dispatch = useDispatch();
+
+    const handleRegisterUser = async user => {
+        await dispatch(registerUserAsync(user, router));
+        router.push('/');
+    };
 
     return (
         <AuthLayout>
@@ -18,6 +24,6 @@ export default withRouter(function Signup({router}) {
             </div>
         </AuthLayout>
     )
-})
+}
 
-export const getServerSideProps = withRedux(withoutAuth());
+export const getServerSideProps = withoutAuth();

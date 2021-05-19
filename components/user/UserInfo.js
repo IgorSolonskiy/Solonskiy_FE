@@ -1,5 +1,6 @@
+import {Avatar} from "../image/Avatar";
+
 import Link from "next/link";
-import {ImageAvatar} from "../image/ImageAvatar";
 
 export default function UserInfo({user}) {
     return (
@@ -7,7 +8,7 @@ export default function UserInfo({user}) {
             <li className="btn d-flex text-primary list-group-item list-group-item-action
             flex-column align-items-start justify-content-start border-bottom">
                 <div className='d-flex align-items-center justify-content-center'>
-                    <ImageAvatar user={user} size={35}/>
+                    <Avatar avatar={user.avatar} name={user.name} size={35}/>
                     <div className='ms-3'>
                         <div className='mb-3'>Name: {user.name}</div>
                         <div className='mb-3'>Login: {user.username}</div>

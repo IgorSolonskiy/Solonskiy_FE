@@ -1,4 +1,4 @@
-import {withRouter} from "next/router";
+import {useRouter} from "next/router";
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {addUserAsync} from "../../store/user";
@@ -18,11 +18,12 @@ import Posts from '../../components/post/Post';
 import UserProfile from "../../components/user/UserProfile";
 import CommentsList from "../../components/list/CommentsList";
 
-export default withRouter(function Post({router}) {
+export default function Post() {
     const {profile} = useSelector(state => state.profile);
     const {idComment} = useSelector(state => state.comments);
     const {post} = useSelector(state => state.posts);
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const handleDeletePost = (deletedPost) => {
         dispatch(deletePostAsync(deletedPost.id));
@@ -64,7 +65,7 @@ export default withRouter(function Post({router}) {
             <CommentsList onSubmit={handleChangeComment} onChange={handleSetCommentID} onDelete={handleDeleteComment}/>
         </MainLayout>
     )
-})
+}
 
 
 export const getServerSideProps = withRedux(withAuth(async (ctx, {user}, {dispatch, getState}) => {

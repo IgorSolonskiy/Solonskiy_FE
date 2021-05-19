@@ -1,10 +1,9 @@
 import {withoutAuth} from "../hof/withoutAuth";
-import {withRedux} from "../hof/withRedux";
 
 import AuthLayout from "../components/layout/AuthLayout";
 import Link from "next/link";
 
-export default function Home() {
+export default function Index() {
  return <AuthLayout>
      <div className='min-vh-100 d-flex flex-column justify-content-center align-items-center'>
          <h1 className='text-info'>In the course of what is happening</h1>
@@ -15,7 +14,4 @@ export default function Home() {
  </AuthLayout>
 }
 
-export const getServerSideProps = withRedux(withoutAuth(async (ctx) => {
-        return {props: {}}
-    }
-))
+export const getServerSideProps = withoutAuth();

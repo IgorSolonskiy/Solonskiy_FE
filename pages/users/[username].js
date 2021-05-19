@@ -11,7 +11,7 @@ import FormPosts from "../../components/forms/FormPosts";
 import FormSearch from "../../components/forms/FormSearch";
 import UsersList from "../../components/list/UsersList";
 
-export default function Profile() {
+export default function Home() {
     const {user} = useSelector((state) => state.users);
     const dispatch = useDispatch();
 

@@ -1,14 +1,20 @@
-import {withRouter} from "next/router";
+import {useRouter} from "next/router";
 import {withoutAuth} from "../hof/withoutAuth";
 import {loginUserAsync} from "../store/profile";
-import {withRedux} from "../hof/withRedux";
+import {useDispatch} from "react-redux";
 
 import FormLogin from "../components/forms/FormLogin";
 import Link from "next/link";
 import AuthLayout from "../components/layout/AuthLayout";
 
-export default withRouter(function Login({router}) {
-    const handleLoginUser = user => loginUserAsync(user, router);
+export default function Login() {
+    const router = useRouter();
+    const dispatch = useDispatch();
+
+    const handleLoginUser =async user => {
+        await dispatch(loginUserAsync(user))
+        router.push('/');
+    };
 
     return (
         <AuthLayout>
@@ -18,6 +24,6 @@ export default withRouter(function Login({router}) {
             </div>
         </AuthLayout>
     )
-})
+}
 
-export const getServerSideProps = withRedux(withoutAuth());
+export const getServerSideProps = withoutAuth();
