@@ -61,7 +61,7 @@ export default function FormProfile({onSubmit}) {
                        placeholder="Title?"/>
                 {formik.errors.name ? <div className='text-danger'>{formik.errors.name}</div> : null}
             </div>
-            <div className='d-flex w-100 align-items-center border justify-content-around mt-3 mb-3'>
+            <div className='d-flex w-100 align-items-center  justify-content-around'>
                 <input type="file" id="avatar" className="d-none"
                        onChange={(event) => {
                            formik.setFieldValue("avatar", event.currentTarget.files[0])
