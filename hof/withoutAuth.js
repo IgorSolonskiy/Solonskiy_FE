@@ -1,4 +1,5 @@
-import apiServer from "../libs/apiServer";
+import apiServer from '../libs/apiServer';
+import {getProfile} from "../api/profile";
 
 export const withoutAuth = getServerSideProps => async (ctx) => {
     try {
@@ -6,7 +7,7 @@ export const withoutAuth = getServerSideProps => async (ctx) => {
 
         apiServer.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-        const {data: response} = await apiServer.get('profile');
+        const response = await getProfile();
 
         return {
             redirect: {
