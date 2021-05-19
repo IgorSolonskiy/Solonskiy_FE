@@ -1,7 +1,7 @@
 import {profileActionTypes} from "./actions";
 
 const initialState = {
-    profile: null,
+    profile: {},
 }
 
 export const profileReducer = (state = initialState, action) => {
