@@ -24,7 +24,8 @@ export const postsReducer = (state = initialState, action) => {
             return {...state, posts: state.posts.filter(post => post.id !== action.payload)}
 
         case postsActionTypes.CHANGE_POST:
-            return {...state, post: action.payload}
+            return {...state, post: action.payload, posts: state.posts
+                    .map(post=> post.id === action.payload.id ? action.payload : post)}
 
         default:
             return state

@@ -2,11 +2,11 @@ import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import Btn from "../btn/Btn";
 
-export default function FormComments({onSubmit, comment = {content: ''}}) {
+export default function CreateCommentForm({onSubmit}) {
 
     const formik = useFormik({
         initialValues: {
-            content: comment.content,
+            content: '',
         },
         validationSchema: Yup.object({
             content: Yup.string()

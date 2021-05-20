@@ -38,6 +38,6 @@ export const registerUserAsync = (user) => async dispatch => {
 
 export const logoutUserAsync = () => async dispatch => {
     await apiClient.get('logout');
-    await Cookies.remove('token');
+    Cookies.remove('token');
     dispatch(setProfile({}));
 };

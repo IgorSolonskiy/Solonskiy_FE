@@ -12,7 +12,7 @@ export default function Signup() {
     const dispatch = useDispatch();
 
     const handleRegisterUser = async user => {
-        await dispatch(registerUserAsync(user, router));
+        await dispatch(registerUserAsync(user));
         router.push('/');
     };
 

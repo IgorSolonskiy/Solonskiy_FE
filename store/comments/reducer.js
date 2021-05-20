@@ -14,19 +14,11 @@ export const commentsReducer = (state = initialState, action) => {
             return {...state, comments: [...state.comments, action.payload]}
 
         case commentsActionTypes.REMOVE_COMMENT:
-            return {...state, comments: state.comments.filter(comment=>comment.id !== action.payload)}
+            return {...state, comments: state.comments.filter(comment => comment.id !== action.payload)}
 
         case commentsActionTypes.CHANGE_COMMENT:
-
-            return {...state, comments: [...state.comments.map(comment=>{
-                if(comment.id === action.payload.id){
-                    comment = action.payload;
-                }
-                return comment;
-                })]}
-
-        case commentsActionTypes.SET_ID_COMMENT:
-            return {...state, idComment: action.payload}
+            return {...state, comments: [...state.comments
+                    .map(comment => comment.id === action.payload.id ? action.payload : comment)]}
 
         default:
             return state

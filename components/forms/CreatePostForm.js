@@ -2,12 +2,12 @@ import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import Btn from "../btn/Btn";
 
-export default function FormPosts({onSubmit, postData={title:'',content:''}}) {
+export default function CreatePostForm({onSubmit}) {
 
     const formik = useFormik({
         initialValues: {
-            title: postData.title,
-            content: postData.content,
+            title: '',
+            content: '',
         },
         validationSchema: Yup.object({
             title: Yup.string()

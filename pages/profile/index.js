@@ -10,7 +10,10 @@ import FormProfile from "../../components/forms/FormProfile";
 export default function Profile() {
     const dispatch = useDispatch();
 
-    const handleChangeProfile = (updatedProfile) => dispatch(changeProfileAsync(updatedProfile));
+    const handleChangeProfile =async (updatedProfile,formik) => {
+        await dispatch(changeProfileAsync(updatedProfile))
+        formik.setFieldValue("avatar", '')
+    };
 
     return (
         <MainLayout>

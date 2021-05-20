@@ -1,13 +1,13 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {addUserAsync, setUsersList, setUsersListAsync} from "../../store/user";
-import {addOnePostListAsync, deletePostAsync, setPostsListAsync} from "../../store/posts";
+import {addOnePostListAsync, changePostAsync, deletePostAsync, setPostsListAsync} from "../../store/posts";
 import {useDispatch, useSelector} from "react-redux";
 
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
-import FormPosts from "../../components/forms/FormPosts";
+import CreatePostForm from "../../components/forms/CreatePostForm";
 import FormSearch from "../../components/forms/FormSearch";
 import UsersList from "../../components/list/UsersList";
 
@@ -22,23 +22,29 @@ export default function Home() {
         formikHelpers.resetForm(true);
     }
 
+    const handleEditPost =async (editPost,newPost,setEditing) => {
+        await dispatch(changePostAsync(editPost.id, newPost))
+        setEditing(false);
+    };
+
     const handleSearchUsers = (e) => dispatch(e.target.value
         ? setUsersListAsync(e.target.value)
         : setUsersList([]));
 
+    const profile = !user ?
+        <div className='d-flex align-items-start justify-content-between w-100'>
+            <CreatePostForm onSubmit={handlePostCreate}/>
+            <div>
+                <FormSearch onChange={handleSearchUsers}/>
+                <UsersList/>
+            </div>
+        </div> : null;
+
     return (
         <MainLayout>
             <UserProfile/>
-            {!user ?
-                <div className='d-flex align-items-start justify-content-between w-100'>
-                    <FormPosts onSubmit={handlePostCreate}/>
-                    <div>
-                        <FormSearch onChange={handleSearchUsers}/>
-                        <UsersList/>
-                    </div>
-                </div> : ''
-            }
-            <PostsList onDelete={handlePostDelete}/>
+            {profile}
+            <PostsList showControls={user ? 0 : 1} onChange={handleEditPost} onDelete={handlePostDelete}/>
         </MainLayout>
     )
 }

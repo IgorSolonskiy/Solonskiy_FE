@@ -6,14 +6,12 @@ export const commentsActionTypes = {
     ADD_COMMENT: 'COMMENTS.ADD_COMMENT',
     REMOVE_COMMENT: 'COMMENTS.REMOVE_COMMENT',
     CHANGE_COMMENT: 'COMMENTS.CHANGE_COMMENT',
-    SET_ID_COMMENT: 'COMMENTS.SET_ID_COMMENT',
 }
 
 export const setCommentsList = (payload) => ({type: commentsActionTypes.SET_COMMENTS_LIST, payload});
 export const addComment = (payload) => ({type: commentsActionTypes.ADD_COMMENT, payload});
 export const removeComment = (payload) => ({type: commentsActionTypes.REMOVE_COMMENT, payload});
 export const changeComment = (payload) => ({type: commentsActionTypes.CHANGE_COMMENT, payload});
-export const setIdComment = (payload) => ({type: commentsActionTypes.SET_ID_COMMENT, payload});
 
 export const setCommentsListAsync = (id) => async dispatch => {
     const {data: response} = await apiServer.get(`posts/${id}/comments`);

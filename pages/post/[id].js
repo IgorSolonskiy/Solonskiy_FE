@@ -3,24 +3,17 @@ import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {addUserAsync} from "../../store/user";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    addCommentAsync,
-    changeCommentAsync,
-    deleteCommentAsync,
-    setCommentsListAsync,
-    setIdComment
-} from "../../store/comments";
+import {addCommentAsync, changeCommentAsync, deleteCommentAsync, setCommentsListAsync,} from "../../store/comments";
 import {changePostAsync, deletePostAsync, setPostAsync, setPostId,} from "../../store/posts";
 
 import MainLayout from "../../components/layout/MainLayout";
-import FormPosts from "../../components/forms/FormPosts";
 import Posts from '../../components/post/Post';
 import UserProfile from "../../components/user/UserProfile";
 import CommentsList from "../../components/list/CommentsList";
+import CreateCommentForm from "../../components/forms/CreateCommentForm";
 
 export default function Post() {
     const {profile} = useSelector(state => state.profile);
-    const {idComment} = useSelector(state => state.comments);
     const {post} = useSelector(state => state.posts);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -32,21 +25,15 @@ export default function Post() {
 
     const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment.id));
 
-    const handleSetCommentID = (comment) => {
-        if (idComment === comment.id) {
-            return dispatch(setIdComment(null))
-        }
-
-        return dispatch(setIdComment(comment.id))
+    const handleEditComment = async (comment, changeComment, setEditing) => {
+        await dispatch(changeCommentAsync(comment.id, changeComment));
+        setEditing(false);
     };
 
-    const handleChangeComment = (changeComment) => {
-        dispatch(changeCommentAsync(idComment, changeComment))
-
-        return dispatch(setIdComment(null))
+    const handleEditPost = async (editPost, newPost, setEditing) => {
+        await dispatch(changePostAsync(editPost.id, newPost))
+        setEditing(false);
     };
-
-    const handleEditPost = (newPost) => dispatch(changePostAsync(post.id, newPost));
 
     const handleCreateComment = (newComment, formikHelpers) => {
         dispatch(addCommentAsync(post.id, newComment))
@@ -55,14 +42,15 @@ export default function Post() {
 
     return (
         <MainLayout>
-            {
-                post.author.id === profile.id ?
-                    <FormPosts postData={post} onSubmit={handleEditPost}/>
-                    :
-                    <UserProfile/>
-            }
-            <Posts post={post} onSubmit={handleCreateComment} onDelete={handleDeletePost}/>
-            <CommentsList onSubmit={handleChangeComment} onChange={handleSetCommentID} onDelete={handleDeleteComment}/>
+            <UserProfile/>
+            <Posts onChange={handleEditPost}
+                   showControls={post.author.id === profile.id}
+                   post={post}
+                   onDelete={handleDeletePost}/>
+            <div className='w-100 d-flex mt-3 justify-content-center'>
+                <CreateCommentForm onSubmit={handleCreateComment}/>
+            </div>
+            <CommentsList onSubmit={handleEditComment} onDelete={handleDeleteComment}/>
         </MainLayout>
     )
 }
