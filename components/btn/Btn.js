@@ -1,5 +1,5 @@
-export default function Btn({name, classBtn, onClick,type}) {
+export default function Btn({name, classBtn, onClick,type,style}) {
     return (
-        <button type={type} className={`btn ${classBtn}`} onClick={onClick}>{name}</button>
+        <button type={type} className={`btn ${classBtn}`} style={style} onClick={onClick}>{name}</button>
     )
 }

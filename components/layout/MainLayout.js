@@ -22,14 +22,18 @@ export default function MainLayout({children}) {
                 <div className='mx-3 w-25 d-flex flex-column align-items-center'>
                     <Link href={`/users/${profile.username}`}><span
                         className='btn btn-outline-secondary mt-2'>Home</span></Link>
+                    <Link href={`/users`}><span
+                        className='btn btn-outline-secondary mt-2'>Users</span></Link>
                     <Link href='/profile'><span
                         className='btn btn-outline-secondary mt-2'>Profile</span></Link>
                 </div>
                 <div className='d-flex flex-column w-100 align-items-center vh-100 pb-3'>
                     {children}
                 </div>
+                <Btn type='button' name='Sign out'  classBtn='btn btn-outline-secondary mt-3'
+                     style={{width:'150px'}}
+                     onClick={handleLogout}/>
             </main>
-            <Btn type='button' name='Sign out' classBtn='btn btn-outline-secondary mt-3' onClick={handleLogout}/>
         </div>
     )
 }
