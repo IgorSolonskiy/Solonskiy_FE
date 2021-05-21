@@ -7,7 +7,8 @@ export const postsActionTypes = {
     REMOVE_POST: 'POSTS.REMOVE_POST',
     SET_POST: 'POSTS.SET_POST',
     CHANGE_POST: 'POSTS.CHANGE_POST',
-    SET_POST_ID: 'POSTS.SET_POST_ID'
+    SET_POST_ID: 'POSTS.SET_POST_ID',
+    SET_FETCHING: 'POSTS.SET_FETCHING'
 }
 
 export const setPostsList = (payload) => ({type: postsActionTypes.SET_POSTS_LIST, payload});
@@ -16,6 +17,7 @@ export const setPost = (payload) => ({type: postsActionTypes.SET_POST, payload})
 export const removePost = (payload) => ({type: postsActionTypes.REMOVE_POST, payload});
 export const changePost = (payload) => ({type: postsActionTypes.CHANGE_POST, payload});
 export const setPostId = (payload) => ({type: postsActionTypes.SET_POST_ID, payload});
+export const setFetching = (payload) => ({type: postsActionTypes.SET_FETCHING, payload});
 
 export const setPostsListClientAsync = (username, page) => async dispatch => {
     const {data: response} = await apiClient
@@ -26,7 +28,8 @@ export const setPostsListClientAsync = (username, page) => async dispatch => {
 
 export const setPostsListServerAsync = (username) => async dispatch => {
     const {data: response} = await apiServer
-        .get(`users/${username}/posts?limit=${process.env.PER_PAGE_POSTS_PAGINATE}&page=${process.env.DEFAULT_PAGINATE_POSTS_PAGE_SERVER}`)
+        .get(`users/${username}/posts?limit=${process.env.PER_PAGE_POSTS_PAGINATE}&page=${process.
+            env.DEFAULT_PAGINATE_POSTS_PAGE_SERVER}`)
 
     dispatch(setPostsList(response));
 };

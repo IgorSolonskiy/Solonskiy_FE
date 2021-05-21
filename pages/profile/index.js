@@ -1,6 +1,5 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
-import {setPostsListAsync} from "../../store/posts";
 import {useDispatch} from "react-redux";
 import {changeProfileAsync} from "../../store/profile";
 
@@ -26,15 +25,4 @@ export default function Profile() {
     )
 }
 
-export const getServerSideProps = withRedux(withAuth(async (ctx, {user}, {dispatch}) => {
-        try {
-            await dispatch(setPostsListAsync(user.username));
-
-            return {props: {}};
-        } catch (e) {
-            return {
-                notFound: true,
-            }
-        }
-    }
-))
+export const getServerSideProps = withRedux(withAuth())
