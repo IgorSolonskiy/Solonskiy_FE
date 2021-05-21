@@ -14,7 +14,7 @@ export const setUser = (payload) => ({type: usersActionTypes.SET_USER, payload})
 export const setSearchUsersListAsync = (username) => async dispatch => {
     const {data: response} = await apiClient.get(`users?username=${username}`);
 
-    dispatch(setSearchUsersList(response));
+    dispatch(setSearchUsersList(response.data));
 };
 
 export const setPaginateUsersListAsync = (page) => async dispatch => {

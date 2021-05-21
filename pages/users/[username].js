@@ -17,24 +17,25 @@ import UserProfile from "../../components/user/UserProfile";
 import CreatePostForm from "../../components/forms/CreatePostForm";
 
 export default function Home({auth}) {
+    const dispatch = useDispatch();
     const {user} = useSelector((state) => state.users);
     const {lastPagePaginate} = useSelector((state) => state.posts)
     const [fetching, setFetching] = useState(false);
     const [currentPage, setCurrentPage] = useState(process.env.DEFAULT_PAGINATE_POSTS_PAGE_CLIENT);
-    const dispatch = useDispatch();
 
-    useEffect(async () => {
+    useEffect(() => {
         if (fetching) {
-            await dispatch(setPostsListClientAsync(user ? user.username : auth.user.username, currentPage));
+            dispatch(setPostsListClientAsync(user ? user.username : auth.user.username, currentPage));
             setCurrentPage(prevPage => prevPage + process.env.ONE_PAGE);
             setFetching(false);
         }
     }, [fetching])
 
-    useEffect(async () => {
+    useEffect(() => {
         setCurrentPage(() => process.env.DEFAULT_PAGINATE_POSTS_PAGE_CLIENT)
-        document.addEventListener('scroll', handleInfiniteScroll)
-        return () => document.removeEventListener('scroll', handleInfiniteScroll)
+        document.addEventListener('scroll', handleInfiniteScroll);
+
+        return () => document.removeEventListener('scroll', handleInfiniteScroll);
     }, [auth])
 
     const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
@@ -51,6 +52,7 @@ export default function Home({auth}) {
 
     const handleInfiniteScroll = (e) => {
         const {scrollHeight, scrollTop} = e.target.documentElement;
+
         return scrollHeight === (scrollTop + window.innerHeight) && currentPage !== lastPagePaginate
             ? setFetching(true)
             : null;
