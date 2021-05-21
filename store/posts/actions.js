@@ -24,9 +24,9 @@ export const setPostsListClientAsync = (username, page) => async dispatch => {
     dispatch(setPostsList(response));
 };
 
-export const setPostsListServerAsync = (username, page) => async dispatch => {
+export const setPostsListServerAsync = (username) => async dispatch => {
     const {data: response} = await apiServer
-        .get(`users/${username}/posts?limit=${process.env.PER_PAGE_POSTS_PAGINATE}&page=${page}`)
+        .get(`users/${username}/posts?limit=${process.env.PER_PAGE_POSTS_PAGINATE}&page=${process.env.DEFAULT_PAGINATE_POSTS_PAGE_SERVER}`)
 
     dispatch(setPostsList(response));
 };
