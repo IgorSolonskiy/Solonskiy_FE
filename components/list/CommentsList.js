@@ -5,7 +5,7 @@ export default function CommentsList({onDelete, onSubmit}) {
     const {comments} = useSelector((state) => state.comments)
 
     return (
-        <ul className="ps-5 list-group list-group-flush w-100 mb-3 mt-3 vh-100" style={{overflowY: "scroll"}}>
+        <ul className="list-group w-100 mt-3">
             {comments.map(comment => <Comment key={comment.id}
                                               onSubmit={onSubmit}
                                               onDelete={onDelete}

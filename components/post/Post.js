@@ -32,12 +32,12 @@ export default function Post({post, onDelete, onChange, showControls}) {
         : null;
 
     return (
-        <li className='d-flex align-items-center position-relative w-100 list-group-item list-group-item-action'>
+        <li className='d-flex align-items-center w-100 shadow-lg border mb-3'>
             <div className='d-flex flex-column w-100'>
                 <div onClick={() => !editing && router.push(`/post/${post.id}`)}>
                     <div className="w-100">
                         <div className=" ms-2 me-auto">
-                            <div className='d-flex justify-content-center align-items-center '>
+                            <div className='d-flex justify-content-center align-items-center pt-3'>
                                 <Avatar avatar={post.author.avatar} name={post.author.name} size={40}/>
                                 <div
                                     className="fw-bold mt-2 mx-3 text-center text-uppercase ">{post.author.username}

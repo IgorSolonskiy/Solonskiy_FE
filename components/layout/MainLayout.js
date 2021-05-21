@@ -17,9 +17,10 @@ export default function MainLayout({children}) {
 
     return (
         <div
-            className="container-fluid justify-content-center d-flex align-items-start overflow-hidden p-0 pb-3 vh-100">
-            <main className="d-flex align-items-start justify-content-between w-75 m-auto">
-                <div className='mx-3 w-25 d-flex flex-column align-items-center'>
+            className="container-fluid justify-content-center d-flex align-items-start  p-0 pb-3 min-vh-100">
+            <main className="d-flex align-items-start justify-content-between w-75 m-auto position-relative ">
+                <div    style={{zIndex: 30}}
+                    className='mx-3 w-25 d-flex flex-column align-items-start position-fixed'>
                     <Link href={`/users/${profile.username}`}><span
                         className='btn btn-outline-secondary mt-2'>Home</span></Link>
                     <Link href={`/users`}><span
@@ -27,11 +28,15 @@ export default function MainLayout({children}) {
                     <Link href='/profile'><span
                         className='btn btn-outline-secondary mt-2'>Profile</span></Link>
                 </div>
-                <div className='d-flex flex-column w-100 align-items-center vh-100 pb-3'>
+                <div    style={{marginLeft:'200px'}}
+                    className='d-flex flex-column w-100 align-items-center vh-100 pb-3'>
                     {children}
                 </div>
-                <Btn type='button' name='Sign out'  classBtn='btn btn-outline-secondary mt-3'
-                     style={{width:'150px'}}
+                <Btn type='button' name='Sign out'
+                     classBtn='btn btn-outline-secondary mt-3 position-fixed'
+                     style={{width:'150px',
+                         right: '40px'
+                     }}
                      onClick={handleLogout}/>
             </main>
         </div>

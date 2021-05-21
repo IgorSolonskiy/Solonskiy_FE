@@ -17,8 +17,16 @@ export const removePost = (payload) => ({type: postsActionTypes.REMOVE_POST, pay
 export const changePost = (payload) => ({type: postsActionTypes.CHANGE_POST, payload});
 export const setPostId = (payload) => ({type: postsActionTypes.SET_POST_ID, payload});
 
-export const setPostsListAsync = (username) => async dispatch => {
-    const {data: response} = await apiServer.get(`users/${username}/posts`)
+export const setPostsListClientAsync = (username, page) => async dispatch => {
+    const {data: response} = await apiClient
+        .get(`users/${username}/posts?limit=${process.env.PER_PAGE_POSTS_PAGINATE}&page=${page}`)
+
+    dispatch(setPostsList(response));
+};
+
+export const setPostsListServerAsync = (username, page) => async dispatch => {
+    const {data: response} = await apiServer
+        .get(`users/${username}/posts?limit=${process.env.PER_PAGE_POSTS_PAGINATE}&page=${page}`)
 
     dispatch(setPostsList(response));
 };

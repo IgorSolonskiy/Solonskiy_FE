@@ -2,6 +2,7 @@ import {postsActionTypes} from "./actions";
 
 const initialState = {
     posts: [],
+    lastPagePaginate: null,
     post: null,
     postId: null,
 }
@@ -9,7 +10,8 @@ const initialState = {
 export const postsReducer = (state = initialState, action) => {
     switch (action.type) {
         case postsActionTypes.SET_POSTS_LIST:
-            return {...state, posts: [...action.payload]}
+            return {...state, posts: [...state.posts,...action.payload.data],
+                lastPagePaginate: action.payload.meta.last_page}
 
         case postsActionTypes.ADD_ONE_POST_LIST:
             return {...state, posts: [...state.posts, action.payload]}

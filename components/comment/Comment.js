@@ -32,8 +32,7 @@ export default function Comment({comment, onDelete, onSubmit}) {
 
 
     return (
-        <li className='d-flex align-items-center position-relative border
-        card border-secondary list-group-item list-group-item-action '>
+        <li className='d-flex align-items-center position-relative border p-2 mb-3 card border-secondary '>
             <div className="w-100">
                 <div className=" ms-2 me-auto">
                     <div className='d-flex justify-content-center'>
