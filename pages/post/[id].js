@@ -13,8 +13,8 @@ import CommentsList from "../../components/list/CommentsList";
 import CreateCommentForm from "../../components/forms/CreateCommentForm";
 
 export default function Post() {
-    const {profile} = useSelector(state => state.profile);
-    const {post} = useSelector(state => state.posts);
+    const profile = useSelector(state => state.profile.profile);
+    const post = useSelector(state => state.posts.post);
     const dispatch = useDispatch();
     const router = useRouter();
 

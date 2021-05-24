@@ -12,7 +12,7 @@ import FormSearch from "../../components/forms/FormSearch";
 import UsersList from "../../components/list/UsersList";
 
 export default function Home() {
-    const {user} = useSelector((state) => state.users);
+    const user = useSelector((state) => state.users.user);
     const dispatch = useDispatch();
 
     const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));

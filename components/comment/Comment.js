@@ -7,8 +7,8 @@ import Btn from "../btn/Btn";
 import EditCommentForm from "../forms/EditCommentForm";
 
 export default function Comment({comment, onDelete, onSubmit}) {
-    const {profile} = useSelector(state => state.profile);
-    const {user} = useSelector(state => state.users);
+    const profile = useSelector(state => state.profile.profile);
+    const user = useSelector(state => state.users.user);
     const [editing, setEditing] = useState(false);
 
     const handleEditComment = async (comment, changeComment) => {

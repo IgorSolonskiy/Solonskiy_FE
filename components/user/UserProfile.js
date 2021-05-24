@@ -4,9 +4,9 @@ import {Avatar} from "../image/Avatar";
 import Link from "next/link";
 
 export default function UserProfile() {
-    const {profile} = useSelector(state => state.profile);
-    const {user} = useSelector(state => state.users);
-    const {post} = useSelector(state => state.posts);
+    const profile = useSelector(state => state.profile.profile);
+    const user = useSelector(state => state.users.user);
+    const post = useSelector(state => state.posts.post);
     const userName = user ? user.name : profile.name;
     const userAvatar = user ? user.avatar : profile.avatar;
     const userLogin = user ? user.username : profile.username;

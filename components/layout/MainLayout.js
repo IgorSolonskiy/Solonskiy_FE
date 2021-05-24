@@ -6,7 +6,7 @@ import Link from "next/link";
 import Btn from "../btn/Btn";
 
 export default function MainLayout({children}) {
-    const {profile} = useSelector(state => state.profile);
+    const profile = useSelector(state => state.profile.profile);
     const dispatch = useDispatch();
     const router = useRouter();
 
