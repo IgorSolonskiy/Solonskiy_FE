@@ -31,29 +31,28 @@ export const setPostsListServerAsync = (username) => async dispatch => {
         .get(`users/${username}/posts?limit=${process.env.PER_PAGE_POSTS_PAGINATE}&page=${process.
             env.DEFAULT_PAGINATE_POSTS_PAGE_SERVER}`)
 
-    dispatch(setPostsList(response));
+  dispatch(setPostsList(response));
 };
 
 export const addOnePostListAsync = (post) => async dispatch => {
-    const {data: response} = await apiClient.post('posts', post);
+  const { data: response } = await apiClient.post("posts", post);
 
-    dispatch(addOnePostList(response));
+  dispatch(addOnePostList(response));
 };
 
 export const setPostAsync = (id) => async dispatch => {
-    const {data: response} = await apiServer.get(`posts/${id}`);
+  const { data: response } = await apiServer.get(`posts/${id}`);
 
-    dispatch(setPost(response));
+  dispatch(setPost(response));
 };
 
 export const changePostAsync = (id, post) => async dispatch => {
-    const {data: response} = await apiClient.put(`posts/${id}`, post);
+  const { data: response } = await apiClient.put(`posts/${id}`, post);
 
-    dispatch(changePost(response))
+  dispatch(changePost(response));
 };
 
-
 export const deletePostAsync = (id) => async dispatch => {
-    await apiClient.delete(`posts/${id}`);
-    dispatch(removePost(id))
+  await apiClient.delete(`posts/${id}`);
+  dispatch(removePost(id));
 };

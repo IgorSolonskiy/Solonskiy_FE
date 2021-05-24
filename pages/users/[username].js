@@ -41,12 +41,12 @@ export default function Home({auth}) {
         return  () => document.removeEventListener('scroll', handleInfiniteScroll);;
     }, [auth])
 
-    const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
+  const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
 
-    const handlePostCreate = (newPost, formikHelpers) => {
-        dispatch(addOnePostListAsync(newPost));
-        formikHelpers.resetForm(true);
-    }
+  const handlePostCreate = (newPost, formikHelpers) => {
+    dispatch(addOnePostListAsync(newPost));
+    formikHelpers.resetForm(true);
+  };
 
     const handleEditPost = async (editPost, newPost, setEditing) => {
         await dispatch(changePostAsync(editPost.id, newPost))
@@ -78,15 +78,15 @@ export const getServerSideProps = withRedux(withAuth(async (ctx, auth, {dispatch
         try {
             await dispatch(setPostsListServerAsync(ctx.query.username));
 
-            if (ctx.query.username !== auth.user.username) {
-                await dispatch(addUserAsync(ctx.query.username))
-            }
+      if (ctx.query.username !== auth.user.username) {
+        await dispatch(addUserAsync(ctx.query.username));
+      }
 
-            return {props: {}};
-        } catch (e) {
-            return {
-                notFound: true,
-            }
-        }
+      return { props: {} };
+    } catch (e) {
+      return {
+        notFound: true,
+      };
     }
-))
+  }
+));

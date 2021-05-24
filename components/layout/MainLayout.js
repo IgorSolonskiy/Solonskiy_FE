@@ -1,19 +1,19 @@
-import {useRouter} from "next/router";
-import {useDispatch, useSelector} from "react-redux";
-import {logoutUserAsync} from "../../store/profile";
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUserAsync } from "../../store/profile";
 
 import Link from "next/link";
 import Btn from "../btn/Btn";
 
-export default function MainLayout({children}) {
-    const {profile} = useSelector(state => state.profile);
-    const dispatch = useDispatch();
-    const router = useRouter();
+export default function MainLayout ({ children }) {
+  const profile = useSelector(state => state.profile.profile);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-    const handleLogout = async () => {
-        await dispatch(logoutUserAsync())
-        router.push('/login');
-    };
+  const handleLogout = async () => {
+    await dispatch(logoutUserAsync());
+    router.push("/login");
+  };
 
     return (
         <div
