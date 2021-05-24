@@ -1,8 +1,8 @@
-import {withAuth} from "../../hof/withAuth";
-import {withRedux} from "../../hof/withRedux";
-import {addUserAsync, setUsersList, setUsersListAsync} from "../../store/user";
-import {addOnePostListAsync, changePostAsync, deletePostAsync, setPostsListAsync} from "../../store/posts";
-import {useDispatch, useSelector} from "react-redux";
+import { withAuth } from "../../hof/withAuth";
+import { withRedux } from "../../hof/withRedux";
+import { addUserAsync } from "../../store/user";
+import { addOnePostListAsync, changePostAsync, deletePostAsync, setPostsListAsync } from "../../store/posts";
+import { useDispatch, useSelector } from "react-redux";
 
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
@@ -24,8 +24,7 @@ export default function Home () {
     await dispatch(changePostAsync(editPost.id, newPost));
   };
 
-    const profile = !user ? <CreatePostForm onSubmit={handlePostCreate}/> : null;
-
+  const profile = !user ? <CreatePostForm onSubmit={handlePostCreate}/> : null;
   const showControls = user ? 0 : 1;
 
   return (
