@@ -13,10 +13,9 @@ import {useEffect} from "react";
 
 export default function Users({auth}) {
     const dispatch = useDispatch();
-    const defaultPagePagination = 1;
 
     useEffect(()=>{
-        dispatch(setPaginateUsersListAsync(defaultPagePagination));
+        dispatch(setPaginateUsersListAsync(process.env.DEFAULT_PAGINATE_USERS_PAGE));
     },[auth])
 
     const handleSearchUsers = (e) => dispatch(e.target.value
