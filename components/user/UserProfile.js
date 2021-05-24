@@ -8,7 +8,7 @@ export default function UserProfile() {
     const {user} = useSelector(state => state.users);
     const {post} = useSelector(state => state.posts);
 
-    const backAuthorPage = user && post ?
+    const returnBackLink = user && post ?
         <Link href={`/users/${user.username}`}>
             <span className='btn btn-outline-secondary my-3'>&lArr;</span>
         </Link>
@@ -21,7 +21,7 @@ export default function UserProfile() {
                     size={80}/>
             <div className='mx-3 h3'>{user ? user.name : profile.name}</div>
             <div className='h3 mx-3'>Login: {user ? user.username : profile.username}</div>
-            {backAuthorPage}
+            {returnBackLink}
         </div>
     )
 }

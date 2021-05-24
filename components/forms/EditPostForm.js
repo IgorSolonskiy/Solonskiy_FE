@@ -2,7 +2,7 @@ import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import Btn from "../btn/Btn";
 
-export default function EditPostForm({onSubmit, post = {content: '', title: ''}, setEditing}) {
+export default function EditPostForm({onSubmit, post = {content: '', title: ''}}) {
     const formik = useFormik({
         initialValues: {
             title: post.title,
@@ -18,7 +18,7 @@ export default function EditPostForm({onSubmit, post = {content: '', title: ''},
         }),
         validateOnChange: false,
         onSubmit: (values) => {
-            onSubmit(post, values, setEditing)
+            onSubmit(post, values);
         },
     });
 

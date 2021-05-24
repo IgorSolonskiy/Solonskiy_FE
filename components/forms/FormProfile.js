@@ -17,7 +17,7 @@ export default function FormProfile({onSubmit}) {
                 .max(30, 'Must be 30 characters or less')
                 .required('Required'),
         }),
-        onSubmit: (values, formikHelpers) => {
+        onSubmit: (values) => {
             let formData = new FormData();
 
             if (values.avatar) {
@@ -32,7 +32,7 @@ export default function FormProfile({onSubmit}) {
 
     const handleChangeAvatar = (event) => formik.setFieldValue("avatar", event.currentTarget.files[0]);
 
-    const preview = formik.values.avatar
+    const previewAvatar = formik.values.avatar
         ? <Avatar avatar={URL.createObjectURL(formik.values.avatar)} size={150}/>
         : <Avatar avatar={profile.avatar} name={profile.name} size={150}/>
 
@@ -47,7 +47,7 @@ export default function FormProfile({onSubmit}) {
                 <input type="file" id="avatar" className="d-none"
                        value={formik.initialValues.avatar}
                        onChange={handleChangeAvatar}/>
-                {preview}
+                {previewAvatar}
                 <h4>{profile.username}</h4>
             </label>
             <label htmlFor="name" className='form-label text-center m-0  w-100 d-flex align-items-center'>

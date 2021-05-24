@@ -2,7 +2,7 @@ import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import Btn from "../btn/Btn";
 
-export default function EditCommentForm({onSubmit, comment = {content: ''},setEditing}) {
+export default function EditCommentForm({onSubmit, comment = {content: ''}}) {
 
     const formik = useFormik({
         initialValues: {
@@ -13,9 +13,9 @@ export default function EditCommentForm({onSubmit, comment = {content: ''},setEd
                 .max(150, 'Must be 150 characters or less')
                 .required('Required'),
         }),
-        validateOnChange:false,
+        validateOnChange: false,
         onSubmit: (values, formikHelpers) => {
-            onSubmit(comment,values,setEditing)
+            onSubmit(comment, values);
         },
     });
 

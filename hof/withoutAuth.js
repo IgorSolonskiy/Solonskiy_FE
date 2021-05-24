@@ -7,11 +7,11 @@ export const withoutAuth = getServerSideProps => async (ctx) => {
 
         apiServer.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-        const response = await getProfile();
+        const profile = await getProfile();
 
         return {
             redirect: {
-                destination: `/users/${response.username}`,
+                destination: `/users/${profile.username}`,
                 permanent: false,
             }
         }

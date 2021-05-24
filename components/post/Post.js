@@ -9,8 +9,13 @@ export default function Post({post, onDelete, onChange, showControls}) {
     const [editing, setEditing] = useState(false);
     const router = useRouter();
 
+    const handleEditPost = async (editPost, newPost) => {
+        await onChange(editPost, newPost);
+        setEditing(false);
+    }
+
     const content = editing ?
-        <EditPostForm onSubmit={onChange} setEditing={setEditing} post={post}/>
+        <EditPostForm onSubmit={handleEditPost} post={post}/>
         :
         <div>
             <div className="fw-bold mt-2 w-100">{post.title}</div>

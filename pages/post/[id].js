@@ -25,14 +25,12 @@ export default function Post() {
 
     const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment.id));
 
-    const handleEditComment = async (comment, changeComment, setEditing) => {
+    const handleEditComment = async (comment, changeComment) => {
         await dispatch(changeCommentAsync(comment.id, changeComment));
-        setEditing(false);
     };
 
-    const handleEditPost = async (editPost, newPost, setEditing) => {
+    const handleEditPost = async (editPost, newPost) => {
         await dispatch(changePostAsync(editPost.id, newPost))
-        setEditing(false);
     };
 
     const handleCreateComment = (newComment, formikHelpers) => {
@@ -40,11 +38,13 @@ export default function Post() {
         formikHelpers.resetForm(true);
     };
 
+    const showControls = post.author.id === profile.id;
+
     return (
         <MainLayout>
             <UserProfile/>
             <Posts onChange={handleEditPost}
-                   showControls={post.author.id === profile.id}
+                   showControls={showControls}
                    post={post}
                    onDelete={handleDeletePost}/>
             <div className='w-100 d-flex mt-3 justify-content-center'>

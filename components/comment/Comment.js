@@ -11,8 +11,13 @@ export default function Comment({comment, onDelete, onSubmit}) {
     const {user} = useSelector(state => state.users);
     const [editing, setEditing] = useState(false);
 
+    const handleEditComment = async (comment, changeComment) => {
+        await onSubmit(comment, changeComment);
+        setEditing(false);
+    }
+
     const content = editing ?
-        <EditCommentForm setEditing={setEditing} onSubmit={onSubmit} comment={comment}/>
+        <EditCommentForm onSubmit={handleEditComment} comment={comment}/>
         :
         <p className="mt-3 mb-0">{comment.content}</p>;
 

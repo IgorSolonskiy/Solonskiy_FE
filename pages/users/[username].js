@@ -22,9 +22,8 @@ export default function Home() {
         formikHelpers.resetForm(true);
     }
 
-    const handleEditPost =async (editPost,newPost,setEditing) => {
+    const handleEditPost = async (editPost, newPost) => {
         await dispatch(changePostAsync(editPost.id, newPost))
-        setEditing(false);
     };
 
     const handleSearchUsers = (e) => dispatch(e.target.value
@@ -40,11 +39,13 @@ export default function Home() {
             </div>
         </div> : null;
 
+    const showControls = user ? 0 : 1;
+
     return (
         <MainLayout>
             <UserProfile/>
             {profile}
-            <PostsList showControls={user ? 0 : 1} onChange={handleEditPost} onDelete={handlePostDelete}/>
+            <PostsList showControls={showControls} onChange={handleEditPost} onDelete={handlePostDelete}/>
         </MainLayout>
     )
 }
