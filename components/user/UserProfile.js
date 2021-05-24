@@ -14,13 +14,17 @@ export default function UserProfile() {
         </Link>
         : null;
 
+        const userAvatar = user ? user.avatar : profile.avatar;
+        const userName = user ? user.name : profile.name;
+        const userLogin = user ? user.username : profile.username;
+
     return (
         <div className="d-flex align-items-center justify-content-around w-100 mt-3 mb-3">
-            <Avatar avatar={user ? user.avatar : profile.avatar}
-                    name={user ? user.name : profile.name}
+            <Avatar avatar={userAvatar}
+                    name={userName}
                     size={80}/>
-            <div className='mx-3 h3'>{user ? user.name : profile.name}</div>
-            <div className='h3 mx-3'>Login: {user ? user.username : profile.username}</div>
+            <div className='mx-3 h3'>{userName}</div>
+            <div className='h3 mx-3'>Login: {userLogin}</div>
             {returnBackLink}
         </div>
     )
