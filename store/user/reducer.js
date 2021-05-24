@@ -1,4 +1,4 @@
-import {usersActionTypes} from "./actions";
+import { usersActionTypes } from "./actions";
 
 const initialState = {
     paginateUsers: {},
@@ -14,10 +14,10 @@ export const userReducer = (state = initialState, action) => {
         case usersActionTypes.SET_SEARCH_USERS_LIST:
             return {...state, searchUsers: [...action.payload]}
 
-        case usersActionTypes.SET_USER:
-            return {...state, user: action.payload}
+    case usersActionTypes.SET_USER:
+      return { ...state, user: action.payload };
 
-        default:
-            return state
-    }
-}
+    default:
+      return state;
+  }
+};

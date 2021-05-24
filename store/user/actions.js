@@ -25,7 +25,7 @@ export const setPaginateUsersListAsync = (page) => async dispatch => {
 };
 
 export const addUserAsync = username => async dispatch => {
-    const {data: response} = await apiServer.get(`users/${username}`);
+  const { data: response } = await apiServer.get(`users/${username}`);
 
-    dispatch(setUser(response));
+  dispatch(setUser(response));
 };

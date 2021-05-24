@@ -1,4 +1,4 @@
-import {Avatar} from "../image/Avatar";
+import { Avatar } from "../image/Avatar";
 
 import Link from "next/link";
 
