@@ -1,16 +1,16 @@
 import {useSelector} from "react-redux";
 import { Spin, Pagination } from 'antd';
 
-import PaginateUserInfo from "../user/PaginateUserInfo";
+import UserInfo from "../user/UserInfo";
 
-export default function PaginateUsersList({onChange}) {
+export default function UsersPaginateList({onChange}) {
     const {paginateUsers} = useSelector((state) => state.users)
     const users =  paginateUsers.data;
 
     const usersList = users ?
         <div className='d-flex flex-column w-100 flex-grow-1 align-items-center'>
             <ul className='list-group w-100 mt-3 border border-bottom-0 flex-grow-1 mb-3' style={{minHeight:'760px'}}>
-                {users.map(user => <PaginateUserInfo user={user} key={user.id}/>)}
+                {users.map(user => <UserInfo user={user} key={user.id}/>)}
             </ul>
             <Pagination defaultCurrent={1}
                         pageSize={paginateUsers.meta.per_page}

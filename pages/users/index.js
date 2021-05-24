@@ -4,10 +4,10 @@ import {withRedux} from "../../hof/withRedux";
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import FormSearch from "../../components/forms/FormSearch";
-import SearchUsersList from "../../components/list/SearchUsersList";
+import UsersSearchList from "../../components/list/UsersSearchList";
 import {setPaginateUsersListAsync, setSearchUsersList, setSearchUsersListAsync} from "../../store/user";
 import {useDispatch} from "react-redux";
-import PaginateUsersList from "../../components/list/PaginateUsersList";
+import UsersPaginateList from "../../components/list/UsersPaginateList";
 import {useEffect} from "react";
 
 
@@ -28,10 +28,10 @@ export default function Users({auth}) {
         <MainLayout>
             <UserProfile/>
             <div className='d-flex w-100'>
-                <PaginateUsersList onChange={handlePaginateUsers}/>
+                <UsersPaginateList onChange={handlePaginateUsers}/>
                 <div className='d-flex flex-column align-items-end w-50 position-relative h-75 mx-3'>
                     <FormSearch onChange={handleSearchUsers}/>
-                    <SearchUsersList />
+                    <UsersSearchList />
                 </div>
             </div>
         </MainLayout>

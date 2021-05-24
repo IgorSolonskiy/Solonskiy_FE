@@ -2,7 +2,7 @@ import {Avatar} from "../image/Avatar";
 
 import Link from "next/link";
 
-export default function PaginateUserInfo({user}) {
+export default function UserInfo({user}) {
     return (
         <Link href={`/users/${user.username}`}>
             <li className="btn text-primary border shadow-lg m-3">
