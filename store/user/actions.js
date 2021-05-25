@@ -12,9 +12,10 @@ export const setPaginateUsersData = (payload) => ({ type: usersActionTypes.SET_P
 export const setUser = (payload) => ({ type: usersActionTypes.SET_USER, payload });
 
 export const setSearchUsersListAsync = (username) => async dispatch => {
-  const { data: response } = await apiClient.get(`users?username=${username}`);
+  const { data: response } = await apiClient
+    .get(`users?username=${username}&limit=${process.env.NUMBER_TOTAL_SEARCH_USERS}`);
 
-  dispatch(setSearchUsersList(response));
+  dispatch(setSearchUsersList(response.data));
 };
 
 export const setPaginateUsersDataAsync = (page) => async dispatch => {
