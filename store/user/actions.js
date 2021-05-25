@@ -20,7 +20,7 @@ export const setSearchUsersListAsync = (username) => async dispatch => {
 
 export const setPaginateUsersDataAsync = (page) => async dispatch => {
   const { data: response } = await apiClient
-    .get(`users?limit=${process.env.PER_PAGE_USERS_PAGINATE}&page=${page}`);
+    .get(`users?limit=${process.env.NUMBER_TOTAL_PAGINATE_USERS}&page=${page}`);
 
   dispatch(setPaginateUsersData(response));
 };
