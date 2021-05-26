@@ -51,7 +51,7 @@ export default function Home ({ auth }) {
     <MainLayout>
       <UserProfile/>
       {profile}
-      <PostsList showControls={user ? false : true}
+      <PostsList showControls={!user}
                  onChange={handleEditPost}
                  onDelete={handlePostDelete}/>
     </MainLayout>
