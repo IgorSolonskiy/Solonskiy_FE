@@ -19,10 +19,8 @@ export default function Post ({ post, onDelete, onChange, showControls }) {
     <EditPostForm onSubmit={handleEditPost} post={post}/>
     :
     <div>
-      <p className="fw-bold mt-2 w-100" style={{whiteSpace:'pre'}}>{post.title.split(' ')
-        .map(item=>item[0] === '@' ? <Link href={`/users/${item.replace('@','')}`}>{item}</Link> : ' ' + item + ' ')}</p>
-      <p className="mt-3" style={{whiteSpace:'pre'}}>{post.content.split(' ')
-        .map(item=>item[0] === '@' ? <Link href={`/users/${item.replace('@','')}`}>{item}</Link> : ' ' + item + ' ')}</p>
+      <div className="fw-bold mt-2 w-100">{post.title}</div>
+      <p className="mt-3">{post.content}</p>
     </div>;
 
   const controls = showControls
