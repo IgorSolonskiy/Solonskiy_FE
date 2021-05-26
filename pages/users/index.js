@@ -1,12 +1,9 @@
 import { Spin } from "antd";
 import { withAuth } from "../../hof/withAuth";
 import { withRedux } from "../../hof/withRedux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setSearchUsersAsync,
-  setUsersAsync
-} from "../../store/user";
+import { setSearchUsersAsync, setUsersAsync } from "../../store/user";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
@@ -15,16 +12,22 @@ import UsersList from "../../components/list/UsersList";
 
 export default function Users ({ auth }) {
   const users = useSelector((state) => state.users.users);
+  const [searchName, setSearchName] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(setUsersAsync());
-  },[auth]);
+  }, [auth]);
 
-  const handleSearchUsers = (username) =>
-    dispatch(username ? setSearchUsersAsync(username) : setUsersAsync());
+  const handleSearchUsers = (username) => {
+    if (username) {
+      setSearchName(() => username);
+      return dispatch(setSearchUsersAsync(username));
+    }
+    return dispatch(setUsersAsync());
+  };
 
-  const handlePaginateUsers = e => dispatch(setUsersAsync(e));
+  const handlePaginateUsers = e => dispatch(searchName ? setSearchUsersAsync(searchName, e) : setUsersAsync(e));
 
   const usersLists = users ?
     <UsersList onChange={handlePaginateUsers}/>
