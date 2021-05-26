@@ -23,6 +23,7 @@ export default function Home ({ auth }) {
   const fetching = useSelector((state) => state.posts.fetching);
   const lastPagePaginate = useSelector((state) => state.posts.lastPagePaginate);
   const [currentPage, setCurrentPage] = useState(2);
+  const postAuthor = user ? user.username : auth.user.username;
 
   useEffect(() => {
     if (currentPage > lastPagePaginate) {
@@ -32,7 +33,7 @@ export default function Home ({ auth }) {
 
     if (fetching) {
       setCurrentPage(prevPage => prevPage + 1);
-      dispatch(setPostsListClientAsync(user ? user.username : auth.user.username, currentPage));
+      dispatch(setPostsListClientAsync(postAuthor, currentPage));
       dispatch(setFetching(false));
     }
   }, [fetching]);
