@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import Btn from "../btn/Btn";
 import EditPostForm from "../forms/EditPostForm";
-import Link from 'next/link'
 
 export default function Post ({ post, onDelete, onChange, showControls }) {
   const [editing, setEditing] = useState(false);
