@@ -31,7 +31,7 @@ export const setPostsListServerAsync = (username) => async dispatch => {
         .get(`users/${username}/posts?limit=${process.env.NUMBER_TOTAL_PAGINATE_POSTS}&page=${process.
             env.DEFAULT_PAGINATE_POSTS_PAGE}`)
 
-  dispatch(setPostsList(response));
+  dispatch(setPostsList(response.data));
 };
 
 export const addOnePostListAsync = (post) => async dispatch => {
