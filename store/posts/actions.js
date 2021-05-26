@@ -20,7 +20,7 @@ export const setPostId = (payload) => ({ type: postsActionTypes.SET_POST_ID, pay
 export const setPostsListAsync = (username) => async dispatch => {
   const { data: response } = await apiServer.get(`users/${username}/posts`);
 
-  dispatch(setPostsList(response));
+  dispatch(setPostsList(response.data));
 };
 
 export const addOnePostListAsync = (post) => async dispatch => {
