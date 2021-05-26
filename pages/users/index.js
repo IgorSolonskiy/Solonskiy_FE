@@ -24,6 +24,8 @@ export default function Users ({ auth }) {
       setSearchName(() => username);
       return dispatch(setSearchUsersAsync(username));
     }
+
+    setSearchName(() => false);
     return dispatch(setUsersAsync());
   };
 
