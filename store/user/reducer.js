@@ -1,14 +1,24 @@
 import { usersActionTypes } from "./actions";
 
 const initialState = {
-  paginateUsersData: {},
+  users: [],
+  pagination: {
+    total: null,
+    perPage: null,
+  },
   user: null,
 };
 
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case usersActionTypes.SET_PAGINATE_USERS_DATA:
-      return { ...state, paginateUsersData: action.payload };
+    case usersActionTypes.SET_USERS:
+      return {
+        ...state, users: action.payload.data,
+        pagination: {
+          total: action.payload.meta.total,
+          perPage: action.payload.meta.per_page
+        }
+      };
 
     case usersActionTypes.SET_USER:
       return { ...state, user: action.payload };

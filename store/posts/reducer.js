@@ -1,21 +1,38 @@
 import { postsActionTypes } from "./actions";
 
 const initialState = {
-    posts: [],
-    lastPagePaginate: null,
-    fetching: false,
-    post: null,
-    postId: null,
-}
+  posts: [],
+  pagination: {
+    currentPage: 1,
+    lastPage: 1
+  },
+  fetching: false,
+  post: null,
+  postId: null,
+};
 
 export const postsReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case postsActionTypes.SET_POSTS_LIST:
-            return {...state, posts: [...state.posts,...action.payload.data],
-                lastPagePaginate: action.payload.meta.last_page}
+  switch (action.type) {
+    case postsActionTypes.SET_POSTS_LIST:
+      return {
+        ...state, posts: [...state.posts, ...action.payload.data],
+        pagination: {
+          ...state.pagination,
+          lastPage: action.payload.meta.last_page
+        }
+      };
 
-        case postsActionTypes.SET_FETCHING:
-            return {...state, fetching: action.payload}
+    case postsActionTypes.SET_CURRENT_PAGE:
+      return {
+        ...state,
+        pagination: {
+          ...state.pagination,
+          currentPage: action.payload
+        }
+      };
+
+    case postsActionTypes.SET_FETCHING:
+      return { ...state, fetching: action.payload };
 
     case postsActionTypes.ADD_ONE_POST_LIST:
       return { ...state, posts: [...state.posts, action.payload] };

@@ -4,8 +4,9 @@ import { Pagination } from "antd";
 import UserInfo from "../user/UserInfo";
 
 export default function UsersList ({ onChange }) {
-  const users = useSelector((state) => state.users.paginateUsersData.data);
-  const paginateInfo = useSelector((state) => state.users.paginateUsersData.meta);
+  const users = useSelector((state) => state.users.users);
+  const total = useSelector((state) => state.users.pagination.total);
+  const perPage = useSelector((state) => state.users.pagination.perPage);
 
   return (
     <div className="d-flex flex-column w-100 flex-grow-1 align-items-center">
@@ -13,8 +14,8 @@ export default function UsersList ({ onChange }) {
         {users.map(user => <UserInfo user={user} key={user.id}/>)}
       </ul>
       <Pagination defaultCurrent={1}
-                  pageSize={paginateInfo.per_page}
-                  total={paginateInfo.total}
+                  pageSize={perPage}
+                  total={total}
                   onChange={onChange}
                   className=" mb-3"/>
     </div>
