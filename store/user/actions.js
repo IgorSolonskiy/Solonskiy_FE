@@ -2,25 +2,25 @@ import apiServer from "../../libs/apiServer";
 import apiClient from "../../libs/apiClient";
 
 export const usersActionTypes = {
-  SET_PAGINATE_USERS_DATA: "USERS.SET_PAGINATE_USERS_DATA",
+  SET_USERS: "USERS.SET_USERS",
   SET_USER: "USERS.SET_USER",
 };
 
-export const setPaginateUsersData = (payload) => ({ type: usersActionTypes.SET_PAGINATE_USERS_DATA, payload });
+export const setUsers = (payload) => ({ type: usersActionTypes.SET_USERS, payload });
 export const setUser = (payload) => ({ type: usersActionTypes.SET_USER, payload });
 
-export const setSearchUsersListAsync = (username, page = 1) => async dispatch => {
+export const setSearchUsersAsync = (username, page = 1, limit = 6) => async dispatch => {
   const { data: response } = await apiClient
-    .get(`users?username=${username}&limit=6&page=${page}`);
+    .get(`users?username=${username}&limit=${limit}&page=${page}`);
 
-  dispatch(setPaginateUsersData(response));
+  dispatch(setUsers(response));
 };
 
-export const setPaginateUsersDataAsync = (page = 1) => async dispatch => {
+export const setUsersAsync = (page = 1, limit = 6) => async dispatch => {
   const { data: response } = await apiClient
-    .get(`users?limit=6&page=${page}`);
+    .get(`users?page=${page}&limit=${limit}`);
 
-  dispatch(setPaginateUsersData(response));
+  dispatch(setUsers(response));
 };
 
 export const addUserAsync = username => async dispatch => {

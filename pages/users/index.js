@@ -3,7 +3,10 @@ import { withAuth } from "../../hof/withAuth";
 import { withRedux } from "../../hof/withRedux";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPaginateUsersDataAsync, setSearchUsersListAsync } from "../../store/user";
+import {
+  setSearchUsersAsync,
+  setUsersAsync
+} from "../../store/user";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
@@ -11,17 +14,17 @@ import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
 
 export default function Users ({ auth }) {
-  const users = useSelector((state) => state.users.paginateUsersData.data);
+  const users = useSelector((state) => state.users.users);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setPaginateUsersDataAsync(process.env.DEFAULT_PAGINATE_USERS_PAGE));
-  }, [auth]);
+    dispatch(setUsersAsync());
+  },[auth]);
 
   const handleSearchUsers = (username) =>
-    dispatch(username ? setSearchUsersListAsync(username) : setPaginateUsersDataAsync());
+    dispatch(username ? setSearchUsersAsync(username) : setUsersAsync());
 
-  const handlePaginateUsers = e => dispatch(setPaginateUsersDataAsync(e));
+  const handlePaginateUsers = e => dispatch(setUsersAsync(e));
 
   const usersLists = users ?
     <UsersList onChange={handlePaginateUsers}/>
