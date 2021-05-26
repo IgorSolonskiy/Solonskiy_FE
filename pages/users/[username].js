@@ -1,16 +1,9 @@
 import { withAuth } from "../../hof/withAuth";
 import { withRedux } from "../../hof/withRedux";
 import { addUserAsync } from "../../store/user";
-import {
-  addOnePostListAsync,
-  changePostAsync,
-  deletePostAsync,
-  setFetching,
-  setPostsListClientAsync,
-  setPostsListServerAsync
-} from "../../store/posts";
+import { addOnePostListAsync, changePostAsync, deletePostAsync, setPostsListAsync } from "../../store/posts";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
@@ -21,30 +14,16 @@ export default function Home ({ auth }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.user);
   const fetching = useSelector((state) => state.posts.fetching);
-  const lastPagePaginate = useSelector((state) => state.posts.lastPagePaginate);
-  const [currentPage, setCurrentPage] = useState(2);
+  const lastPage = useSelector((state) => state.posts.pagination.lastPage);
+  const currentPage = useSelector((state) => state.posts.pagination.currentPage);
   const postAuthor = user ? user.username : auth.user.username;
 
   useEffect(() => {
-    if (currentPage > lastPagePaginate) {
-      return null;
-    }
-    ;
-
-    if (fetching) {
-      setCurrentPage(prevPage => prevPage + 1);
-      dispatch(setPostsListClientAsync(postAuthor, currentPage));
-      dispatch(setFetching(false));
-    }
-  }, [fetching]);
-
-  useEffect(() => {
-    setCurrentPage(() => 2);
     document.addEventListener("scroll", handleInfiniteScroll);
 
     return () => document.removeEventListener("scroll", handleInfiniteScroll);
     ;
-  }, [auth]);
+  });
 
   const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
 
@@ -61,8 +40,8 @@ export default function Home ({ auth }) {
   const handleInfiniteScroll = (e) => {
     const { scrollHeight, scrollTop } = e.target.documentElement;
 
-    if (scrollHeight <= (scrollTop + window.innerHeight)) {
-      dispatch(setFetching(true));
+    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && currentPage < lastPage) {
+      dispatch(setPostsListAsync(postAuthor, currentPage + 1));
     }
   };
 
@@ -81,7 +60,7 @@ export default function Home ({ auth }) {
 
 export const getServerSideProps = withRedux(withAuth(async (ctx, auth, { dispatch }) => {
     try {
-      await dispatch(setPostsListServerAsync(ctx.query.username));
+      await dispatch(setPostsListAsync(ctx.query.username));
 
       if (ctx.query.username !== auth.user.username) {
         await dispatch(addUserAsync(ctx.query.username));
