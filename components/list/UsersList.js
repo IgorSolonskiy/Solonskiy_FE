@@ -3,7 +3,7 @@ import { Pagination } from "antd";
 
 import UserInfo from "../user/UserInfo";
 
-export default function UsersPaginateList ({ onChange }) {
+export default function UsersList ({ onChange }) {
   const users = useSelector((state) => state.users.paginateUsersData.data);
   const paginateInfo = useSelector((state) => state.users.paginateUsersData.meta);
 

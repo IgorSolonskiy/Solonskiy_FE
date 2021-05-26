@@ -35,7 +35,7 @@ export default function Post () {
 
   const handleCreateComment = (newComment, formikHelpers) => {
     dispatch(addCommentAsync(post.id, newComment));
-    formikHelpers.resetForm(true);
+    formikHelpers.resetForm();
   };
 
   const showControls = post.author.id === profile.id;
