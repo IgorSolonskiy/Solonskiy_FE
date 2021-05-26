@@ -11,14 +11,14 @@ export const setUser = (payload) => ({ type: usersActionTypes.SET_USER, payload 
 
 export const setSearchUsersListAsync = (username, page = 1) => async dispatch => {
   const { data: response } = await apiClient
-    .get(`users?username=${username}&limit=${process.env.NUMBER_TOTAL_PAGINATE_USERS}&page=${page}`);
+    .get(`users?username=${username}&limit=6&page=${page}`);
 
   dispatch(setPaginateUsersData(response));
 };
 
 export const setPaginateUsersDataAsync = (page = 1) => async dispatch => {
   const { data: response } = await apiClient
-    .get(`users?limit=${process.env.NUMBER_TOTAL_PAGINATE_USERS}&page=${page}`);
+    .get(`users?limit=6&page=${page}`);
 
   dispatch(setPaginateUsersData(response));
 };

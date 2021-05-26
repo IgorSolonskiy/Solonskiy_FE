@@ -21,15 +21,14 @@ export const setFetching = (payload) => ({type: postsActionTypes.SET_FETCHING, p
 
 export const setPostsListClientAsync = (username, page) => async dispatch => {
     const {data: response} = await apiClient
-        .get(`users/${username}/posts?limit=${process.env.NUMBER_TOTAL_PAGINATE_POSTS}&page=${page}`)
+        .get(`users/${username}/posts?limit=10&page=${page}`)
 
     dispatch(setPostsList(response));
 };
 
 export const setPostsListServerAsync = (username) => async dispatch => {
     const {data: response} = await apiServer
-        .get(`users/${username}/posts?limit=${process.env.NUMBER_TOTAL_PAGINATE_POSTS}&page=${process.
-            env.DEFAULT_PAGINATE_POSTS_PAGE}`)
+        .get(`users/${username}/posts?limit=10&page=1`)
 
   dispatch(setPostsList(response));
 };

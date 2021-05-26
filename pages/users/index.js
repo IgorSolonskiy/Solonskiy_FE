@@ -18,10 +18,8 @@ export default function Users ({ auth }) {
     dispatch(setPaginateUsersDataAsync(process.env.DEFAULT_PAGINATE_USERS_PAGE));
   }, [auth]);
 
-  const handleSearchUsers = (username, formikHelpers) => {
+  const handleSearchUsers = (username) =>
     dispatch(username ? setSearchUsersListAsync(username) : setPaginateUsersDataAsync());
-    formikHelpers.resetForm();
-  };
 
   const handlePaginateUsers = e => dispatch(setPaginateUsersDataAsync(e));
 

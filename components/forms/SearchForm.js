@@ -7,8 +7,8 @@ export default function SearchForm ({ onSubmit }) {
       name: "",
     },
     validateOnChange: false,
-    onSubmit: (values, formikHelpers) => {
-      onSubmit(values.name, formikHelpers);
+    onSubmit: (values) => {
+      onSubmit(values.name);
     },
   });
 
