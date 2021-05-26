@@ -50,7 +50,7 @@ export default function Home ({ auth }) {
 
   const handlePostCreate = (newPost, formikHelpers) => {
     dispatch(addOnePostListAsync(newPost));
-    formikHelpers.resetForm(true);
+    formikHelpers.resetForm();
   };
 
   const handleEditPost = async (editPost, newPost, setEditing) => {
