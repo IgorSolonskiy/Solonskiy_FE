@@ -3,7 +3,7 @@ import { withAuth } from "../../hof/withAuth";
 import { withRedux } from "../../hof/withRedux";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchUsersAsync, setUsersAsync } from "../../store/user";
+import { getUsersAsync, searchUsersAsync } from "../../store/user";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
@@ -18,14 +18,14 @@ export default function Users () {
   const handleSearchUsers = (username) => {
     if (username) {
       setSearchName(username);
-      return dispatch(setSearchUsersAsync(username));
+      return dispatch(searchUsersAsync(username));
     }
 
     setSearchName(false);
-    return dispatch(setUsersAsync(1));
+    return dispatch(getUsersAsync(1));
   };
 
-  const handlePaginateUsers = page => dispatch(searchName ? setSearchUsersAsync(searchName, page) : setUsersAsync(page));
+  const handlePaginateUsers = page => dispatch(searchName ? searchUsersAsync(searchName, page) : getUsersAsync(page));
 
   const usersLists = users ?
     <UsersList onPaginationChange={handlePaginateUsers}/>
@@ -48,7 +48,7 @@ export default function Users () {
 }
 
 export const getServerSideProps = withRedux(withAuth(async (ctx, auth, { dispatch }) => {
-  await dispatch(setUsersAsync());
+  await dispatch(getUsersAsync());
 
   return { props: {} };
 }));
