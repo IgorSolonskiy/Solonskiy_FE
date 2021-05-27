@@ -28,7 +28,7 @@ export const setPostsListAsync = (username, page) => async dispatch => {
       ? await apiClient.get(`users/${username}/posts?page=${page}`)
       : await apiServer.get(`users/${username}/posts?page=1`);
 
-    dispatch(setCurrentPage(page ? page : 1));
+    dispatch(setCurrentPage(page || 1));
     dispatch(setPostsList(response));
   } finally {
     dispatch(setFetching(false));

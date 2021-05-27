@@ -22,20 +22,11 @@ export default function Home ({ auth }) {
     document.addEventListener("scroll", handleInfiniteScroll);
 
     return () => document.removeEventListener("scroll", handleInfiniteScroll);
-    ;
   });
 
   const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
-
-  const handlePostCreate = (newPost, formikHelpers) => {
-    dispatch(addOnePostListAsync(newPost));
-    formikHelpers.resetForm();
-  };
-
-  const handleEditPost = async (editPost, newPost, setEditing) => {
-    await dispatch(changePostAsync(editPost.id, newPost));
-    setEditing(false);
-  };
+  const handlePostCreate = (newPost) => dispatch(addOnePostListAsync(newPost));
+  const handleEditPost = async (editPost, newPost) => await dispatch(changePostAsync(editPost.id, newPost));
 
   const handleInfiniteScroll = (e) => {
     const { scrollHeight, scrollTop } = e.target.documentElement;

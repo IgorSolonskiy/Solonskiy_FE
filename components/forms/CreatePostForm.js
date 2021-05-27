@@ -18,8 +18,9 @@ export default function CreatePostForm ({ onSubmit }) {
         .required("Required"),
     }),
     validateOnChange: false,
-    onSubmit: (values, formikHelpers) => {
-      onSubmit(values, formikHelpers);
+    onSubmit: (values,formikHelpers) => {
+      onSubmit(values);
+      formikHelpers.resetForm();
     },
   });
 

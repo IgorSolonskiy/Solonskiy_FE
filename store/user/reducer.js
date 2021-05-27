@@ -5,6 +5,7 @@ const initialState = {
   pagination: {
     total: null,
     perPage: null,
+    currentPage: 1
   },
   user: null,
 };
@@ -16,7 +17,8 @@ export const userReducer = (state = initialState, action) => {
         ...state, users: action.payload.data,
         pagination: {
           total: action.payload.meta.total,
-          perPage: action.payload.meta.per_page
+          perPage: action.payload.meta.per_page,
+          currentPage: action.payload.meta.current_page
         }
       };
 

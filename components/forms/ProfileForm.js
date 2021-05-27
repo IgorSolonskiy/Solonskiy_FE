@@ -17,7 +17,7 @@ export default function ProfileForm ({ onSubmit }) {
         .max(30, "Must be 30 characters or less")
         .required("Required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       let formData = new FormData();
 
       if (values.avatar) {
@@ -26,7 +26,8 @@ export default function ProfileForm ({ onSubmit }) {
 
       formData.append("name", values.name);
       formData.append("_method", "PUT");
-      onSubmit(formData, formik);
+      await onSubmit(formData);
+      formik.setFieldValue("avatar", "");
     },
   });
 

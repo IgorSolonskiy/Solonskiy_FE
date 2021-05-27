@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import { withAuth } from "../../hof/withAuth";
 import { withRedux } from "../../hof/withRedux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchUsersAsync, setUsersAsync } from "../../store/user";
 
@@ -10,29 +10,25 @@ import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
 
-export default function Users ({ auth }) {
+export default function Users () {
   const users = useSelector((state) => state.users.users);
   const [searchName, setSearchName] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setUsersAsync());
-  }, [auth]);
-
   const handleSearchUsers = (username) => {
     if (username) {
-      setSearchName(() => username);
+      setSearchName(username);
       return dispatch(setSearchUsersAsync(username));
     }
 
-    setSearchName(() => false);
-    return dispatch(setUsersAsync());
+    setSearchName(false);
+    return dispatch(setUsersAsync(1));
   };
 
-  const handlePaginateUsers = e => dispatch(searchName ? setSearchUsersAsync(searchName, e) : setUsersAsync(e));
+  const handlePaginateUsers = page => dispatch(searchName ? setSearchUsersAsync(searchName, page) : setUsersAsync(page));
 
   const usersLists = users ?
-    <UsersList onChange={handlePaginateUsers}/>
+    <UsersList onPaginationChange={handlePaginateUsers}/>
     :
     <div className="w-100 h-100 d-flex align-items-center justify-content-center">
       <Spin size="large"/>
@@ -51,4 +47,8 @@ export default function Users ({ auth }) {
   );
 }
 
-export const getServerSideProps = withRedux(withAuth());
+export const getServerSideProps = withRedux(withAuth(async (ctx, auth, { dispatch }) => {
+  await dispatch(setUsersAsync());
+
+  return { props: {} };
+}));

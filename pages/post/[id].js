@@ -24,19 +24,9 @@ export default function Post () {
   };
 
   const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment.id));
-
-  const handleEditComment = async (comment, changeComment) => {
-    await dispatch(changeCommentAsync(comment.id, changeComment));
-  };
-
-  const handleEditPost = async (editPost, newPost) => {
-    await dispatch(changePostAsync(editPost.id, newPost));
-  };
-
-  const handleCreateComment = (newComment, formikHelpers) => {
-    dispatch(addCommentAsync(post.id, newComment));
-    formikHelpers.resetForm();
-  };
+  const handleEditComment = async (comment, changeComment) => await dispatch(changeCommentAsync(comment.id, changeComment));
+  const handleEditPost = async (editPost, newPost) => await dispatch(changePostAsync(editPost.id, newPost));
+  const handleCreateComment = (newComment) => dispatch(addCommentAsync(post.id, newComment));
 
   const showControls = post.author.id === profile.id;
 

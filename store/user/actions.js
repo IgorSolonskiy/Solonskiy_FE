@@ -16,9 +16,10 @@ export const setSearchUsersAsync = (username, page = 1, limit = 6) => async disp
   dispatch(setUsers(response));
 };
 
-export const setUsersAsync = (page = 1, limit = 6) => async dispatch => {
-  const { data: response } = await apiClient
-    .get(`users?page=${page}&limit=${limit}`);
+export const setUsersAsync = (page, limit = 6) => async dispatch => {
+  const { data: response } = page
+    ? await apiClient.get(`users?page=${page}&limit=${limit}`)
+    : await apiServer.get(`users?page=1&limit=${limit}`);
 
   dispatch(setUsers(response));
 };
