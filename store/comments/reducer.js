@@ -17,7 +17,7 @@ export const commentsReducer = (state = initialState, action) => {
         ...state, comments: [...state.comments, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          cursor: action.payload.links.next && action.payload.links.next.match(/cursor=(.[a-zA-Z0-9_]+)/)[1]
+          cursor: action.payload.links.next && action.payload.links.next.match(/cursor=(\w+)/)[1]
         }
       };
 
