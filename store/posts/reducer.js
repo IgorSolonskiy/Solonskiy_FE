@@ -3,8 +3,7 @@ import { postsActionTypes } from "./actions";
 const initialState = {
   posts: [],
   pagination: {
-    currentPage: 1,
-    lastPage: 1
+    nextCursor: null
   },
   fetching: false,
   post: null,
@@ -18,16 +17,7 @@ export const postsReducer = (state = initialState, action) => {
         ...state, posts: [...state.posts, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          lastPage: action.payload.meta.last_page
-        }
-      };
-
-    case postsActionTypes.SET_CURRENT_PAGE:
-      return {
-        ...state,
-        pagination: {
-          ...state.pagination,
-          currentPage: action.payload
+          lastPage: action.payload.meta.next_cursor
         }
       };
 

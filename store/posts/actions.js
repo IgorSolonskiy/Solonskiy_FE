@@ -9,7 +9,6 @@ export const postsActionTypes = {
   CHANGE_POST: "POSTS.CHANGE_POST",
   SET_POST_ID: "POSTS.SET_POST_ID",
   SET_FETCHING: "POSTS.SET_FETCHING",
-  SET_CURRENT_PAGE: "POSTS.SET_CURRENT_PAGE"
 };
 
 export const setPostsList = (payload) => ({ type: postsActionTypes.SET_POSTS_LIST, payload });
@@ -19,16 +18,14 @@ export const removePost = (payload) => ({ type: postsActionTypes.REMOVE_POST, pa
 export const changePost = (payload) => ({ type: postsActionTypes.CHANGE_POST, payload });
 export const setPostId = (payload) => ({ type: postsActionTypes.SET_POST_ID, payload });
 export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, payload });
-export const setCurrentPage = (payload) => ({ type: postsActionTypes.SET_CURRENT_PAGE, payload });
 
-export const setPostsListAsync = (username, page) => async dispatch => {
+export const setPostsListAsync = (username, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = page
-      ? await apiClient.get(`users/${username}/posts?page=${page}`)
-      : await apiServer.get(`users/${username}/posts?page=1`);
+    const { data: response } = cursor
+      ? await apiClient.get(`users/${username}/posts?limit=10&next_cursor=${cursor || ''}`)
+      : await apiServer.get(`users/${username}/posts?limit=10`);
 
-    dispatch(setCurrentPage(page || 1));
     dispatch(setPostsList(response));
   } finally {
     dispatch(setFetching(false));
