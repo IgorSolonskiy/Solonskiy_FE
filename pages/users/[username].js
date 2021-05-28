@@ -14,8 +14,7 @@ export default function Home ({ auth }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.user);
   const fetching = useSelector((state) => state.posts.fetching);
-  const nextLink = useSelector((state) => state.posts.pagination.nextLink);
-  const postAuthor = user ? user.username : auth.user.username;
+  const cursor = useSelector((state) => state.posts.pagination.cursor);
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -30,8 +29,8 @@ export default function Home ({ auth }) {
   const handleInfiniteScroll = (e) => {
     const { scrollHeight, scrollTop } = e.target.documentElement;
 
-    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && nextLink) {
-      dispatch(setPostsListAsync(postAuthor, nextLink));
+    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && cursor) {
+      dispatch(setPostsListAsync(user.username, cursor));
     }
   };
 
@@ -48,11 +47,10 @@ export default function Home ({ auth }) {
 
 export const getServerSideProps = withRedux(withAuth(async (ctx, auth, { dispatch }) => {
     try {
-      await dispatch(setPostsListAsync(ctx.query.username));
-
-      if (ctx.query.username !== auth.user.username) {
-        await dispatch(addUserAsync(ctx.query.username));
-      }
+      await Promise.all([
+        dispatch(setPostsListAsync(ctx.query.username)),
+        dispatch(addUserAsync(ctx.query.username))
+      ]);
 
       return { props: {} };
     } catch (e) {

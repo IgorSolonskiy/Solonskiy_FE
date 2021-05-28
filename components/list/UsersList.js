@@ -18,6 +18,7 @@ export default function UsersList ({ onPaginationChange }) {
                   pageSize={perPage}
                   total={total}
                   onChange={onPaginationChange}
+                  style={{zIndex:1}}
                   className=" mb-3"/>
     </div>
   );

@@ -31,7 +31,9 @@ export default function Post () {
   return (
     <MainLayout>
       <UserProfile/>
-      <Posts onChange={handleEditPost} post={post} onDelete={handleDeletePost}/>
+      <Posts onChange={handleEditPost}
+             post={post}
+             onDelete={handleDeletePost}/>
       <div className="w-100 d-flex mt-3 justify-content-center">
         <CreateCommentForm onSubmit={handleCreateComment}/>
       </div>
