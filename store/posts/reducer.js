@@ -3,7 +3,7 @@ import { postsActionTypes } from "./actions";
 const initialState = {
   posts: [],
   pagination: {
-    nextCursor: null
+    link: null
   },
   fetching: false,
   post: null,
@@ -17,7 +17,7 @@ export const postsReducer = (state = initialState, action) => {
         ...state, posts: [...state.posts, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          lastPage: action.payload.meta.next_cursor
+          link: action.payload.links.next
         }
       };
 

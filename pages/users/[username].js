@@ -14,7 +14,7 @@ export default function Home ({ auth }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.user);
   const fetching = useSelector((state) => state.posts.fetching);
-  const nextCursor = useSelector((state) => state.posts.pagination.lastPage);
+  const link = useSelector((state) => state.posts.pagination.link);
   const postAuthor = user ? user.username : auth.user.username;
 
   useEffect(() => {
@@ -30,8 +30,8 @@ export default function Home ({ auth }) {
   const handleInfiniteScroll = (e) => {
     const { scrollHeight, scrollTop } = e.target.documentElement;
 
-    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && nextCursor) {
-      dispatch(setPostsListAsync(postAuthor, nextCursor));
+    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && link) {
+      dispatch(setPostsListAsync(postAuthor, link));
     }
   };
 
@@ -56,6 +56,7 @@ export const getServerSideProps = withRedux(withAuth(async (ctx, auth, { dispatc
 
       return { props: {} };
     } catch (e) {
+      console.log(e);
       return {
         notFound: true,
       };

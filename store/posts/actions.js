@@ -19,11 +19,11 @@ export const changePost = (payload) => ({ type: postsActionTypes.CHANGE_POST, pa
 export const setPostId = (payload) => ({ type: postsActionTypes.SET_POST_ID, payload });
 export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, payload });
 
-export const setPostsListAsync = (username, cursor) => async dispatch => {
+export const setPostsListAsync = (username, link) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = cursor
-      ? await apiClient.get(`users/${username}/posts?limit=10&next_cursor=${cursor || ''}`)
+    const { data: response } = link
+      ? await apiClient.get(link)
       : await apiServer.get(`users/${username}/posts?limit=10`);
 
     dispatch(setPostsList(response));
