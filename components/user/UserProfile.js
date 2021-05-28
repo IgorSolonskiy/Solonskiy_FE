@@ -4,12 +4,8 @@ import { Avatar } from "../image/Avatar";
 import Link from "next/link";
 
 export default function UserProfile () {
-  const profile = useSelector(state => state.profile.profile);
   const user = useSelector(state => state.users.user);
   const post = useSelector(state => state.posts.post);
-  const userName = user ? user.name : profile.name;
-  const userAvatar = user ? user.avatar : profile.avatar;
-  const userLogin = user ? user.username : profile.username;
 
   const returnBackLink = user && post ?
     <Link href={`/users/${user.username}`}>
@@ -19,11 +15,11 @@ export default function UserProfile () {
 
   return (
     <div className="d-flex align-items-center justify-content-around w-100 mt-3 mb-3">
-      <Avatar avatar={userAvatar}
-              name={userName}
+      <Avatar avatar={user.avatar}
+              name={user.name}
               size={80}/>
-      <div className="mx-3 h3">{userName}</div>
-      <div className="h3 mx-3">Login: {userLogin}</div>
+      <div className="mx-3 h3">{user.name}</div>
+      <div className="h3 mx-3">Login: {user.username}</div>
       {returnBackLink}
     </div>
   );

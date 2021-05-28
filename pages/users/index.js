@@ -3,7 +3,7 @@ import { withAuth } from "../../hof/withAuth";
 import { withRedux } from "../../hof/withRedux";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsersAsync, searchUsersAsync } from "../../store/user";
+import { getUsersAsync, searchUsersAsync, setUser } from "../../store/user";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
@@ -48,7 +48,10 @@ export default function Users () {
 }
 
 export const getServerSideProps = withRedux(withAuth(async (ctx, auth, { dispatch }) => {
-  await dispatch(getUsersAsync());
+  await Promise.all([
+    dispatch(getUsersAsync()),
+    dispatch(setUser(auth.user))
+  ]);
 
   return { props: {} };
 }));
