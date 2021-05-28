@@ -28,15 +28,10 @@ export default function Post () {
   const handleEditPost = async (editPost, newPost) => await dispatch(changePostAsync(editPost.id, newPost));
   const handleCreateComment = (newComment) => dispatch(addCommentAsync(post.id, newComment));
 
-  const showControls = post.author.id === profile.id;
-
   return (
     <MainLayout>
       <UserProfile/>
-      <Posts onChange={handleEditPost}
-             showControls={showControls}
-             post={post}
-             onDelete={handleDeletePost}/>
+      <Posts onChange={handleEditPost} post={post} onDelete={handleDeletePost}/>
       <div className="w-100 d-flex mt-3 justify-content-center">
         <CreateCommentForm onSubmit={handleCreateComment}/>
       </div>

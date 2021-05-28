@@ -37,15 +37,12 @@ export default function Home ({ auth }) {
   };
 
   const profile = !user ? <CreatePostForm onSubmit={handlePostCreate}/> : null;
-  const showControls = user ? user.id === auth.user.id : true;
 
   return (
     <MainLayout>
       <UserProfile/>
       {profile}
-      <PostsList showControls={showControls}
-                 onChange={handleEditPost}
-                 onDelete={handlePostDelete}/>
+      <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>
     </MainLayout>
   );
 }

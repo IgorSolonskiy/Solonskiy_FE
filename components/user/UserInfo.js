@@ -12,7 +12,7 @@ export default function UserInfo ({ user }) {
           <div className="card-body w-100 p-0 pt-2">
             <h5 className="card-title">Name: {user.name}</h5>
             <h5 className="card-title">Login: {user.username}</h5>
-            <Link href={`/users/${user.username}`}><span className="btn btn-primary">Follow</span></Link>
+            <Link href={`/users/${user.username}`}><span className="btn btn-primary">Page</span></Link>
           </div>
         </div>
     </li>

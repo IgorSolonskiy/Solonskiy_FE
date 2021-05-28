@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import Post from "../post/Post";
 
-export default function PostsList ({ onDelete, onChange, showControls = false }) {
+export default function PostsList ({ onDelete, onChange }) {
   const posts = useSelector((state) => state.posts.posts);
 
   return (
@@ -9,7 +9,6 @@ export default function PostsList ({ onDelete, onChange, showControls = false })
       {posts.map(post => <Post key={post.id}
                                post={post}
                                onChange={onChange}
-                               showControls={showControls}
                                onDelete={onDelete}
       />)}
     </ul>
