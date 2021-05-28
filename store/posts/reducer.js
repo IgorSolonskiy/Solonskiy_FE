@@ -17,7 +17,7 @@ export const postsReducer = (state = initialState, action) => {
         ...state, posts: [...state.posts, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          cursor: action.payload.links.next && action.payload.links.next.match(/cursor=(.[a-zA-Z0-9_]+)/)[1]
+          cursor: action.payload.links.next && action.payload.links.next.match(/cursor=(\w+)/)[1]
         }
       };
 
