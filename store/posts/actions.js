@@ -7,7 +7,8 @@ export const postsActionTypes = {
   REMOVE_POST: "POSTS.REMOVE_POST",
   SET_POST: "POSTS.SET_POST",
   CHANGE_POST: "POSTS.CHANGE_POST",
-  SET_POST_ID: "POSTS.SET_POST_ID"
+  SET_POST_ID: "POSTS.SET_POST_ID",
+  SET_FETCHING: "POSTS.SET_FETCHING",
 };
 
 export const setPostsList = (payload) => ({ type: postsActionTypes.SET_POSTS_LIST, payload });
@@ -16,11 +17,19 @@ export const setPost = (payload) => ({ type: postsActionTypes.SET_POST, payload 
 export const removePost = (payload) => ({ type: postsActionTypes.REMOVE_POST, payload });
 export const changePost = (payload) => ({ type: postsActionTypes.CHANGE_POST, payload });
 export const setPostId = (payload) => ({ type: postsActionTypes.SET_POST_ID, payload });
+export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, payload });
 
-export const setPostsListAsync = (username) => async dispatch => {
-  const { data: response } = await apiServer.get(`users/${username}/posts`);
+export const setPostsListAsync = (username, cursor) => async dispatch => {
+  try {
+    dispatch(setFetching(true));
+    const { data: response } = cursor
+      ? await apiClient.get(`users/${username}/posts?cursor=${cursor}`)
+      : await apiServer.get(`users/${username}/posts`);
 
-  dispatch(setPostsList(response));
+    dispatch(setPostsList(response));
+  } finally {
+    dispatch(setFetching(false));
+  }
 };
 
 export const addOnePostListAsync = (post) => async dispatch => {

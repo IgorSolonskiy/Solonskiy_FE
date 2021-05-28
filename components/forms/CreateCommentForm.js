@@ -15,7 +15,8 @@ export default function CreateCommentForm ({ onSubmit }) {
     }),
     validateOnChange: false,
     onSubmit: (values, formikHelpers) => {
-      onSubmit(values, formikHelpers);
+      onSubmit(values);
+      formikHelpers.resetForm();
     },
   });
 

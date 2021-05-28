@@ -36,8 +36,7 @@ export default function Comment ({ comment, onDelete, onSubmit }) {
     : null;
 
   return (
-    <li className="d-flex align-items-center position-relative border
-        card border-secondary list-group-item list-group-item-action ">
+    <li className="border card border-secondary list-group-item  mt-3">
       <div className="w-100">
         <div className=" ms-2 me-auto">
           <div className="d-flex justify-content-center">

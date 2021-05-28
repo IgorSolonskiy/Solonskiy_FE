@@ -4,47 +4,51 @@ import { withRedux } from "../../hof/withRedux";
 import { addUserAsync } from "../../store/user";
 import { useDispatch, useSelector } from "react-redux";
 import { addCommentAsync, changeCommentAsync, deleteCommentAsync, setCommentsListAsync, } from "../../store/comments";
-import { changePostAsync, deletePostAsync, setPostAsync, setPostId, } from "../../store/posts";
+import { changePostAsync, deletePostAsync, setPostAsync, setPostId, setPostsListAsync, } from "../../store/posts";
 
 import MainLayout from "../../components/layout/MainLayout";
 import Posts from "../../components/post/Post";
 import UserProfile from "../../components/user/UserProfile";
 import CommentsList from "../../components/list/CommentsList";
 import CreateCommentForm from "../../components/forms/CreateCommentForm";
+import { useEffect } from "react";
 
 export default function Post () {
-  const profile = useSelector(state => state.profile.profile);
-  const post = useSelector(state => state.posts.post);
   const dispatch = useDispatch();
   const router = useRouter();
+  const user = useSelector(state => state.users.user);
+  const post = useSelector(state => state.posts.post);
+  const fetching = useSelector((state) => state.comments.fetching);
+  const cursor = useSelector((state) => state.comments.pagination.cursor);
+
+  useEffect(() => {
+    document.addEventListener("scroll", handleInfiniteScroll);
+
+    return () => document.removeEventListener("scroll", handleInfiniteScroll);
+  });
+
+  const handleInfiniteScroll = (e) => {
+    const { scrollHeight, scrollTop } = e.target.documentElement;
+
+    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && cursor) {
+      dispatch(setCommentsListAsync(post.id, cursor));
+    }
+  };
 
   const handleDeletePost = (deletedPost) => {
     dispatch(deletePostAsync(deletedPost.id));
-    router.push(`/users/${profile.username}`);
+    router.push(`/users/${user.username}`);
   };
 
   const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment.id));
-
-  const handleEditComment = async (comment, changeComment) => {
-    await dispatch(changeCommentAsync(comment.id, changeComment));
-  };
-
-  const handleEditPost = async (editPost, newPost) => {
-    await dispatch(changePostAsync(editPost.id, newPost));
-  };
-
-  const handleCreateComment = (newComment, formikHelpers) => {
-    dispatch(addCommentAsync(post.id, newComment));
-    formikHelpers.resetForm(true);
-  };
-
-  const showControls = post.author.id === profile.id;
+  const handleEditComment = async (comment, changeComment) => await dispatch(changeCommentAsync(comment.id, changeComment));
+  const handleEditPost = async (editPost, newPost) => await dispatch(changePostAsync(editPost.id, newPost));
+  const handleCreateComment = (newComment) => dispatch(addCommentAsync(post.id, newComment));
 
   return (
     <MainLayout>
       <UserProfile/>
       <Posts onChange={handleEditPost}
-             showControls={showControls}
              post={post}
              onDelete={handleDeletePost}/>
       <div className="w-100 d-flex mt-3 justify-content-center">
@@ -65,9 +69,7 @@ export const getServerSideProps = withRedux(withAuth(async (ctx, { user }, { dis
 
       const { posts: { post: { author } } } = getState();
 
-      if (author.id !== user.id) {
-        await dispatch(addUserAsync(author.username));
-      }
+      await dispatch(addUserAsync(author.username));
 
       return { props: {} };
     } catch (e) {

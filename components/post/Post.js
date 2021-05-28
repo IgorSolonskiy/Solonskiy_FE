@@ -4,10 +4,13 @@ import { useState } from "react";
 
 import Btn from "../btn/Btn";
 import EditPostForm from "../forms/EditPostForm";
+import { useSelector } from "react-redux";
 
-export default function Post ({ post, onDelete, onChange, showControls }) {
+export default function Post ({ post, onDelete, onChange }) {
+  const profile = useSelector((state) => state.profile.profile);
   const [editing, setEditing] = useState(false);
   const router = useRouter();
+  const showControls = profile.id === post.author.id;
 
   const handleEditPost = async (editPost, newPost) => {
     await onChange(editPost, newPost);

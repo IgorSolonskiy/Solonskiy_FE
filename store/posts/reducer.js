@@ -2,6 +2,10 @@ import { postsActionTypes } from "./actions";
 
 const initialState = {
   posts: [],
+  pagination: {
+    cursor: null
+  },
+  fetching: false,
   post: null,
   postId: null,
 };
@@ -9,7 +13,16 @@ const initialState = {
 export const postsReducer = (state = initialState, action) => {
   switch (action.type) {
     case postsActionTypes.SET_POSTS_LIST:
-      return { ...state, posts: [...action.payload] };
+      return {
+        ...state, posts: [...state.posts, ...action.payload.data],
+        pagination: {
+          ...state.pagination,
+          cursor: action.payload.links.next && action.payload.links.next.match(/cursor=(\w+)/)[1]
+        }
+      };
+
+    case postsActionTypes.SET_FETCHING:
+      return { ...state, fetching: action.payload };
 
     case postsActionTypes.ADD_ONE_POST_LIST:
       return { ...state, posts: [...state.posts, action.payload] };
