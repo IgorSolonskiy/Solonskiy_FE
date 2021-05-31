@@ -34,7 +34,7 @@ export default function Home ({ auth }) {
     }
   };
 
-  const profile = !user ? <CreatePostForm onSubmit={handlePostCreate}/> : null;
+  const profile = auth.user.id === user.id ? <CreatePostForm onSubmit={handlePostCreate}/> : null;
 
   return (
     <MainLayout>
