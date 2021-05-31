@@ -5,6 +5,7 @@ import { useState } from "react";
 import Btn from "../btn/Btn";
 import EditPostForm from "../forms/EditPostForm";
 import { useSelector } from "react-redux";
+import MentionsParser from "../parser/MentionsParser";
 
 export default function Post ({ post, onDelete, onChange }) {
   const profile = useSelector((state) => state.profile.profile);
@@ -21,8 +22,8 @@ export default function Post ({ post, onDelete, onChange }) {
     <EditPostForm onSubmit={handleEditPost} post={post}/>
     :
     <div>
-      <div className="fw-bold mt-2 w-100">{post.title}</div>
-      <p className="mt-3">{post.content}</p>
+      <p className="fw-bold mt-2 w-100" style={{whiteSpace: "pre"}}><MentionsParser post={post.title} /></p>
+      <p className="mt-3" style={{whiteSpace: "pre"}}><MentionsParser post={post.content} /></p>
     </div>;
 
   const controls = showControls
