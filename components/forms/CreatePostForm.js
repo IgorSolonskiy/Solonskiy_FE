@@ -41,11 +41,7 @@ export default function CreatePostForm({onSubmit}) {
         ? await getSearchUsers(search)
         : await getSearchHashtags(search);
 
-    searchData.length
-        ? await formik.setFieldValue('searchData', searchData)
-        : await formik.setFieldValue('searchData',
-        [{name: 'Type your hashtags'}]);
-
+    await formik.setFieldValue('searchData', searchData);
     await formik.setFieldValue('loading', false);
   };
 
