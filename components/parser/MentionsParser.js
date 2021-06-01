@@ -1,39 +1,35 @@
 import {useEffect, useState} from "react";
-import apiClient from "../../libs/apiClient";
-import Link from "next/link";
-import {useRouter} from "next/router";
+import {getUsers} from "../../api/users";
+
+import Tags from "../tags/Tags";
 
 export default function MentionsParser({post}) {
-    const [tagList, setTagList] = useState([]);
-    const router = useRouter()
+  const [parseText, setParseText] = useState([]);
 
-    useEffect(async () => {
-        const textList = await Promise.all(post.split(' ')
-            .map(async item => {
-                if (item[0] === '#') {
-                    return <span key={item} className='text-info'>{item}</span>
-                }
-                if (item[0] === '@') {
-                    try {
-                        const {data: user} = await apiClient(`users/${item.replace('@', '')}`)
-                        if (user) {
-                            return <span key={item}
-                                         onClick={e => {
-                                             e.stopPropagation()
-                                             router.push(`/users/${user.username}`)
-                                         }
-                                         }
-                                         className='btn text-info'>{item}</span>
-                        }
-                    } catch (e) {
-                        return ' ' + item + ' ';
-                    }
-                }
-                return ' ' + item + ' ';
-            }))
+  const handleParseText = async text => await Promise.all(
+      text.split(" ").map(async item => {
+        const textItem = " " + item + " ";
 
-        await setTagList(textList)
-    }, [])
+        if (item[0] === "@" || item[0] === "#") {
 
-    return tagList
+          if (item[0] === "@") {
+            try {
+              await getUsers(item.replace("@", ""));
+            } catch (e) {
+              return textItem;
+            }
+          }
+
+          return <Tags item={item} key={item}/>;
+        }
+
+        return textItem;
+      }));
+
+  useEffect(async () => {
+    const parsePost = await handleParseText(post);
+    await setParseText(parsePost);
+  }, []);
+
+  return parseText;
 }

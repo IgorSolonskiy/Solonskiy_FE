@@ -37,7 +37,6 @@ export default function CreatePostForm({onSubmit}) {
         await formik.setFieldValue('loading', !!formik.values.search)
 
         if (prefix === '@') {
-            console.log(search)
             const searchData = await getSearchUsers(search);
 
             await formik.setFieldValue('searchData', searchData)
