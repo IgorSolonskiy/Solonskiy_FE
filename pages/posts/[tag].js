@@ -1,27 +1,27 @@
-import {withAuth} from "../../hof/withAuth";
-import {withRedux} from "../../hof/withRedux";
-import {useDispatch, useSelector} from "react-redux";
-import {setPostsTagAsync} from "../../store/posts";
+import {withAuth} from '../../hof/withAuth';
+import {withRedux} from '../../hof/withRedux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setPostsTagAsync} from '../../store/posts';
 import {
   changePostAsync,
   deletePostAsync,
-} from "../../store/posts";
+} from '../../store/posts';
 
-import MainLayout from "../../components/layout/MainLayout";
-import UserProfile from "../../components/user/UserProfile";
-import {useEffect} from "react";
-import PostsList from "../../components/list/PostsList";
-import {addUserAsync} from "../../store/user";
+import MainLayout from '../../components/layout/MainLayout';
+import UserProfile from '../../components/user/UserProfile';
+import {useEffect} from 'react';
+import PostsList from '../../components/list/PostsList';
+import {addUserAsync} from '../../store/user';
 
 export default function PostsTag({tag}) {
   const dispatch = useDispatch();
   const fetching = useSelector((state) => state.posts.fetching);
-  const cursor = useSelector((state) => state.posts.pagination.cursor);
+  const nextPage = useSelector((state) => state.posts.pagination.nextPage);
 
   useEffect(() => {
-    document.addEventListener("scroll", handleInfiniteScroll);
+    document.addEventListener('scroll', handleInfiniteScroll);
 
-    return () => document.removeEventListener("scroll", handleInfiniteScroll);
+    return () => document.removeEventListener('scroll', handleInfiniteScroll);
   });
 
   const handlePostDelete = (deletedPost) => dispatch(
@@ -33,9 +33,9 @@ export default function PostsTag({tag}) {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching &&
-        cursor) {
+        nextPage) {
 
-      dispatch(setPostsTagAsync(tag, cursor));
+      dispatch(setPostsTagAsync(tag, nextPage));
     }
   };
 

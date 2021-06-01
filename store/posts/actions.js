@@ -21,12 +21,12 @@ export const setPostId = (payload) => ({ type: postsActionTypes.SET_POST_ID, pay
 export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, payload });
 export const setPostsTag = (payload) => ({ type: postsActionTypes.SET_POSTS_TAG, payload });
 
-export const setPostsTagAsync = (tag, cursor) => async dispatch => {
+export const setPostsTagAsync = (tag, page) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = cursor
-        ? await apiClient.get(`tags/${tag}?cursor=${cursor}`)
-        : await apiServer.get(`tags/${tag}`);
+    const { data: response } = page
+        ? await apiClient.get(`tags/${tag}/posts?page=${page}`)
+        : await apiServer.get(`tags/${tag}/posts`);
 
     dispatch(setPostsTag(response));
   } finally {

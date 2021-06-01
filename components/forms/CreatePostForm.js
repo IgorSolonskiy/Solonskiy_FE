@@ -1,23 +1,23 @@
-import {useFormik} from "formik";
-import {getSearchUsers} from "../../api/users";
-import {getSearchHashtags} from "../../api/tags";
+import {useFormik} from 'formik';
+import {getSearchUsers} from '../../api/users';
+import {getSearchHashtags} from '../../api/tags';
 
-import * as Yup from "yup";
-import Btn from "../btn/Btn";
-import MentionInput from "../inputs/MentionInput";
+import * as Yup from 'yup';
+import Btn from '../btn/Btn';
+import MentionInput from '../inputs/MentionInput';
 
 export default function CreatePostForm({onSubmit}) {
   const formik = useFormik({
     initialValues: {
-      search: "",
+      search: '',
       loading: false,
       searchData: [],
-      content: "",
+      content: '',
     },
     validationSchema: Yup.object({
       content: Yup.string().
-          max(150, "Must be 150 characters or less").
-          required("Required"),
+          max(150, 'Must be 150 characters or less').
+          required('Required'),
     }),
     enableReinitialize: true,
     validateOnChange: false,
@@ -28,28 +28,24 @@ export default function CreatePostForm({onSubmit}) {
   });
 
   const handleSearchMentions = async (search, prefix) => {
-    await formik.setFieldValue("searchData", []);
-    await formik.setFieldValue("search", search);
-    await formik.setFieldValue("loading", !!formik.values.search);
+    await formik.setFieldValue('searchData', []);
+    await formik.setFieldValue('search', search);
+    await formik.setFieldValue('loading', !!formik.values.search);
 
     if (search.length > 1 && !formik.values.searchData.length) {
-      await formik.setFieldValue("loading", false);
-      return formik.setFieldValue("searchData", []);
+      await formik.setFieldValue('loading', false);
+      return formik.setFieldValue('searchData', []);
     }
 
-    if (prefix === "@") {
-      const searchData = await getSearchUsers(search);
+    const searchData = prefix === '@'
+        ? await getSearchUsers(search)
+        : await getSearchHashtags(search);
 
-      await formik.setFieldValue("searchData", searchData);
-    } else {
-      const searchData = await getSearchHashtags(search);
-      const uniqueSearchData = Array(
-          ...new Set(searchData.map(tag => tag.name)));
+    searchData.length
+        ? await formik.setFieldValue('searchData', searchData)
+        : await formik.setFieldValue('searchData', [{name: 'Type your hashtags'}]);
 
-      await formik.setFieldValue("searchData", uniqueSearchData);
-    }
-
-    await formik.setFieldValue("loading", false);
+    await formik.setFieldValue('loading', false);
   };
 
   return (
@@ -60,7 +56,7 @@ export default function CreatePostForm({onSubmit}) {
         <MentionInput
             value={formik.values.content}
             placeholder="What's happening?"
-            onChange={e => formik.setFieldValue("content", e)}
+            onChange={e => formik.setFieldValue('content', e)}
             onSearch={handleSearchMentions}
             loading={formik.values.loading}
             searchData={formik.values.searchData}

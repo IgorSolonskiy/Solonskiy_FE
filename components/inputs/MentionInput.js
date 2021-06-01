@@ -12,18 +12,18 @@ export default function MentionInput({
   placeholder,
   style,
 }) {
-  const searchList = searchData.map(user => user.username
+  const searchList = searchData.map(data => data.username
       ?
-      <Option key={user.username} value={user.username}
+      <Option key={data.username} value={data.username}
               className="antd-demo-dynamic-option">
-        <Avatar avatar={user.avatar} shape="square" name={user.name} size={20}/>
-        <span className="mx-3">{user.username}</span>
+        <Avatar avatar={data.avatar} shape="square" name={data.name} size={20}/>
+        <span className="mx-3">{data.username}</span>
       </Option>
       :
-      <Option key={user} value={user}
+      <Option key={data.name} value={data.name}
               className="antd-demo-dynamic-option">
         <Avatar shape="square" name="#" size={20}/>
-        <span className="mx-3">{user}</span>
+        <span className="mx-3">{data.name}</span>
       </Option>);
 
   return (
