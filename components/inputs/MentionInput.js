@@ -21,6 +21,7 @@ export default function MentionInput({
       :
       <Option key={user} value={user}
               className="antd-demo-dynamic-option">
+        <Avatar  shape="square" name='#' size={20}/>
         <span className="mx-3">{user}</span>
       </Option>);
 
