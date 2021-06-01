@@ -1,5 +1,5 @@
-import {Mentions} from "antd";
-import {Avatar} from "../image/Avatar";
+import {Mentions} from 'antd';
+import {Avatar} from '../image/Avatar';
 
 const {Option} = Mentions;
 
@@ -10,6 +10,7 @@ export default function MentionInput({
   onSearch,
   loading,
   placeholder,
+  style,
 }) {
   const searchList = searchData.map(user => user.username
       ?
@@ -21,16 +22,16 @@ export default function MentionInput({
       :
       <Option key={user} value={user}
               className="antd-demo-dynamic-option">
-        <Avatar  shape="square" name='#' size={20}/>
+        <Avatar shape="square" name="#" size={20}/>
         <span className="mx-3">{user}</span>
       </Option>);
 
   return (
-      <Mentions style={{width: "100%"}} loading={loading}
+      <Mentions style={style} loading={loading}
                 placeholder={placeholder}
                 onChange={onChange}
                 value={value}
-                prefix={["@", "#"]}
+                prefix={['@', '#']}
                 onSearch={onSearch}
       >
         {searchList}

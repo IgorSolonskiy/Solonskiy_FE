@@ -12,13 +12,9 @@ export default function CreatePostForm({onSubmit}) {
       search: "",
       loading: false,
       searchData: [],
-      title: "",
       content: "",
     },
     validationSchema: Yup.object({
-      title: Yup.string().
-          max(30, "Must be 30 characters or less").
-          required("Required"),
       content: Yup.string().
           max(150, "Must be 150 characters or less").
           required("Required"),
@@ -58,22 +54,9 @@ export default function CreatePostForm({onSubmit}) {
 
   return (
       <form
-          className="d-flex flex-column justify-content-center align-items-center mt-3 w-50 mb-3"
+          className="d-flex justify-content-center  align-items-center mt-3 w-100 mb-3"
           autoComplete="off"
           onSubmit={formik.handleSubmit}>
-        <label htmlFor="title" className="form-label text-center">Title</label>
-        <MentionInput
-            value={formik.values.title}
-            placeholder="Title?"
-            onChange={e => formik.setFieldValue("title", e)}
-            onSearch={handleSearchMentions}
-            loading={formik.values.loading}
-            searchData={formik.values.searchData}
-        />
-        {formik.errors.title ? <div
-            className="text-danger">{formik.errors.title}</div> : null}
-        <label htmlFor="content"
-               className="form-label text-center">Content</label>
         <MentionInput
             value={formik.values.content}
             placeholder="What's happening?"
@@ -81,10 +64,16 @@ export default function CreatePostForm({onSubmit}) {
             onSearch={handleSearchMentions}
             loading={formik.values.loading}
             searchData={formik.values.searchData}
+            style={{
+              width: '50%',
+              height: '40px',
+              borderRadius: '10px',
+              fontSize: '22px',
+            }}
         />
         {formik.errors.content ? <div
             className="text-danger">{formik.errors.content}</div> : null}
-        <Btn name="Tweet" classBtn="btn-success mt-3" type="submit"/>
+        <Btn name="Tweet" classBtn="btn-success mx-3" type="submit"/>
       </form>
   );
 }

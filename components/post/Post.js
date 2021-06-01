@@ -1,11 +1,11 @@
-import {Avatar} from "../image/Avatar";
-import {useRouter} from "next/router";
-import {useState} from "react";
+import {Avatar} from '../image/Avatar';
+import {useRouter} from 'next/router';
+import {useState} from 'react';
 
-import Btn from "../btn/Btn";
-import EditPostForm from "../forms/EditPostForm";
-import {useSelector} from "react-redux";
-import MentionsParser from "../parser/MentionsParser";
+import Btn from '../btn/Btn';
+import EditPostForm from '../forms/EditPostForm';
+import {useSelector} from 'react-redux';
+import MentionsParser from '../parser/MentionsParser';
 
 export default function Post({post, onDelete, onChange}) {
   const profile = useSelector((state) => state.profile.profile);
@@ -21,12 +21,8 @@ export default function Post({post, onDelete, onChange}) {
   const content = editing ?
       <EditPostForm onSubmit={handleEditPost} post={post}/>
       :
-      <div>
-        <p className="fw-bold mt-2 w-100" style={{whiteSpace: "pre"}}>
-          <MentionsParser post={post.title}/></p>
-        <p className="mt-3" style={{whiteSpace: "pre"}}><MentionsParser
-            post={post.content}/></p>
-      </div>;
+      <p className="mt-3" style={{whiteSpace: 'pre'}}><MentionsParser
+          post={post.content}/></p>;
 
   const controls = showControls
       ? <div
