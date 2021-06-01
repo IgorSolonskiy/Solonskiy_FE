@@ -27,7 +27,6 @@ export default function MentionInput({
   return (
       <Mentions style={{width: "100%"}} loading={loading}
                 placeholder={placeholder}
-                className="form-control"
                 onChange={onChange}
                 value={value}
                 prefix={["@", "#"]}

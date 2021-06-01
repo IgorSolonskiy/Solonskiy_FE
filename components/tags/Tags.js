@@ -10,6 +10,6 @@ export default function Tags({item}) {
         e.stopPropagation();
         router.push(href);
       }
-      } className="btn text-info">{item}</span>
+      } className="btn text-info p-0">{item}</span>
   );
 }
