@@ -38,17 +38,14 @@ export default function EditPostForm({
       return formik.setFieldValue('searchData', []);
     }
 
-    if (prefix === '@') {
-      const searchData = await getSearchUsers(search);
+    const searchData = prefix === '@'
+        ? await getSearchUsers(search)
+        : await getSearchHashtags(search);
 
-      await formik.setFieldValue('searchData', searchData);
-    } else {
-      const searchData = await getSearchHashtags(search);
-      const uniqueSearchData = Array(
-          ...new Set(searchData.map(tag => tag.name)));
-
-      await formik.setFieldValue('searchData', uniqueSearchData);
-    }
+    searchData.length
+        ? await formik.setFieldValue('searchData', searchData)
+        : await formik.setFieldValue('searchData',
+        [{name: 'Type your hashtags'}]);
 
     await formik.setFieldValue('loading', false);
   };

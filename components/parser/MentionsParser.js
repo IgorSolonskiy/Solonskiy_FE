@@ -1,26 +1,25 @@
-import {useEffect, useState} from "react";
-import {getUsers} from "../../api/users";
+import {useEffect, useState} from 'react';
+import {getUsers} from '../../api/users';
 
-import Tags from "../tags/Tags";
+import Tags from '../tags/Tags';
 
 export default function MentionsParser({post}) {
   const [parseText, setParseText] = useState([]);
 
   const handleParseText = async text => await Promise.all(
-      text.split(" ").map(async item => {
-        const textItem = " " + item + " ";
+      text.split(' ').map(async (content, id) => {
+        const textItem = ' ' + content + ' ';
 
-        if (item[0] === "@" || item[0] === "#") {
+        if (content[0] === '@' || content[0] === '#') {
 
-          if (item[0] === "@") {
+          if (content[0] === '@') {
             try {
-              await getUsers(item.replace("@", ""));
+              await getUsers(content.replace('@', ''));
             } catch (e) {
               return textItem;
             }
           }
-
-          return <Tags item={item} key={item}/>;
+          return <Tags item={content} key={content + id}/>;
         }
 
         return textItem;
