@@ -19,7 +19,7 @@ export default function Post () {
   const user = useSelector(state => state.users.user);
   const post = useSelector(state => state.posts.post);
   const fetching = useSelector((state) => state.comments.fetching);
-  const cursor = useSelector((state) => state.comments.pagination.cursor);
+  const nextPage = useSelector((state) => state.comments.pagination.nextPage);
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -30,8 +30,8 @@ export default function Post () {
   const handleInfiniteScroll = (e) => {
     const { scrollHeight, scrollTop } = e.target.documentElement;
 
-    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && cursor) {
-      dispatch(setCommentsListAsync(post.id, cursor));
+    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && nextPage) {
+      dispatch(setCommentsListAsync(post.id, nextPage));
     }
   };
 

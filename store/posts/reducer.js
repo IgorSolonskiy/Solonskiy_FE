@@ -3,8 +3,6 @@ import {postsActionTypes} from "./actions";
 const initialState = {
   posts: [],
   pagination: {
-    cursor: null,
-    total: null,
     nextPage:null,
   },
   fetching: false,
@@ -20,9 +18,8 @@ export const postsReducer = (state = initialState, action) => {
         ...state, posts: [...state.posts, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          total: action.payload.meta.per_page,
-          cursor: action.payload.links.next &&
-              action.payload.links.next.match(/cursor=(\w+)/)[1],
+          nextPage: action.payload.links.next &&
+              action.payload.links.next.match(/page=(\w+)/)[1],
         },
       };
 

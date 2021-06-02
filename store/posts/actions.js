@@ -35,11 +35,11 @@ export const setPostsTagAsync = (tag, page) => async dispatch => {
 };
 
 
-export const setPostsListAsync = (username, cursor) => async dispatch => {
+export const setPostsListAsync = (username, page) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = cursor
-      ? await apiClient.get(`users/${username}/posts?cursor=${cursor}`)
+    const { data: response } = page
+      ? await apiClient.get(`users/${username}/posts?page=${page}`)
       : await apiServer.get(`users/${username}/posts`);
 
     dispatch(setPostsList(response));

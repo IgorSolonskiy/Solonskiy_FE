@@ -14,7 +14,7 @@ export default function Home ({ auth }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.user);
   const fetching = useSelector((state) => state.posts.fetching);
-  const cursor = useSelector((state) => state.posts.pagination.cursor);
+  const nextPage = useSelector((state) => state.posts.pagination.nextPage);
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -29,8 +29,8 @@ export default function Home ({ auth }) {
   const handleInfiniteScroll = (e) => {
     const { scrollHeight, scrollTop } = e.target.documentElement;
 
-    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && cursor) {
-      dispatch(setPostsListAsync(user.username, cursor));
+    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && nextPage) {
+      dispatch(setPostsListAsync(user.username, nextPage));
     }
   };
 

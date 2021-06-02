@@ -16,12 +16,12 @@ export const removeComment = (payload) => ({ type: commentsActionTypes.REMOVE_CO
 export const changeComment = (payload) => ({ type: commentsActionTypes.CHANGE_COMMENT, payload });
 export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, payload });
 
-export const setCommentsListAsync = (id, cursor) => async dispatch => {
+export const setCommentsListAsync = (id, page) => async dispatch => {
   try {
     dispatch(setFetching(true));
 
-    const { data: response } = cursor
-      ? await apiClient.get(`posts/${id}/comments?cursor=${cursor}`)
+    const { data: response } = page
+      ? await apiClient.get(`posts/${id}/comments?page=${page}`)
       : await apiServer.get(`posts/${id}/comments?`);
 
     dispatch(setCommentsList(response));

@@ -4,7 +4,7 @@ import { postsActionTypes } from "../posts";
 const initialState = {
   comments: [],
   pagination: {
-    cursor: null
+    nextPage: null
   },
   fetching: false,
   idComment: null,
@@ -17,7 +17,7 @@ export const commentsReducer = (state = initialState, action) => {
         ...state, comments: [...state.comments, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          cursor: action.payload.links.next && action.payload.links.next.match(/cursor=(\w+)/)[1]
+          nextPage: action.payload.links.next && action.payload.links.next.match(/page=(\w+)/)[1]
         }
       };
 
