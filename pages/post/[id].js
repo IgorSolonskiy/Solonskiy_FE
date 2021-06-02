@@ -47,7 +47,7 @@ export default function Post () {
 
   return (
     <MainLayout>
-      <UserProfile/>
+      <UserProfile showControls={true}/>
       <Posts onChange={handleEditPost}
              post={post}
              onDelete={handleDeletePost}/>

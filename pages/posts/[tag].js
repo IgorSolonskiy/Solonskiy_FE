@@ -41,7 +41,7 @@ export default function PostsTag({tag}) {
 
   return (
       <MainLayout>
-        <UserProfile/>
+        <UserProfile showControls={true}/>
         <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>
       </MainLayout>
   );

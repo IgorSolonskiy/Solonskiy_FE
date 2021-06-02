@@ -3,11 +3,11 @@ import { Avatar } from "../image/Avatar";
 
 import Link from "next/link";
 
-export default function UserProfile () {
+export default function UserProfile ({showControls}) {
   const user = useSelector(state => state.users.user);
-  const post = useSelector(state => state.posts.post);
 
-  const returnBackLink = user && post ?
+
+  const returnBackLink = showControls ?
     <Link href={`/users/${user.username}`}>
       <span className="btn btn-outline-secondary my-3">&lArr;</span>
     </Link>
