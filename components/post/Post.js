@@ -26,7 +26,7 @@ export default function Post({post, onDelete, onChange}) {
 
   const controls = showControls
       ? <div
-          className="d-flex align-items-center justify-content-around">
+          className="d-flex align-items-center justify-content-around position-absolute end-0">
         <Btn name="Change"
              type="button"
              onClick={() => setEditing(!editing)}
@@ -43,12 +43,12 @@ export default function Post({post, onDelete, onChange}) {
         <div className="d-flex flex-column w-100">
           <div onClick={() => !editing && router.push(`/post/${post.id}`)}>
             <div className="w-100">
-              <div className=" ms-2 me-auto">
+              <div className=" ms-2 me-auto w-100">
                 <div
-                    className="d-flex justify-content-center align-items-center ">
+                    className="d-flex justify-content-center align-items-center">
                   <Avatar avatar={post.author.avatar} name={post.author.name}
                           size={40}/>
-                  <div
+                  <div style={{width:'200px'}}
                       className="fw-bold mt-2 mx-3 text-center text-uppercase ">{post.author.username}
                   </div>
                 </div>
