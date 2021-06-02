@@ -6,12 +6,13 @@ import {
   changePostAsync,
   deletePostAsync,
 } from '../../store/posts';
+import {useEffect} from 'react';
+import {Tag} from 'antd';
+import {addUserAsync} from '../../store/user';
 
 import MainLayout from '../../components/layout/MainLayout';
 import UserProfile from '../../components/user/UserProfile';
-import {useEffect} from 'react';
 import PostsList from '../../components/list/PostsList';
-import {addUserAsync} from '../../store/user';
 
 export default function PostsTag({tag}) {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ export default function PostsTag({tag}) {
   return (
       <MainLayout>
         <UserProfile showControls={true}/>
+        <Tag style={{lineHeight:'30px',fontSize:'22px'}} color="geekblue">#{tag}</Tag>
         <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>
       </MainLayout>
   );
