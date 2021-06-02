@@ -1,10 +1,11 @@
-import { commentsActionTypes } from "./actions";
-import { postsActionTypes } from "../posts";
+import {commentsActionTypes} from './actions';
+import {postsActionTypes} from '../posts';
 
 const initialState = {
   comments: [],
   pagination: {
-    nextPage: null
+    nextPage: null,
+    perPage:null,
   },
   fetching: false,
   idComment: null,
@@ -17,23 +18,34 @@ export const commentsReducer = (state = initialState, action) => {
         ...state, comments: [...state.comments, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          nextPage: action.payload.links.next && action.payload.links.next.match(/page=(\w+)/)[1]
-        }
+          perPage: action.payload.meta.per_page,
+          nextPage: action.payload.links.next &&
+              action.payload.links.next.match(/page=(\w+)/)[1],
+        },
       };
 
     case postsActionTypes.SET_FETCHING:
-      return { ...state, fetching: action.payload };
+      return {...state, fetching: action.payload};
 
     case commentsActionTypes.ADD_COMMENT:
-      return { ...state, comments: [...state.comments, action.payload] };
+      return state.comments.length >= state.pagination.perPage ? state : {
+        ...state,
+        comments: [...state.comments, action.payload],
+      };
 
     case commentsActionTypes.REMOVE_COMMENT:
-      return { ...state, comments: state.comments.filter(comment => comment.id !== action.payload) };
+      return {
+        ...state,
+        comments: state.comments.filter(
+            comment => comment.id !== action.payload),
+      };
 
     case commentsActionTypes.CHANGE_COMMENT:
       return {
-        ...state, comments: [...state.comments
-          .map(comment => comment.id === action.payload.id ? action.payload : comment)]
+        ...state, comments: [
+          ...state.comments.map(comment => comment.id === action.payload.id
+              ? action.payload
+              : comment)],
       };
 
     default:
