@@ -21,11 +21,11 @@ export const setPostId = (payload) => ({ type: postsActionTypes.SET_POST_ID, pay
 export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, payload });
 export const setPostsTag = (payload) => ({ type: postsActionTypes.SET_POSTS_TAG, payload });
 
-export const setPostsTagAsync = (tag, page) => async dispatch => {
+export const setPostsTagAsync = (tag, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = page
-        ? await apiClient.get(`tags/${tag}/posts?page=${page}`)
+    const { data: response } = cursor
+        ? await apiClient.get(`tags/${tag}/posts?cursor=${cursor}`)
         : await apiServer.get(`tags/${tag}/posts`);
 
     dispatch(setPostsTag(response));
@@ -35,11 +35,11 @@ export const setPostsTagAsync = (tag, page) => async dispatch => {
 };
 
 
-export const setPostsListAsync = (username, page) => async dispatch => {
+export const setPostsListAsync = (username, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = page
-      ? await apiClient.get(`users/${username}/posts?page=${page}`)
+    const { data: response } = cursor
+      ? await apiClient.get(`users/${username}/posts?cursor=${cursor}`)
       : await apiServer.get(`users/${username}/posts`);
 
     dispatch(setPostsList(response));

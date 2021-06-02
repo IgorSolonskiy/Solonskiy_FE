@@ -16,7 +16,7 @@ import {addUserAsync} from '../../store/user';
 export default function PostsTag({tag}) {
   const dispatch = useDispatch();
   const fetching = useSelector((state) => state.posts.fetching);
-  const nextPage = useSelector((state) => state.posts.pagination.nextPage);
+  const cursor = useSelector((state) => state.posts.pagination.cursor);
 
   useEffect(() => {
     document.addEventListener('scroll', handleInfiniteScroll);
@@ -33,9 +33,9 @@ export default function PostsTag({tag}) {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching &&
-        nextPage) {
+        cursor) {
 
-      dispatch(setPostsTagAsync(tag, nextPage));
+      dispatch(setPostsTagAsync(tag, cursor));
     }
   };
 

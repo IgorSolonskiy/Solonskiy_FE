@@ -4,8 +4,8 @@ import {postsActionTypes} from '../posts';
 const initialState = {
   comments: [],
   pagination: {
-    nextPage: null,
-    perPage:null,
+    cursor: null,
+    total: null,
   },
   fetching: false,
   idComment: null,
@@ -18,9 +18,9 @@ export const commentsReducer = (state = initialState, action) => {
         ...state, comments: [...state.comments, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          perPage: action.payload.meta.per_page,
-          nextPage: action.payload.links.next &&
-              action.payload.links.next.match(/page=(\w+)/)[1],
+          total: action.payload.meta.per_page,
+          cursor: action.payload.links.next &&
+              action.payload.links.next.match(/cursor=(\w+)/)[1],
         },
       };
 
@@ -28,7 +28,7 @@ export const commentsReducer = (state = initialState, action) => {
       return {...state, fetching: action.payload};
 
     case commentsActionTypes.ADD_COMMENT:
-      return state.comments.length >= state.pagination.perPage ? state : {
+      return state.comments.length >= state.pagination.total ? state : {
         ...state,
         comments: [...state.comments, action.payload],
       };

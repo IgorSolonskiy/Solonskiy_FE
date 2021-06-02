@@ -3,8 +3,8 @@ import {postsActionTypes} from './actions';
 const initialState = {
   posts: [],
   pagination: {
-    nextPage: null,
-    perPage: null,
+    cursor: null,
+    total: null,
   },
   fetching: false,
   post: null,
@@ -20,9 +20,9 @@ export const postsReducer = (state = initialState, action) => {
         ...state, posts: [...state.posts, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          perPage: action.payload.meta.per_page,
-          nextPage: action.payload.links.next &&
-              action.payload.links.next.match(/page=(\w+)/)[1],
+          total: action.payload.meta.per_page,
+          cursor: action.payload.links.next &&
+              action.payload.links.next.match(/cursor=(\w+)/)[1],
         },
       };
 
@@ -33,9 +33,9 @@ export const postsReducer = (state = initialState, action) => {
         posts: [...state.posts, ...action.payload.data],
         pagination: {
           ...state.pagination,
-          perPage: action.payload.meta.per_page,
-          nextPage: action.payload.links.next &&
-              action.payload.links.next.match(/page=(\w+)/)[1],
+          total: action.payload.meta.per_page,
+          cursor: action.payload.links.next &&
+              action.payload.links.next.match(/cursor=(\w+)/)[1],
         },
       };
 
@@ -43,7 +43,7 @@ export const postsReducer = (state = initialState, action) => {
       return {...state, fetching: action.payload};
 
     case postsActionTypes.ADD_ONE_POST_LIST:
-      return state.posts.length >= state.pagination.perPage ? state : {
+      return state.posts.length >= state.pagination.total ? state : {
         ...state,
         posts: [...state.posts, action.payload],
       };
