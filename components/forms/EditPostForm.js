@@ -1,8 +1,8 @@
 import {useFormik} from 'formik';
+import {searchMentions} from '../../helpers/searchMentions';
+
 import * as Yup from 'yup';
 import Btn from '../btn/Btn';
-import {getSearchUsers} from '../../api/users';
-import {getSearchHashtags} from '../../api/tags';
 import MentionInput from '../inputs/MentionInput';
 
 export default function EditPostForm({
@@ -28,24 +28,6 @@ export default function EditPostForm({
     },
   });
 
-  const handleSearchMentions = async (search, prefix) => {
-    await formik.setFieldValue('searchData', []);
-    await formik.setFieldValue('search', search);
-    await formik.setFieldValue('loading', !!formik.values.search);
-
-    if (search.length > 1 && !formik.values.searchData.length) {
-      await formik.setFieldValue('loading', false);
-      return formik.setFieldValue('searchData', []);
-    }
-
-    const searchData = prefix === '@'
-        ? await getSearchUsers(search)
-        : await getSearchHashtags(search);
-
-    await formik.setFieldValue('searchData', searchData);
-    await formik.setFieldValue('loading', false);
-  };
-
   return (
       <form
           className="d-flex  justify-content-start align-items-center mt-3 w-100 mb-3 "
@@ -56,7 +38,8 @@ export default function EditPostForm({
               value={formik.values.content}
               placeholder="What's happening?"
               onChange={e => formik.setFieldValue('content', e)}
-              onSearch={handleSearchMentions}
+              onSearch={(search, prefix) => searchMentions(search, prefix,
+                  formik)}
               loading={formik.values.loading}
               searchData={formik.values.searchData}
               style={{
