@@ -8,9 +8,9 @@ export default function MentionsParser({post}) {
   const router = useRouter();
   const [parseText, setParseText] = useState([]);
 
-  const handleLinkUser = (e, href) => {
+  const handleLinkMentions = (e, href) => {
     e.stopPropagation();
-    router.push(href);
+    return router.push(href);
   };
 
   const handleParseText = async text => await Promise.all(
@@ -19,9 +19,10 @@ export default function MentionsParser({post}) {
 
         if (prefix) {
           return prefix[0] === '#' ?
-              <Tags onCLick={handleLinkUser} tag={content} key={content + id}/>
+              <Tags onCLick={handleLinkMentions} tag={content}
+                    key={content + id}/>
               :
-              <Mentions onCLick={handleLinkUser} mention={content}
+              <Mentions onCLick={handleLinkMentions} mention={content}
                         key={content + id}/>;
         }
 
