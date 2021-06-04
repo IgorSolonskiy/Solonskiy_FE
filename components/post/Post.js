@@ -5,6 +5,7 @@ import { useState } from "react";
 import Btn from "../btn/Btn";
 import EditPostForm from "../forms/EditPostForm";
 import { useSelector } from "react-redux";
+import MentionsParser from "../parser/MentionsParser";
 
 export default function Post ({ post, onDelete, onChange }) {
   const profile = useSelector((state) => state.profile.profile);
@@ -18,16 +19,14 @@ export default function Post ({ post, onDelete, onChange }) {
   };
 
   const content = editing ?
-    <EditPostForm onSubmit={handleEditPost} post={post}/>
-    :
-    <div>
-      <div className="fw-bold mt-2 w-100">{post.title}</div>
-      <p className="mt-3">{post.content}</p>
-    </div>;
+      <EditPostForm onSubmit={handleEditPost} post={post}/>
+      :
+      <p className="mt-3" style={{whiteSpace: 'pre'}}><MentionsParser
+          post={post.content}/></p>;
 
   const controls = showControls
     ? <div
-      className="d-flex align-items-center justify-content-around">
+      className="d-flex position-absolute end-0 align-items-center justify-content-around">
       <Btn name="Change"
            type="button"
            onClick={() => setEditing(!editing)}
@@ -44,10 +43,10 @@ export default function Post ({ post, onDelete, onChange }) {
       <div className="d-flex flex-column w-100">
         <div onClick={() => !editing && router.push(`/post/${post.id}`)}>
           <div className="w-100">
-            <div className=" ms-2 me-auto">
+            <div className=" ms-2 me-auto w-100">
               <div className="d-flex justify-content-center align-items-center ">
                 <Avatar avatar={post.author.avatar} name={post.author.name} size={40}/>
-                <div
+                <div style={{width:'200px'}}
                   className="fw-bold mt-2 mx-3 text-center text-uppercase ">{post.author.username}
                 </div>
               </div>

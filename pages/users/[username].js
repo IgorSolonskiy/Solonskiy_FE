@@ -1,7 +1,7 @@
 import { withAuth } from "../../hof/withAuth";
 import { withRedux } from "../../hof/withRedux";
 import { addUserAsync } from "../../store/user";
-import { addOnePostListAsync, changePostAsync, deletePostAsync, setPostsListAsync } from "../../store/posts";
+import { addOnePostListAsync, changePostAsync, deletePostAsync, getPostsListAsync } from "../../store/posts";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
@@ -30,11 +30,11 @@ export default function Home ({ auth }) {
     const { scrollHeight, scrollTop } = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && cursor) {
-      dispatch(setPostsListAsync(user.username, cursor));
+      dispatch(getPostsListAsync(user.username, cursor));
     }
   };
 
-  const profile = !user ? <CreatePostForm onSubmit={handlePostCreate}/> : null;
+  const profile = auth.user.id === user.id ? <CreatePostForm onSubmit={handlePostCreate}/> : null;
 
   return (
     <MainLayout>
@@ -48,7 +48,7 @@ export default function Home ({ auth }) {
 export const getServerSideProps = withRedux(withAuth(async (ctx, auth, { dispatch }) => {
     try {
       await Promise.all([
-        dispatch(setPostsListAsync(ctx.query.username)),
+        dispatch(getPostsListAsync(ctx.query.username)),
         dispatch(addUserAsync(ctx.query.username))
       ]);
 
