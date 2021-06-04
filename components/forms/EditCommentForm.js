@@ -1,12 +1,17 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Btn from "../btn/Btn";
+import MentionInput from "../inputs/MentionInput";
+import {searchMentions} from "../../helpers/searchMentions";
 
 export default function EditCommentForm ({ onSubmit, comment = { content: "" } }) {
 
   const formik = useFormik({
     initialValues: {
       content: comment.content,
+      search: '',
+      loading: false,
+      searchData: [],
     },
     validationSchema: Yup.object({
       content: Yup.string()
@@ -24,10 +29,23 @@ export default function EditCommentForm ({ onSubmit, comment = { content: "" } }
           autoComplete="off"
           onSubmit={formik.handleSubmit}>
       <div className="w-75">
-        <input type="text" id="content" className="form-control p-1"
-               value={formik.values.content}
-               onChange={formik.handleChange}/>
-        {formik.errors.content ? <div className="text-danger">{formik.errors.content}</div> : null}
+        <MentionInput
+            value={formik.values.content}
+            placeholder="What's happening?"
+            onChange={e => formik.setFieldValue('content', e)}
+            onSearch={(search, prefix) => searchMentions(search, prefix,
+                formik)}
+            loading={formik.values.loading}
+            searchData={formik.values.searchData}
+            style={{
+              width: '100%',
+              height: '40px',
+              borderRadius: '10px',
+              fontSize: '16px',
+            }}
+        />
+        {formik.errors.content ? <div
+            className="text-danger">{formik.errors.content}</div> : null}
       </div>
       <Btn name="Save"
            type="submit"

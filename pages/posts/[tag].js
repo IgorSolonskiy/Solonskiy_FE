@@ -1,28 +1,29 @@
-import {withAuth} from '../../hof/withAuth';
-import {withRedux} from '../../hof/withRedux';
-import {useDispatch, useSelector} from 'react-redux';
-import {setPostsTagAsync} from '../../store/posts';
+import {withAuth} from "../../hof/withAuth";
+import {withRedux} from "../../hof/withRedux";
+import {useDispatch, useSelector} from "react-redux";
+import {setPostsTagAsync, setTag} from "../../store/posts";
 import {
   changePostAsync,
   deletePostAsync,
-} from '../../store/posts';
-import {useEffect} from 'react';
-import {Tag} from 'antd';
-import {addUserAsync} from '../../store/user';
+} from "../../store/posts";
+import {useEffect} from "react";
+import {Tag} from "antd";
+import {addUserAsync} from "../../store/user";
 
-import MainLayout from '../../components/layout/MainLayout';
-import UserProfile from '../../components/user/UserProfile';
-import PostsList from '../../components/list/PostsList';
+import MainLayout from "../../components/layout/MainLayout";
+import UserProfile from "../../components/user/UserProfile";
+import PostsList from "../../components/list/PostsList";
 
-export default function PostsTag({tag}) {
+export default function PostsTag() {
   const dispatch = useDispatch();
+  const tag = useSelector((state) => state.posts.tag);
   const fetching = useSelector((state) => state.posts.fetching);
   const cursor = useSelector((state) => state.posts.pagination.cursor);
 
   useEffect(() => {
-    document.addEventListener('scroll', handleInfiniteScroll);
+    document.addEventListener("scroll", handleInfiniteScroll);
 
-    return () => document.removeEventListener('scroll', handleInfiniteScroll);
+    return () => document.removeEventListener("scroll", handleInfiniteScroll);
   });
 
   const handlePostDelete = (deletedPost) => dispatch(
@@ -43,7 +44,8 @@ export default function PostsTag({tag}) {
   return (
       <MainLayout>
         <UserProfile showControls={true}/>
-        <Tag style={{lineHeight:'30px',fontSize:'22px'}} color="geekblue">#{tag}</Tag>
+        <Tag style={{lineHeight: "30px", fontSize: "22px"}}
+             color="geekblue">#{tag}</Tag>
         <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>
       </MainLayout>
   );
@@ -52,10 +54,13 @@ export default function PostsTag({tag}) {
 export const getServerSideProps = withRedux(
     withAuth(async (ctx, {user}, {dispatch}) => {
           try {
-            await dispatch(setPostsTagAsync(ctx.query.tag));
-            await dispatch(addUserAsync(user.username));
+            await Promise.all([
+              dispatch(setPostsTagAsync(ctx.query.tag)),
+              dispatch(addUserAsync(user.username)),
+              dispatch(setTag(ctx.query.tag)),
+            ]);
 
-            return {props: {tag: ctx.query.tag}};
+            return {props: {}};
           } catch (e) {
             return {
               notFound: true,

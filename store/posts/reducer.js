@@ -9,6 +9,7 @@ const initialState = {
   fetching: false,
   post: null,
   postId: null,
+  tag:null,
 };
 
 export const postsReducer = (state = initialState, action) => {
@@ -41,6 +42,9 @@ export const postsReducer = (state = initialState, action) => {
 
     case postsActionTypes.SET_FETCHING:
       return {...state, fetching: action.payload};
+
+    case postsActionTypes.SET_TAG:
+      return {...state, tag: action.payload};
 
     case postsActionTypes.ADD_ONE_POST_LIST:
       return state.posts.length >= state.pagination.total ? state : {

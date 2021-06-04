@@ -9,7 +9,8 @@ export const postsActionTypes = {
   CHANGE_POST: "POSTS.CHANGE_POST",
   SET_POST_ID: "POSTS.SET_POST_ID",
   SET_FETCHING: "POSTS.SET_FETCHING",
-  SET_POSTS_TAG:"POSTS.SET_POSTS_TAG"
+  SET_POSTS_TAG:"POSTS.SET_POSTS_TAG",
+  SET_TAG:"POSTS.SET_TAG"
 };
 
 export const setPostsList = (payload) => ({ type: postsActionTypes.SET_POSTS_LIST, payload });
@@ -20,6 +21,7 @@ export const changePost = (payload) => ({ type: postsActionTypes.CHANGE_POST, pa
 export const setPostId = (payload) => ({ type: postsActionTypes.SET_POST_ID, payload });
 export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, payload });
 export const setPostsTag = (payload) => ({ type: postsActionTypes.SET_POSTS_TAG, payload });
+export const setTag = (payload) => ({ type: postsActionTypes.SET_TAG, payload });
 
 export const setPostsTagAsync = (tag, cursor) => async dispatch => {
   try {
