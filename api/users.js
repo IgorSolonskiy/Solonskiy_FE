@@ -6,9 +6,3 @@ export const getSearchUsers = async (username, page = 1, limit = 6) => {
 
   return response.data;
 };
-
-export const getUsers = async (username) => {
-  const {data: response} = await apiClient(`users/${username}`);
-
-  return response.data;
-};
