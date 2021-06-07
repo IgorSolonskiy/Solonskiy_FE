@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import Btn from "../btn/Btn";
 import EditCommentForm from "../forms/EditCommentForm";
+import MentionsParser from "../parser/MentionsParser";
 
 export default function Comment ({ comment, onDelete, onSubmit }) {
   const profile = useSelector(state => state.profile.profile);
@@ -19,7 +20,8 @@ export default function Comment ({ comment, onDelete, onSubmit }) {
   const content = editing ?
     <EditCommentForm onSubmit={handleEditComment} comment={comment}/>
     :
-    <p className="mt-3 mb-0">{comment.content}</p>;
+    <p className="mt-3" style={{ whiteSpace: "pre" }}>
+      <MentionsParser mentions={comment.mentions} text={comment.content}/></p>;
 
   const changeCommentButton = profile.id === comment.author.id &&
     <Btn name="Change" type="button" onClick={() => setEditing(!editing)}

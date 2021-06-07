@@ -19,10 +19,10 @@ export default function Post ({ post, onDelete, onChange }) {
   };
 
   const content = editing ?
-      <EditPostForm onSubmit={handleEditPost} post={post}/>
-      :
-      <p className="mt-3" style={{whiteSpace: 'pre'}}><MentionsParser mentions={post.mentions}
-          post={post.content}/></p>;
+    <EditPostForm onSubmit={handleEditPost} post={post}/>
+    :
+    <p className="mt-3" style={{ whiteSpace: "pre" }}>
+      <MentionsParser mentions={post.mentions} text={post.content}/></p>;
 
   const controls = showControls
     ? <div
@@ -46,8 +46,8 @@ export default function Post ({ post, onDelete, onChange }) {
             <div className=" ms-2 me-auto w-100">
               <div className="d-flex justify-content-center align-items-center ">
                 <Avatar avatar={post.author.avatar} name={post.author.name} size={40}/>
-                <div style={{width:'200px'}}
-                  className="fw-bold mt-2 mx-3 text-center text-uppercase ">{post.author.username}
+                <div style={{ width: "200px" }}
+                     className="fw-bold mt-2 mx-3 text-center text-uppercase ">{post.author.username}
                 </div>
               </div>
               {content}
