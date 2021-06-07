@@ -20,8 +20,8 @@ export default function Comment ({ comment, onDelete, onSubmit }) {
   const content = editing ?
     <EditCommentForm onSubmit={handleEditComment} comment={comment}/>
     :
-    <p className="mt-3" style={{ whiteSpace: "pre" }}><MentionsParser
-      post={comment.content}/></p>;
+    <p className="mt-3" style={{ whiteSpace: "pre" }}>
+      <MentionsParser mentions={comment.mentions} text={comment.content}/></p>;
 
   const changeCommentButton = profile.id === comment.author.id &&
     <Btn name="Change" type="button" onClick={() => setEditing(!editing)}

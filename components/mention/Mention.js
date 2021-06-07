@@ -1,20 +1,9 @@
-import {useEffect, useState} from "react";
-import {getUsers} from "../../api/users";
+export default function Mention ({ mentions, content, onCLick }) {
+  const userName = content.replace("@", "");
+  const user = mentions.filter(user => user.name === userName);
 
-export default function Mention({mention, onCLick}) {
-  const [userExists, setUserExists] = useState(true);
-  const userName = mention.replace("@", "");
-
-  useEffect(async () => {
-    try {
-      await getUsers(userName);
-    } catch (e) {
-      setUserExists(false);
-    }
-  }, []);
-
-  return userExists ?
-      <span onClick={e => onCLick(e, `/users/${userName}`)}
-            className="btn text-info p-0">{mention} </span>
-      : mention + " ";
+  return user.length ?
+    <span onClick={e => onCLick(e, `/users/${userName}`)}
+          className="btn text-info p-0">{content} </span>
+    : content + " ";
 }

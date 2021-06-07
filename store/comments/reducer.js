@@ -25,7 +25,7 @@ export const commentsReducer = (state = initialState, action) => {
       return { ...state, fetching: action.payload };
 
     case commentsActionTypes.ADD_COMMENT:
-      return { ...state, comments: [...state.comments, action.payload] };
+      return state.pagination.cursor ? state : { ...state, comments: [...state.comments, action.payload] };
 
     case commentsActionTypes.REMOVE_COMMENT:
       return { ...state, comments: state.comments.filter(comment => comment.id !== action.payload) };
