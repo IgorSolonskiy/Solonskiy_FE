@@ -21,7 +21,7 @@ export default function Post ({ post, onDelete, onChange }) {
   const content = editing ?
       <EditPostForm onSubmit={handleEditPost} post={post}/>
       :
-      <p className="mt-3" style={{whiteSpace: 'pre'}}><MentionsParser
+      <p className="mt-3" style={{whiteSpace: 'pre'}}><MentionsParser mentions={post.mentions}
           post={post.content}/></p>;
 
   const controls = showControls

@@ -1,9 +1,9 @@
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 import Tag from "../tag/Tag";
 import Mention from "../mention/Mention";
 
-export default function MentionsParser({post}) {
+export default function MentionsParser ({ post, mentions }) {
   const router = useRouter();
 
   const handleLinkMentions = (e, href) => {
@@ -16,11 +16,11 @@ export default function MentionsParser({post}) {
 
     if (prefix) {
       return prefix[0] === "#" ?
-          <Tag onCLick={handleLinkMentions} tag={content}
-               key={content + id}/>
-          :
-          <Mention onCLick={handleLinkMentions} mention={content}
-                   key={content + id}/>;
+        <Tag onCLick={handleLinkMentions} tag={content}
+             key={content + id}/>
+        :
+        <Mention mentions={mentions} onCLick={handleLinkMentions} content={content}
+                 key={content + id}/>;
     }
 
     return content + " ";
