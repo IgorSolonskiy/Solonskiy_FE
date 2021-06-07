@@ -1,5 +1,4 @@
-import apiServer from "../../libs/apiServer";
-import apiClient from "../../libs/apiClient";
+import Api from "../../libs/Api";
 import Cookies from "js-cookie";
 
 export const profileActionTypes = {
@@ -9,13 +8,13 @@ export const profileActionTypes = {
 export const setProfile = (payload) => ({ type: profileActionTypes.SET_PROFILE, payload });
 
 export const setProfileAsync = () => async dispatch => {
-  const { data: response } = await apiServer.get("profile");
+  const { data: response } = await Api.get("profile");
 
   dispatch(setProfile(response));
 };
 
 export const changeProfileAsync = (updatedProfile) => async dispatch => {
-  const { data: response } = await apiClient.post("profile", updatedProfile, {
+  const { data: response } = await Api.post("profile", updatedProfile, {
     headers: {
       "Content-Type": "multipart/form-data"
     }
@@ -25,19 +24,19 @@ export const changeProfileAsync = (updatedProfile) => async dispatch => {
 };
 
 export const loginUserAsync = user => async dispatch => {
-  const { data: { token: response } } = await apiClient.post("login", user);
+  const { data: { token: response } } = await Api.post("login", user);
 
   await Cookies.set("token", response);
 };
 
 export const registerUserAsync = (user) => async dispatch => {
-  const { data: { token: response } } = await apiClient.post("register", user);
+  const { data: { token: response } } = await Api.post("register", user);
 
   await Cookies.set("token", response);
 };
 
 export const logoutUserAsync = () => async dispatch => {
-  await apiClient.get("logout");
+  await Api.get("logout");
   Cookies.remove("token");
   dispatch(setProfile({}));
 };

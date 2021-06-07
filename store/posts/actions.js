@@ -1,5 +1,4 @@
-import apiClient from "../../libs/apiClient";
-import apiServer from "../../libs/apiServer";
+import Api from "../../libs/Api";
 
 export const postsActionTypes = {
   SET_POSTS_LIST: "POSTS.SET_POSTS_LIST",
@@ -22,9 +21,7 @@ export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, 
 export const getPostsByTagAsync = (tag, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = cursor
-        ? await apiClient.get(`tags/${tag}/posts?cursor=${cursor}`)
-        : await apiServer.get(`tags/${tag}/posts`);
+    const { data: response } = await Api.get(`tags/${tag}/posts?cursor=${cursor}`)
 
     dispatch(setPostsList(response));
   } finally {
@@ -35,9 +32,7 @@ export const getPostsByTagAsync = (tag, cursor) => async dispatch => {
 export const getPostsListAsync = (username, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = cursor
-      ? await apiClient.get(`users/${username}/posts?cursor=${cursor}`)
-      : await apiServer.get(`users/${username}/posts`);
+    const { data: response } = await Api.get(`users/${username}/posts?cursor=${cursor}`);
 
     dispatch(setPostsList(response));
   } finally {
@@ -46,24 +41,24 @@ export const getPostsListAsync = (username, cursor) => async dispatch => {
 };
 
 export const addOnePostListAsync = (post) => async dispatch => {
-  const { data: response } = await apiClient.post("posts", post);
+  const { data: response } = await Api.post("posts", post);
 
   dispatch(addOnePostList(response));
 };
 
 export const setPostAsync = (id) => async dispatch => {
-  const { data: response } = await apiServer.get(`posts/${id}`);
+  const { data: response } = await Api.get(`posts/${id}`);
 
   dispatch(setPost(response));
 };
 
 export const changePostAsync = (id, post) => async dispatch => {
-  const { data: response } = await apiClient.put(`posts/${id}`, post);
+  const { data: response } = await Api.put(`posts/${id}`, post);
 
   dispatch(changePost(response));
 };
 
 export const deletePostAsync = (id) => async dispatch => {
-  await apiClient.delete(`posts/${id}`);
+  await Api.delete(`posts/${id}`);
   dispatch(removePost(id));
 };

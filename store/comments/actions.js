@@ -1,5 +1,4 @@
-import apiServer from "../../libs/apiServer";
-import apiClient from "../../libs/apiClient";
+import Api from "../../libs/Api";
 import { postsActionTypes } from "../posts";
 
 export const commentsActionTypes = {
@@ -20,9 +19,7 @@ export const setCommentsListAsync = (id, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
 
-    const { data: response } = cursor
-      ? await apiClient.get(`posts/${id}/comments?cursor=${cursor}`)
-      : await apiServer.get(`posts/${id}/comments?`);
+    const { data: response } = await Api.get(`posts/${id}/comments?cursor=${cursor}`)
 
     dispatch(setCommentsList(response));
   } finally {
@@ -31,17 +28,17 @@ export const setCommentsListAsync = (id, cursor) => async dispatch => {
 };
 
 export const addCommentAsync = (id, comment) => async dispatch => {
-  const { data: response } = await apiClient.post(`posts/${id}/comments`, comment);
+  const { data: response } = await Api.post(`posts/${id}/comments`, comment);
 
   dispatch(addComment(response));
 };
 
 export const deleteCommentAsync = (id) => async dispatch => {
-  await apiClient.delete(`comments/${id}`);
+  await Api.delete(`comments/${id}`);
   dispatch(removeComment(id));
 };
 
 export const changeCommentAsync = (id, comment) => async dispatch => {
-  const { data: response } = await apiClient.put(`comments/${id}`, comment);
+  const { data: response } = await Api.put(`comments/${id}`, comment);
   dispatch(changeComment(response));
 };

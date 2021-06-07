@@ -1,12 +1,12 @@
-import apiServer from "../libs/apiServer";
-
 import { setProfileAsync } from "../store/profile";
+import Api from "../libs/Api";
 
 export const withAuth = getServerSideProps => (async (ctx, storeData) => {
   const { token } = ctx.req.cookies;
   if (token) {
     try {
-      apiServer.defaults.headers["Authorization"] = `Bearer ${token}`;
+      Api.defaults.headers["Authorization"] = `Bearer ${token}`;
+
       await storeData.dispatch(setProfileAsync());
 
       const { profile: { profile: user } } = storeData.getState();
