@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import Btn from "../btn/Btn";
 import EditCommentForm from "../forms/EditCommentForm";
-import MentionsParser from "../parser/MentionsParser";
+import DynamicContent from "../parser/DynamicContent";
 
 export default function Comment ({ comment, onDelete, onSubmit }) {
   const profile = useSelector(state => state.profile.profile);
@@ -16,12 +16,13 @@ export default function Comment ({ comment, onDelete, onSubmit }) {
     await onSubmit(comment, changeComment);
     setEditing(false);
   };
+  const mentionedUsers = comment.mentionedUsers.map(user => user.username);
 
   const content = editing ?
     <EditCommentForm onSubmit={handleEditComment} comment={comment}/>
     :
     <p className="mt-3" style={{ whiteSpace: "pre" }}>
-      <MentionsParser mentions={comment.mentionedUsers} text={comment.content}/></p>;
+      <DynamicContent mentions={mentionedUsers} content={comment.content}/></p>;
 
   const changeCommentButton = profile.id === comment.author.id &&
     <Btn name="Change" type="button" onClick={() => setEditing(!editing)}
