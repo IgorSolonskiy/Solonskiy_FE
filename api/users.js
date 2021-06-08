@@ -1,7 +1,7 @@
-import Api from "../libs/Api";
+import Instance from "../libs/Instance";
 
-export const getSearchUsers = async (username, page = 1, limit = 6) => {
-  const { data: response } = await Api.get(
+const search = async (username, page = 1, limit = 6) => {
+  const { data: response } = await Instance.get(
     `users?username=${username}&limit=${limit}&page=${page}`);
 
   return response.data;

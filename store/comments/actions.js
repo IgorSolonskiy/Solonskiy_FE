@@ -1,4 +1,4 @@
-import Api from "../../libs/Api";
+import Instance from "../../libs/Instance";
 import { postsActionTypes } from "../posts";
 
 export const commentsActionTypes = {
@@ -19,7 +19,7 @@ export const setCommentsListAsync = (id, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
 
-    const { data: response } = await Api.get(`posts/${id}/comments?cursor=${cursor}`)
+    const { data: response } = await Instance.get(`posts/${id}/comments?cursor=${cursor}`)
 
     dispatch(setCommentsList(response));
   } finally {
@@ -28,17 +28,17 @@ export const setCommentsListAsync = (id, cursor) => async dispatch => {
 };
 
 export const addCommentAsync = (id, comment) => async dispatch => {
-  const { data: response } = await Api.post(`posts/${id}/comments`, comment);
+  const { data: response } = await Instance.post(`posts/${id}/comments`, comment);
 
   dispatch(addComment(response));
 };
 
 export const deleteCommentAsync = (id) => async dispatch => {
-  await Api.delete(`comments/${id}`);
+  await Instance.delete(`comments/${id}`);
   dispatch(removeComment(id));
 };
 
 export const changeCommentAsync = (id, comment) => async dispatch => {
-  const { data: response } = await Api.put(`comments/${id}`, comment);
+  const { data: response } = await Instance.put(`comments/${id}`, comment);
   dispatch(changeComment(response));
 };

@@ -1,7 +1,7 @@
-import Api from "../libs/Api";
+import Instance from "../libs/Instance";
 
 export const getProfile = async () => {
-  const { data: response } = await Api.get("profile");
+  const { data: response } = await Instance.get("profile");
 
   return response;
 };

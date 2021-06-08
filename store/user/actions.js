@@ -1,4 +1,4 @@
-import Api from "../../libs/Api";
+import Instance from "../../libs/Instance";
 
 export const usersActionTypes = {
   SET_USERS: "USERS.SET_USERS",
@@ -9,20 +9,20 @@ export const setUsers = (payload) => ({ type: usersActionTypes.SET_USERS, payloa
 export const setUser = (payload) => ({ type: usersActionTypes.SET_USER, payload });
 
 export const searchUsersAsync = (username, page = 1, limit = 6) => async dispatch => {
-  const { data: response } = await Api
+  const { data: response } = await Instance
     .get(`users?username=${username}&limit=${limit}&page=${page}`);
 
   dispatch(setUsers(response));
 };
 
 export const getUsersAsync = (page, limit = 6) => async dispatch => {
-  const { data: response } = await Api.get(`users?page=${page}&limit=${limit}`)
+  const { data: response } = await Instance.get(`users?page=${page}&limit=${limit}`)
 
   dispatch(setUsers(response));
 };
 
 export const addUserAsync = username => async dispatch => {
-  const { data: response } = await Api.get(`users/${username}`);
+  const { data: response } = await Instance.get(`users/${username}`);
 
   dispatch(setUser(response));
 };

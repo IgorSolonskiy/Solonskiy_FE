@@ -1,11 +1,11 @@
 import { getProfile } from "../api/profile";
-import Api from "../libs/Api";
+import Instance from "../libs/Instance";
 
 export const withoutAuth = getServerSideProps => async (ctx) => {
   try {
     const { token } = ctx.req.cookies;
 
-    Api.defaults.headers["Authorization"] = `Bearer ${token}`;
+    Instance.defaults.headers["Authorization"] = `Bearer ${token}`;
 
     const profile = await getProfile();
 

@@ -1,7 +1,7 @@
-import Api from "../libs/Api";
+import Instance from "../libs/Instance";
 
-export const getSearchHashtags = async (tag) => {
-  const {data: response} = await Api.get(`tags?name=${tag}`);
+const search = async (tag) => {
+  const {data: response} = await Instance.get(`tags?name=${tag}`);
 
   return response.data;
 };
