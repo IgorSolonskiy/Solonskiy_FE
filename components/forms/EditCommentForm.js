@@ -27,7 +27,7 @@ export default function EditCommentForm ({ onSubmit, comment = { content: "" } }
         <div className="w-75">
           <DynamicInput
               value={formik.values.content}
-              onChange={e => formik.setFieldValue('content', e)}
+              onChange={value => formik.setFieldValue("content", value)}
           />
           {formik.errors.content ? <div
               className="text-danger">{formik.errors.content}</div> : null}
