@@ -19,7 +19,20 @@ export const changePost = (payload) => ({ type: postsActionTypes.CHANGE_POST, pa
 export const setPostId = (payload) => ({ type: postsActionTypes.SET_POST_ID, payload });
 export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, payload });
 
-export const setPostsListAsync = (username, cursor) => async dispatch => {
+export const getPostsByTagAsync = (tag, cursor) => async dispatch => {
+  try {
+    dispatch(setFetching(true));
+    const { data: response } = cursor
+        ? await apiClient.get(`tags/${tag}/posts?cursor=${cursor}`)
+        : await apiServer.get(`tags/${tag}/posts`);
+
+    dispatch(setPostsList(response));
+  } finally {
+    dispatch(setFetching(false));
+  }
+};
+
+export const getPostsListAsync = (username, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
     const { data: response } = cursor
