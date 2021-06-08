@@ -1,7 +1,7 @@
-import AxiosInstance from "../libs/axiosInstance";
+import apiClient from "../libs/apiClient";
 
 export const getProfile = async () => {
-  const { data: response } = await AxiosInstance.get("profile");
+  const { data: response } = await apiClient.get("profile");
 
   return response;
 };

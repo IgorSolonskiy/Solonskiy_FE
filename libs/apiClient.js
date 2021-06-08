@@ -1,12 +1,12 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const AxiosInstance = axios.create({
+const apiClient = axios.create({
   baseURL: process.env.API_URL,
   responseType: "json"
 });
 
-AxiosInstance.interceptors.request.use(config => {
+apiClient.interceptors.request.use(config => {
   if (Cookies.get("token")) {
     config.headers.common.Authorization = `Bearer ${Cookies.get("token")}`;
   }
@@ -14,4 +14,4 @@ AxiosInstance.interceptors.request.use(config => {
   return config;
 });
 
-export default AxiosInstance;
+export default apiClient;

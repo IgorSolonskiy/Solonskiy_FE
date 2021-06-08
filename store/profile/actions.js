@@ -1,42 +1,45 @@
-import AxiosInstance from "../../libs/axiosInstance";
+import apiClient from "../../libs/apiClient";
 import Cookies from "js-cookie";
 
 export const profileActionTypes = {
-  SET_PROFILE: "PROFILE.SET_PROFILE"
+  SET_PROFILE: "PROFILE.SET_PROFILE",
 };
 
-export const setProfile = (payload) => ({ type: profileActionTypes.SET_PROFILE, payload });
+export const setProfile = (payload) => ({
+  type: profileActionTypes.SET_PROFILE,
+  payload,
+});
 
 export const setProfileAsync = () => async dispatch => {
-  const { data: response } = await AxiosInstance.get("profile");
+  const {data: response} = await apiClient.get("profile");
 
   dispatch(setProfile(response));
 };
 
 export const changeProfileAsync = (updatedProfile) => async dispatch => {
-  const { data: response } = await AxiosInstance.post("profile", updatedProfile, {
+  const {data: response} = await apiClient.post("profile", updatedProfile, {
     headers: {
-      "Content-Type": "multipart/form-data"
-    }
+      "Content-Type": "multipart/form-data",
+    },
   });
 
   dispatch(setProfile(response));
 };
 
 export const loginUserAsync = user => async dispatch => {
-  const { data: { token: response } } = await AxiosInstance.post("login", user);
+  const {data: {token: response}} = await apiClient.post("login", user);
 
   await Cookies.set("token", response);
 };
 
 export const registerUserAsync = (user) => async dispatch => {
-  const { data: { token: response } } = await AxiosInstance.post("register", user);
+  const {data: {token: response}} = await apiClient.post("register", user);
 
   await Cookies.set("token", response);
 };
 
 export const logoutUserAsync = () => async dispatch => {
-  await AxiosInstance.get("logout");
+  await apiClient.get("logout");
   Cookies.remove("token");
   dispatch(setProfile({}));
 };
