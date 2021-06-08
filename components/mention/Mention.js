@@ -1,6 +1,6 @@
 export default function Mention ({ mentions, content, onCLick }) {
   const userName = content.replace("@", "");
-  const user = mentions.filter(user => user.name === userName);
+  const user = mentions.filter(user => user.username === userName);
 
   return user.length ?
     <span onClick={e => onCLick(e, `/users/${userName}`)}

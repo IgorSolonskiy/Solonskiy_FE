@@ -22,7 +22,7 @@ export default function Post ({ post, onDelete, onChange }) {
     <EditPostForm onSubmit={handleEditPost} post={post}/>
     :
     <p className="mt-3" style={{ whiteSpace: "pre" }}>
-      <MentionsParser mentions={post.mentions} text={post.content}/></p>;
+      <MentionsParser mentions={post.mentionedUsers} text={post.content}/></p>;
 
   const controls = showControls
     ? <div
