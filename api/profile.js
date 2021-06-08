@@ -5,3 +5,7 @@ export const getProfile = async () => {
 
   return response;
 };
+
+export default {
+  getProfile
+}

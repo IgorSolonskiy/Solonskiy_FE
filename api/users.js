@@ -6,3 +6,7 @@ export const getSearchUsers = async (username, page = 1, limit = 6) => {
 
   return response.data;
 };
+
+export default {
+  search
+}

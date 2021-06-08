@@ -1,9 +1,13 @@
-export default function Mention ({ mentions, content, onCLick }) {
-  const userName = content.replace("@", "");
-  const user = mentions.filter(user => user.username === userName);
+import {useRouter} from "next/router";
 
-  return user.length ?
-    <span onClick={e => onCLick(e, `/users/${userName}`)}
-          className="btn text-info p-0">{content} </span>
-    : content + " ";
+export default function Mention({username}) {
+  const router = useRouter();
+
+  const handleClick = e => {
+    e.stopPropagation();
+    router.push(`/users/${username}`);
+  };
+
+  return <span onClick={handleClick}
+               className="btn text-info p-0">@{username}</span>;
 }

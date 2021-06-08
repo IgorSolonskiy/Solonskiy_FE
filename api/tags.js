@@ -5,3 +5,7 @@ export const getSearchHashtags = async (tag) => {
 
   return response.data;
 };
+
+export default {
+  search
+}

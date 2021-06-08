@@ -1,17 +1,13 @@
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import Btn from "../btn/Btn";
-import MentionInput from "../inputs/MentionInput";
-import {searchMentions} from "../../helpers/searchMentions";
+import DynamicInput from "../inputs/DynamicInput";
 
 export default function CreateCommentForm({onSubmit}) {
 
   const formik = useFormik({
     initialValues: {
       content: "",
-      search: "",
-      loading: false,
-      searchData: [],
     },
     validationSchema: Yup.object({
       content: Yup.string().
@@ -30,20 +26,10 @@ export default function CreateCommentForm({onSubmit}) {
           className="d-flex justify-content-center align-items-center w-75 ms-3"
           autoComplete="off"
           onSubmit={formik.handleSubmit}>
-        <MentionInput
+        <DynamicInput
             value={formik.values.content}
             placeholder="Comment?"
             onChange={e => formik.setFieldValue("content", e)}
-            onSearch={(search, prefix) => searchMentions(search, prefix,
-                formik)}
-            loading={formik.values.loading}
-            searchData={formik.values.searchData}
-            style={{
-              width: "100%",
-              height: "30px",
-              borderRadius: "10px",
-              fontSize: "18px",
-            }}
         />
         {formik.errors.content ? <div
             className="text-danger">{formik.errors.content}</div> : null}

@@ -1,7 +1,13 @@
-export default function Tag({tag, onCLick}) {
-  return (
-      <span
-          onClick={event => onCLick(event, `/posts/${tag.replace('#', '')}`)}
-          className="btn text-info p-0">{tag} </span>
-  );
+import {useRouter} from "next/router";
+
+export default function Tag({tag}) {
+  const router = useRouter();
+
+  const handleClick = e => {
+    e.stopPropagation();
+    router.push(`/posts/${tag}`);
+  };
+
+  return <span onClick={handleClick}
+               className="btn text-info p-0">#{tag}</span>;
 }
