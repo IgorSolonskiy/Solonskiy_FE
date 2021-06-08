@@ -10,7 +10,7 @@ import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import PostsList from "../../components/list/PostsList";
 
-export default function PostsTag ({ tag }) {
+export default function PostsByTag ({ tag }) {
   const dispatch = useDispatch();
   const fetching = useSelector((state) => state.posts.fetching);
   const cursor = useSelector((state) => state.posts.pagination.cursor);
