@@ -1,4 +1,4 @@
-import Instance from "../../libs/Instance";
+import AxiosInstance from "../../libs/axiosInstance";
 
 export const postsActionTypes = {
   SET_POSTS_LIST: "POSTS.SET_POSTS_LIST",
@@ -21,7 +21,7 @@ export const setFetching = (payload) => ({ type: postsActionTypes.SET_FETCHING, 
 export const getPostsByTagAsync = (tag, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = await Instance.get(`tags/${tag}/posts?cursor=${cursor}`)
+    const { data: response } = await AxiosInstance.get(`tags/${tag}/posts?cursor=${cursor}`)
 
     dispatch(setPostsList(response));
   } finally {
@@ -32,7 +32,7 @@ export const getPostsByTagAsync = (tag, cursor) => async dispatch => {
 export const getPostsListAsync = (username, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
-    const { data: response } = await Instance.get(`users/${username}/posts?cursor=${cursor}`);
+    const { data: response } = await AxiosInstance.get(`users/${username}/posts?cursor=${cursor}`);
 
     dispatch(setPostsList(response));
   } finally {
@@ -41,24 +41,24 @@ export const getPostsListAsync = (username, cursor) => async dispatch => {
 };
 
 export const addOnePostListAsync = (post) => async dispatch => {
-  const { data: response } = await Instance.post("posts", post);
+  const { data: response } = await AxiosInstance.post("posts", post);
 
   dispatch(addOnePostList(response));
 };
 
 export const setPostAsync = (id) => async dispatch => {
-  const { data: response } = await Instance.get(`posts/${id}`);
+  const { data: response } = await AxiosInstance.get(`posts/${id}`);
 
   dispatch(setPost(response));
 };
 
 export const changePostAsync = (id, post) => async dispatch => {
-  const { data: response } = await Instance.put(`posts/${id}`, post);
+  const { data: response } = await AxiosInstance.put(`posts/${id}`, post);
 
   dispatch(changePost(response));
 };
 
 export const deletePostAsync = (id) => async dispatch => {
-  await Instance.delete(`posts/${id}`);
+  await AxiosInstance.delete(`posts/${id}`);
   dispatch(removePost(id));
 };

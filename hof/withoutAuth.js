@@ -1,11 +1,11 @@
 import { getProfile } from "../api/profile";
-import Instance from "../libs/Instance";
+import AxiosInstance from "../libs/axiosInstance";
 
 export const withoutAuth = getServerSideProps => async (ctx) => {
   try {
     const { token } = ctx.req.cookies;
 
-    Instance.defaults.headers["Authorization"] = `Bearer ${token}`;
+    AxiosInstance.defaults.headers["Authorization"] = `Bearer ${token}`;
 
     const profile = await Api.Profile.getProfile();
 

@@ -1,7 +1,7 @@
-import Instance from "../libs/Instance";
+import AxiosInstance from "../libs/axiosInstance";
 
 const search = async (tag) => {
-  const {data: response} = await Instance.get(`tags?name=${tag}`);
+  const {data: response} = await AxiosInstance.get(`tags?name=${tag}`);
 
   return response.data;
 };

@@ -1,11 +1,11 @@
 import { setProfileAsync } from "../store/profile";
-import Instance from "../libs/Instance";
+import AxiosInstance from "../libs/axiosInstance";
 
 export const withAuth = getServerSideProps => (async (ctx, storeData) => {
   const { token } = ctx.req.cookies;
   if (token) {
     try {
-      Instance.defaults.headers["Authorization"] = `Bearer ${token}`;
+      AxiosInstance.defaults.headers["Authorization"] = `Bearer ${token}`;
 
       await storeData.dispatch(setProfileAsync());
 

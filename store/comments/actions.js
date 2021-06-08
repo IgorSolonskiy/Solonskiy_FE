@@ -1,4 +1,4 @@
-import Instance from "../../libs/Instance";
+import AxiosInstance from "../../libs/axiosInstance";
 import { postsActionTypes } from "../posts";
 
 export const commentsActionTypes = {
@@ -19,7 +19,7 @@ export const setCommentsListAsync = (id, cursor) => async dispatch => {
   try {
     dispatch(setFetching(true));
 
-    const { data: response } = await Instance.get(`posts/${id}/comments?cursor=${cursor}`)
+    const { data: response } = await AxiosInstance.get(`posts/${id}/comments?cursor=${cursor}`)
 
     dispatch(setCommentsList(response));
   } finally {
@@ -28,17 +28,17 @@ export const setCommentsListAsync = (id, cursor) => async dispatch => {
 };
 
 export const addCommentAsync = (id, comment) => async dispatch => {
-  const { data: response } = await Instance.post(`posts/${id}/comments`, comment);
+  const { data: response } = await AxiosInstance.post(`posts/${id}/comments`, comment);
 
   dispatch(addComment(response));
 };
 
 export const deleteCommentAsync = (id) => async dispatch => {
-  await Instance.delete(`comments/${id}`);
+  await AxiosInstance.delete(`comments/${id}`);
   dispatch(removeComment(id));
 };
 
 export const changeCommentAsync = (id, comment) => async dispatch => {
-  const { data: response } = await Instance.put(`comments/${id}`, comment);
+  const { data: response } = await AxiosInstance.put(`comments/${id}`, comment);
   dispatch(changeComment(response));
 };
