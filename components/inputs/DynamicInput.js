@@ -46,10 +46,10 @@ export default function DynamicInput({
           loading={loading} placeholder={placeholder} onChange={onChange}
           value={value} prefix={["@", "#"]} onSearch={handleSearch}
           style={{
-            width: "50%",
-            height: "40px",
+            width: "100%",
+            height: "32px",
             borderRadius: "10px",
-            fontSize: "22px",
+            fontSize: "18px",
           }}
       >
         {searchList}

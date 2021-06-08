@@ -24,7 +24,7 @@ export default function CreatePostForm({onSubmit}) {
 
   return (
       <form
-          className="d-flex justify-content-center  align-items-center mt-3 w-100 mb-3"
+          className="d-flex justify-content-center  align-items-center mt-3 w-75 mb-3"
           autoComplete="off"
           onSubmit={formik.handleSubmit}>
         <DynamicInput
