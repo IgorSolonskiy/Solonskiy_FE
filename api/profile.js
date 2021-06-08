@@ -1,7 +1,7 @@
-import apiServer from "../libs/apiServer";
+import apiClient from "../libs/apiClient";
 
-const getProfile = async () => {
-  const { data: response } = await apiServer.get("profile");
+export const getProfile = async () => {
+  const { data: response } = await apiClient.get("profile");
 
   return response;
 };
