@@ -19,12 +19,13 @@ export default function Post({post, onDelete, onChange}) {
   };
 
   const mentionedUsers = post.mentionedUsers.map(user => user.username);
+  const hashtags = post.hashtags.map(tag => tag.name);
 
   const content = editing ?
       <EditPostForm onSubmit={handleEditPost} post={post}/>
       :
       <p className="mt-3" style={{whiteSpace: "pre"}}>
-        <DynamicContent mentions={mentionedUsers} content={post.content}/>
+        <DynamicContent mentions={mentionedUsers} hashtags={hashtags} content={post.content}/>
       </p>;
 
   const controls = showControls
