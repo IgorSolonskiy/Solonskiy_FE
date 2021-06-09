@@ -1,10 +1,8 @@
-import apiClient from "../../libs/apiClient";
-
 export const profileActionTypes = {
-  SET_PROFILE: "PROFILE.SET_PROFILE"
+  SET_PROFILE: "PROFILE.SET_PROFILE",
 };
 
-export const setProfile = () => ({ type: profileActionTypes.SET_PROFILE });
+export const setProfile = () => ({type: profileActionTypes.SET_PROFILE});
 
 export const setProfileAsync = () => ({
   type: profileActionTypes.SET_PROFILE,
@@ -14,17 +12,17 @@ export const setProfileAsync = () => ({
   meta: {
     getData: (data) => {
       return {
-        profile: data
+        profile: data,
       };
     },
   },
 });
 
-export const changeProfileAsync =async  (updatedProfile) => {
-  const { data: response } = await apiClient.post("profile", updatedProfile, {
-    headers: {
-      "Content-Type": "multipart/form-data"
-    }
-  });
-
-};
+export const changeProfileAsync = updatedProfile => ({
+  type: profileActionTypes.SET_PROFILE,
+  request: {
+    url: `profile`,
+    method: "post",
+    params: updatedProfile,
+  },
+});

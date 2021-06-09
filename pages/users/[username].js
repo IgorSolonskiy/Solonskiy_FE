@@ -10,7 +10,7 @@ import CreatePostForm from "../../components/forms/CreatePostForm";
 import {
   addOnePostListAsync, changePostAsync,
   deletePostAsync,
-  getPostsByPaginateAsync, getPostsListAsync, setPostsList,
+  getPostsListAsync, setPostsList,
 } from "../../store/posts/actions";
 import {addUserAsync, setUser} from "../../store/user/actions";
 import {getQuerySelector} from "@redux-requests/core";
@@ -36,7 +36,7 @@ export default function Home({auth}) {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getPostsByPaginateAsync(user.username, cursor));
+      dispatch(getPostsListAsync(user.username, cursor));
     }
   };
 

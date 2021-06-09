@@ -19,7 +19,7 @@ import {
 import {
   addCommentAsync,
   changeCommentAsync,
-  deleteCommentAsync, getCommentsByPaginateAsync, setCommentsList,
+  deleteCommentAsync, setCommentsList,
   setCommentsListAsync,
 } from "../../store/comments/actions";
 
@@ -40,7 +40,7 @@ export default function Post() {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getCommentsByPaginateAsync(post.id, cursor));
+      dispatch(setCommentsListAsync(post.id, cursor));
     }
   };
 

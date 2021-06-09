@@ -8,14 +8,15 @@ const search = async (username, page = 1, limit = 6) => {
   return response.data;
 };
 
-export const login = async user => {
-  const {data: {token: response}} = await apiClient.post("login", user);
+export const login = async credentials => {
+  const {data: {token: response}} = await apiClient.post("login", credentials);
 
   Cookies.set("token", response);
 };
 
-export const register = async (user) => {
-  const {data: {token: response}} = await apiClient.post("register", user);
+export const register = async (userData) => {
+  const {data: {token: response}} = await apiClient.post("register",
+      userData);
 
   await Cookies.set("token", response);
 };

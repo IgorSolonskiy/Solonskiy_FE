@@ -1,4 +1,4 @@
-import apiClient from "../../libs/apiClient";
+import {metaDataAddPost, metaDataByPaginate} from "./requestConfig";
 
 export const postsActionTypes = {
   SET_POSTS_LIST: "POSTS.SET_POSTS_LIST",
@@ -6,49 +6,14 @@ export const postsActionTypes = {
   REMOVE_POST: "POSTS.REMOVE_POST",
   SET_POST: "POSTS.SET_POST",
   CHANGE_POST: "POSTS.CHANGE_POST",
-  SET_POST_ID: "POSTS.SET_POST_ID",
-  SET_FETCHING: "POSTS.SET_FETCHING",
 };
 
 export const setPostsList = () => ({
   type: postsActionTypes.SET_POSTS_LIST,
 });
-export const addOnePostList = () => ({
-  type: postsActionTypes.ADD_ONE_POST_LIST,
-});
+
 export const setPost = () => ({
   type: postsActionTypes.SET_POST,
-});
-export const removePost = () => ({
-  type: postsActionTypes.REMOVE_POST,
-});
-export const changePost = () => ({
-  type: postsActionTypes.CHANGE_POST,
-});
-export const setPostId = () => ({
-  type: postsActionTypes.SET_POST_ID,
-});
-export const setFetching = () => ({
-  type: postsActionTypes.SET_FETCHING,
-});
-
-export const getPostsByPaginateAsync = (username, cursor = "") => ({
-  type: postsActionTypes.SET_POSTS_LIST,
-  request: {
-    url: `users/${username}/posts?cursor=${cursor}`,
-  },
-  meta: {
-    mutations: {
-      [postsActionTypes.SET_POSTS_LIST]: {
-        updateData: ({posts: prevPosts}, {data: posts, links: {next}}) => {
-          return {
-            posts: [...prevPosts, ...posts],
-            cursor: next && next.match(/cursor=(\w+)/)[1],
-          };
-        },
-      },
-    },
-  },
 });
 
 export const getPostsListAsync = (username, cursor = "") => ({
@@ -56,14 +21,7 @@ export const getPostsListAsync = (username, cursor = "") => ({
   request: {
     url: `users/${username}/posts?cursor=${cursor}`,
   },
-  meta: {
-    getData: (data) => {
-      return {
-        posts: data.data,
-        cursor: data.links.next && data.links.next.match(/cursor=(\w+)/)[1]
-      };
-    },
-  },
+  meta: metaDataByPaginate,
 });
 
 export const getPostsByTagAsync = (tag, cursor) => ({
@@ -71,6 +29,7 @@ export const getPostsByTagAsync = (tag, cursor) => ({
   request: {
     url: `tags/${tag}/posts?cursor=${cursor}`,
   },
+  meta: metaDataByPaginate,
 });
 
 export const addOnePostListAsync = ({content}) => ({
@@ -82,18 +41,7 @@ export const addOnePostListAsync = ({content}) => ({
     },
     method: "post",
   },
-  meta: {
-    mutations: {
-      [postsActionTypes.SET_POSTS_LIST]: {
-        updateData: (prevState, post) => {
-          return {
-            ...prevState,
-            posts: [...prevState.posts, post],
-          };
-        },
-      },
-    },
-  },
+  meta: metaDataAddPost,
 });
 
 export const setPostAsync = (id) => ({
@@ -111,11 +59,27 @@ export const setPostAsync = (id) => ({
   },
 });
 
-export const changePostAsync = (id, post) => async dispatch => {
-  const {data: response} = await apiClient.put(`posts/${id}`, post);
-
-  dispatch(changePost(response));
-};
+export const changePostAsync = (id, post) => ({
+  type: postsActionTypes.CHANGE_POST,
+  request: {
+    url: `posts/${id}`,
+    method: "put",
+    params: post,
+  },
+  meta: {
+    mutations: {
+      [postsActionTypes.SET_POSTS_LIST]: {
+        updateData: (prevState, changedPost) => {
+          return {
+            ...prevState,
+            posts: prevState.posts.map(
+                post => post.id === id ? changedPost : post),
+          };
+        },
+      },
+    },
+  },
+});
 
 export const deletePostAsync = (id) => ({
   type: postsActionTypes.REMOVE_POST,
