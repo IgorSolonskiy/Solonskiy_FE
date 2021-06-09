@@ -1,25 +1,34 @@
-import { useRouter } from "next/router";
-import { withAuth } from "../../hof/withAuth";
-import { withRedux } from "../../hof/withRedux";
-import { addUserAsync } from "../../store/user";
-import { useDispatch, useSelector } from "react-redux";
-import { addCommentAsync, changeCommentAsync, deleteCommentAsync, setCommentsListAsync, } from "../../store/comments";
-import { changePostAsync, deletePostAsync, setPostAsync, setPostId, setPostsListAsync, } from "../../store/posts";
+import {useRouter} from "next/router";
+import {withAuth} from "../../hof/withAuth";
+import {withRedux} from "../../hof/withRedux";
+import {useDispatch, useSelector} from "react-redux";
 
 import MainLayout from "../../components/layout/MainLayout";
 import Posts from "../../components/post/Post";
 import UserProfile from "../../components/user/UserProfile";
 import CommentsList from "../../components/list/CommentsList";
 import CreateCommentForm from "../../components/forms/CreateCommentForm";
-import { useEffect } from "react";
+import {useEffect} from "react";
+import {getQuerySelector} from "@redux-requests/core";
+import {addUserAsync, setUser} from "../../store/user/actions";
+import {
+  changePostAsync, deletePostAsync,
+  setPost,
+  setPostAsync,
+} from "../../store/posts/actions";
+import {
+  addCommentAsync,
+  changeCommentAsync,
+  deleteCommentAsync, getCommentsByPaginateAsync, setCommentsList,
+  setCommentsListAsync,
+} from "../../store/comments/actions";
 
-export default function Post () {
+export default function Post() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const user = useSelector(state => state.users.user);
-  const post = useSelector(state => state.posts.post);
-  const fetching = useSelector((state) => state.comments.fetching);
-  const cursor = useSelector((state) => state.comments.pagination.cursor);
+  const {data: {post}} = useSelector(getQuerySelector(setPost()));
+  const {data: {user}} = useSelector(getQuerySelector(setUser()));
+  const {data: {cursor}} = useSelector(getQuerySelector(setCommentsList()));
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -28,10 +37,10 @@ export default function Post () {
   });
 
   const handleInfiniteScroll = (e) => {
-    const { scrollHeight, scrollTop } = e.target.documentElement;
+    const {scrollHeight, scrollTop} = e.target.documentElement;
 
-    if (scrollHeight <= (scrollTop + window.innerHeight) && !fetching && cursor) {
-      dispatch(setCommentsListAsync(post.id, cursor));
+    if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
+      dispatch(getCommentsByPaginateAsync(post.id, cursor));
     }
   };
 
@@ -40,42 +49,49 @@ export default function Post () {
     router.push(`/users/${user.username}`);
   };
 
-  const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment.id));
-  const handleEditComment = async (comment, changeComment) => await dispatch(changeCommentAsync(comment.id, changeComment));
-  const handleEditPost = async (editPost, newPost) => await dispatch(changePostAsync(editPost.id, newPost));
-  const handleCreateComment = (newComment) => dispatch(addCommentAsync(post.id, newComment));
+  const handleDeleteComment = (deletedComment) => dispatch(
+      deleteCommentAsync(deletedComment.id));
+  const handleEditComment = async (comment, changeComment) => await dispatch(
+      changeCommentAsync(comment.id, changeComment));
+  const handleEditPost = async (editPost, newPost) => await dispatch(
+      changePostAsync(editPost.id, newPost));
+  const handleCreateComment = (newComment) => dispatch(
+      addCommentAsync(post.id, newComment));
 
   return (
-    <MainLayout>
-      <UserProfile/>
-      <Posts onChange={handleEditPost}
-             post={post}
-             onDelete={handleDeletePost}/>
-      <div className="w-100 d-flex mt-3 justify-content-center">
-        <CreateCommentForm onSubmit={handleCreateComment}/>
-      </div>
-      <CommentsList onSubmit={handleEditComment} onDelete={handleDeleteComment}/>
-    </MainLayout>
+      <MainLayout>
+        <UserProfile/>
+        <Posts onChange={handleEditPost}
+               post={post}
+               onDelete={handleDeletePost}/>
+        <div className="w-100 d-flex mt-3 justify-content-center">
+          <CreateCommentForm onSubmit={handleCreateComment}/>
+        </div>
+        <CommentsList onSubmit={handleEditComment}
+                      onDelete={handleDeleteComment}/>
+      </MainLayout>
   );
 }
 
-export const getServerSideProps = withRedux(withAuth(async (ctx, { user }, { dispatch, getState }) => {
-    try {
-      await Promise.all([
-        dispatch(setPostAsync(ctx.query.id)),
-        dispatch(setCommentsListAsync(ctx.query.id)),
-        dispatch(setPostId(ctx.query.id)),
-      ]);
+export const getServerSideProps = withRedux(
+    withAuth(async (ctx, {user}, {dispatch, getState}) => {
+          try {
+            await Promise.all([
+              dispatch(setPostAsync(ctx.query.id)),
+              dispatch(setCommentsListAsync(ctx.query.id)),
+            ]);
 
-      const { posts: { post: { author } } } = getState();
+            const data = getState();
+            const author = data.requests.queries["POSTS.SET_POST"].data.post.author;
 
-      await dispatch(addUserAsync(author.username));
+            await dispatch(addUserAsync(author.username));
 
-      return { props: {} };
-    } catch (e) {
-      return {
-        notFound: true,
-      };
-    }
-  }
-));
+            return {props: {}};
+          } catch (e) {
+            console.log(e);
+            return {
+              notFound: true,
+            };
+          }
+        },
+    ));

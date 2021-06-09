@@ -5,13 +5,11 @@ export const usersActionTypes = {
   SET_USER: "USERS.SET_USER",
 };
 
-export const setUsers = (payload) => ({
-  type: usersActionTypes.SET_USERS,
-  payload,
-});
-export const setUser = (payload) => ({
+export const setUsers = () => ({
   type: usersActionTypes.SET_USER,
-  payload,
+});
+export const setUser = () => ({
+  type: usersActionTypes.SET_USER,
 });
 
 export const searchUsersAsync = (
@@ -23,14 +21,21 @@ export const searchUsersAsync = (
 };
 
 export const getUsersAsync = (page, limit = 6) => async dispatch => {
-  const {data: response} = await apiClient.get(
-      `users?page=${page}&limit=${limit}`);
+  const {data: response} = await apiClient.get(`users?page=${page}&limit=${limit}`);
 
   dispatch(setUsers(response));
 };
 
-export const addUserAsync = username => async dispatch => {
-  const {data: response} = await apiClient.get(`users/${username}`);
-
-  dispatch(setUser(response));
-};
+export const addUserAsync = (username) => ({
+  type: usersActionTypes.SET_USER,
+  request: {
+    url: `users/${username}`,
+  },
+  meta: {
+    getData: (data) => {
+      return {
+        user: data,
+      };
+    },
+  },
+});

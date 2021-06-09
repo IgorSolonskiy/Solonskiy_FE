@@ -1,14 +1,16 @@
 import {Avatar} from "../image/Avatar";
 import {useRouter} from "next/router";
 import {useState} from "react";
+import {getQuerySelector} from "@redux-requests/core";
+import {setProfile} from "../../store/profile/actions";
+import {useSelector} from "react-redux";
 
 import Btn from "../btn/Btn";
 import EditPostForm from "../forms/EditPostForm";
-import {useSelector} from "react-redux";
 import DynamicContent from "../parser/DynamicContent";
 
 export default function Post({post, onDelete, onChange}) {
-  const profile = useSelector((state) => state.profile.profile);
+  const {data: {profile}} = useSelector(getQuerySelector(setProfile()));
   const [editing, setEditing] = useState(false);
   const router = useRouter();
   const showControls = profile.id === post.author.id;
@@ -25,7 +27,8 @@ export default function Post({post, onDelete, onChange}) {
       <EditPostForm onSubmit={handleEditPost} post={post}/>
       :
       <p className="mt-3" style={{whiteSpace: "pre"}}>
-        <DynamicContent mentions={mentionedUsers} hashtags={hashtags} content={post.content}/>
+        <DynamicContent mentions={mentionedUsers} hashtags={hashtags}
+                        content={post.content}/>
       </p>;
 
   const controls = showControls
@@ -53,7 +56,8 @@ export default function Post({post, onDelete, onChange}) {
                   <Avatar avatar={post.author.avatar} name={post.author.name}
                           size={40}/>
                   <div style={{width: "200px"}}
-                       className="fw-bold mt-2 mx-3 text-center text-uppercase ">{post.author.username}
+                       className="fw-bold mt-2 mx-3 text-center text-uppercase ">
+                    {post.author.username}
                   </div>
                 </div>
                 {content}

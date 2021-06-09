@@ -1,8 +1,9 @@
+import {Api} from "../api";
 import apiClient from "../libs/apiClient";
 
 export const withoutAuth = getServerSideProps => async (ctx) => {
   try {
-    const { token } = ctx.req.cookies;
+    const {token} = ctx.req.cookies;
 
     apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
 
@@ -12,18 +13,18 @@ export const withoutAuth = getServerSideProps => async (ctx) => {
       redirect: {
         destination: `/users/${profile.username}`,
         permanent: false,
-      }
+      },
     };
   } catch (e) {
     if (getServerSideProps) {
       const result = await getServerSideProps(ctx);
       return {
         ...result,
-        props: {}
+        props: {},
       };
     }
 
-    return { props: {} };
+    return {props: {}};
   }
 };
 

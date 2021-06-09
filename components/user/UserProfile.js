@@ -1,11 +1,14 @@
 import { useSelector } from "react-redux";
 import { Avatar } from "../image/Avatar";
+import {getQuerySelector} from "@redux-requests/core";
 
 import Link from "next/link";
+import {setUser} from "../../store/user/actions";
+import {setPost} from "../../store/posts/actions";
 
 export default function UserProfile () {
-  const user = useSelector(state => state.users.user);
-  const post = useSelector(state => state.posts.post);
+  const {data:{user}} = useSelector(getQuerySelector(setUser()));
+  const {post} = useSelector(getQuerySelector(setPost()));
 
   const returnBackLink = user && post ?
     <Link href={`/users/${user.username}`}>

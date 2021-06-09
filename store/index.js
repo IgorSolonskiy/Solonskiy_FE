@@ -1,16 +1,30 @@
-import { applyMiddleware, createStore } from "redux";
-import { reducers } from "./reducers";
-import { useMemo } from "react";
+import {useMemo} from "react";
+import {createDriver} from "@redux-requests/axios";
+import {handleRequests} from "@redux-requests/core";
+import {createStore, applyMiddleware, combineReducers, compose} from "redux";
 
-import thunk from "redux-thunk";
+import apiClient from "../libs/apiClient";
 
 let store;
 
-function initStore (preloadedState = {}) {
+function initStore(preloadedState = {}) {
+  const {
+    requestsReducer,
+    requestsMiddleware,
+  } = handleRequests({driver: createDriver(apiClient)});
+
+  const reducers = combineReducers({
+    requests: requestsReducer,
+  });
+  const composeEnhancers =
+      typeof window !== "undefined"
+          ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+          : compose;
+
   return createStore(
-    reducers,
-    preloadedState,
-    applyMiddleware(thunk)
+      reducers,
+      preloadedState,
+      composeEnhancers(applyMiddleware(...requestsMiddleware)),
   );
 }
 
@@ -34,7 +48,7 @@ export const initializeStore = (preloadedState) => {
   return _store;
 };
 
-export function useStore (initialState) {
+export function useStore(initialState) {
   const store = useMemo(() => initializeStore(initialState), [initialState]);
   return store;
 }

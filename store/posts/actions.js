@@ -10,70 +10,106 @@ export const postsActionTypes = {
   SET_FETCHING: "POSTS.SET_FETCHING",
 };
 
-export const setPostsList = (payload) => ({
+export const setPostsList = () => ({
   type: postsActionTypes.SET_POSTS_LIST,
-  payload,
 });
-export const addOnePostList = (payload) => ({
+export const addOnePostList = () => ({
   type: postsActionTypes.ADD_ONE_POST_LIST,
-  payload,
 });
-export const setPost = (payload) => ({
+export const setPost = () => ({
   type: postsActionTypes.SET_POST,
-  payload,
 });
-export const removePost = (payload) => ({
+export const removePost = () => ({
   type: postsActionTypes.REMOVE_POST,
-  payload,
 });
-export const changePost = (payload) => ({
+export const changePost = () => ({
   type: postsActionTypes.CHANGE_POST,
-  payload,
 });
-export const setPostId = (payload) => ({
+export const setPostId = () => ({
   type: postsActionTypes.SET_POST_ID,
-  payload,
 });
-export const setFetching = (payload) => ({
+export const setFetching = () => ({
   type: postsActionTypes.SET_FETCHING,
-  payload,
 });
 
-export const getPostsByTagAsync = (tag, cursor) => async dispatch => {
-  try {
-    dispatch(setFetching(true));
-    const {data: response} = await apiClient.get(
-        `tags/${tag}/posts?cursor=${cursor}`);
+export const getPostsByPaginateAsync = (username, cursor = "") => ({
+  type: postsActionTypes.SET_POSTS_LIST,
+  request: {
+    url: `users/${username}/posts?cursor=${cursor}`,
+  },
+  meta: {
+    mutations: {
+      [postsActionTypes.SET_POSTS_LIST]: {
+        updateData: ({posts: prevPosts}, {data: posts, links: {next}}) => {
+          return {
+            posts: [...prevPosts, ...posts],
+            cursor: next && next.match(/cursor=(\w+)/)[1],
+          };
+        },
+      },
+    },
+  },
+});
 
-    dispatch(setPostsList(response));
-  } finally {
-    dispatch(setFetching(false));
-  }
-};
+export const getPostsListAsync = (username, cursor = "") => ({
+  type: postsActionTypes.SET_POSTS_LIST,
+  request: {
+    url: `users/${username}/posts?cursor=${cursor}`,
+  },
+  meta: {
+    getData: (data) => {
+      return {
+        posts: data.data,
+        cursor: data.links.next && data.links.next.match(/cursor=(\w+)/)[1]
+      };
+    },
+  },
+});
 
-export const getPostsListAsync = (username, cursor) => async dispatch => {
-  try {
-    dispatch(setFetching(true));
-    const {data: response} = await apiClient.get(
-        `users/${username}/posts?cursor=${cursor}`);
+export const getPostsByTagAsync = (tag, cursor) => ({
+  type: postsActionTypes.SET_POSTS_LIST,
+  request: {
+    url: `tags/${tag}/posts?cursor=${cursor}`,
+  },
+});
 
-    dispatch(setPostsList(response));
-  } finally {
-    dispatch(setFetching(false));
-  }
-};
+export const addOnePostListAsync = ({content}) => ({
+  type: postsActionTypes.ADD_ONE_POST_LIST,
+  request: {
+    url: "posts",
+    params: {
+      content,
+    },
+    method: "post",
+  },
+  meta: {
+    mutations: {
+      [postsActionTypes.SET_POSTS_LIST]: {
+        updateData: (prevState, post) => {
+          return {
+            ...prevState,
+            posts: [...prevState.posts, post],
+          };
+        },
+      },
+    },
+  },
+});
 
-export const addOnePostListAsync = (post) => async dispatch => {
-  const {data: response} = await apiClient.post("posts", post);
-
-  dispatch(addOnePostList(response));
-};
-
-export const setPostAsync = (id) => async dispatch => {
-  const {data: response} = await apiClient.get(`posts/${id}`);
-
-  dispatch(setPost(response));
-};
+export const setPostAsync = (id) => ({
+  type: postsActionTypes.SET_POST,
+  request: {
+    url: `posts/${id}`,
+  },
+  meta: {
+    getData: (data) => {
+      return {
+        post: data,
+        postId: data.id,
+      };
+    },
+  },
+});
 
 export const changePostAsync = (id, post) => async dispatch => {
   const {data: response} = await apiClient.put(`posts/${id}`, post);
@@ -81,7 +117,22 @@ export const changePostAsync = (id, post) => async dispatch => {
   dispatch(changePost(response));
 };
 
-export const deletePostAsync = (id) => async dispatch => {
-  await apiClient.delete(`posts/${id}`);
-  dispatch(removePost(id));
-};
+export const deletePostAsync = (id) => ({
+  type: postsActionTypes.REMOVE_POST,
+  request: {
+    url: `posts/${id}`,
+    method: "delete",
+  },
+  meta: {
+    mutations: {
+      [postsActionTypes.SET_POSTS_LIST]: {
+        updateData: (prevState) => {
+          return {
+            ...prevState,
+            posts: prevState.posts.filter(post => post.id !== id),
+          };
+        },
+      },
+    },
+  },
+});
