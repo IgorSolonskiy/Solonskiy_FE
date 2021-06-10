@@ -71,12 +71,23 @@ export const followUserAsync = (username) => ({
   request: {
     url: `users/${username}/follow`,
   },
+  meta: {
+    mutations: {
+      [usersActionTypes.SET_FOLLOWERS]: {
+        updateData: ({followers}) => {
+          return {
+            followers: [...followers, username],
+          };
+        },
+      },
+    },
+  },
 });
 
 export const getFollowersAsync = (username) => ({
   type: usersActionTypes.SET_FOLLOWERS,
   request: {
-    url: `users/${username}/followers`,
+    url: `users/${username}/followings`,
   },
   meta: {
     getData: (data) => {
@@ -91,6 +102,7 @@ export const unfollowUserAsync = (username) => ({
   type: usersActionTypes.REMOVE_FOLLOW,
   request: {
     url: `users/${username}/unfollow`,
+    method: "delete",
   },
   meta: {
     mutations: {
@@ -99,7 +111,7 @@ export const unfollowUserAsync = (username) => ({
           return {
             ...prevState,
             followers: prevState.followers.filter(
-                user => user.username !== username),
+                user => user !== username),
           };
         },
       },

@@ -61,9 +61,9 @@ export const addOnePostListAsync = ({content}) => ({
     mutations: {
       [postsActionTypes.SET_POSTS_LIST]: {
         updateData: (prevState, post) => {
-          return prevState.cursor ? prevState : {
+          return {
             ...prevState,
-            posts: [...prevState.posts, post],
+            posts: [post, ...prevState.posts],
           };
         },
       },

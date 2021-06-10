@@ -30,13 +30,9 @@ export default function Users() {
     return dispatch(getUsersAsync(1));
   };
 
-  const handleFollowUser = username => {
-    dispatch(followUserAsync(username));
-  };
+  const handleFollowUser = username => dispatch(followUserAsync(username));
 
-  const handleUnfollowUser = username => {
-    dispatch(unfollowUserAsync(username));
-  };
+  const handleUnfollowUser = username => dispatch(unfollowUserAsync(username));
 
   const handlePaginateUsers = page => dispatch(
       searchName ? searchUsersAsync(searchName, page) : getUsersAsync(page));
