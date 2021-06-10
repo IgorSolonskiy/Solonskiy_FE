@@ -17,3 +17,15 @@ export const setProfileAsync = () => ({
     },
   },
 });
+
+export const changeProfileAsync = (updateData) => ({
+  type: profileActionTypes.SET_PROFILE,
+  request: {
+    url: `profile`,
+    method: "post",
+    data: updateData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  },
+});
