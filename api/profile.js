@@ -6,14 +6,6 @@ export const getProfile = async () => {
   return response;
 };
 
-export const change = updatedProfile => apiClient.post("profile",
-    updatedProfile, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
 export default {
   getProfile,
-  change,
 };

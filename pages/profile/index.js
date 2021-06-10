@@ -1,13 +1,16 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
+import {useDispatch} from "react-redux";
+import {changeProfileAsync} from "../../store/profile/actions";
 
 import MainLayout from "../../components/layout/MainLayout";
 import ProfileForm from "../../components/forms/ProfileForm";
-import {Api} from "../../api";
 
 export default function Profile() {
-  const handleChangeProfile = async (updatedProfile) => Api.Profile.change(
-      updatedProfile);
+  const dispatch = useDispatch();
+
+  const handleChangeProfile = (updatedProfile) => dispatch(
+      changeProfileAsync(updatedProfile));
 
   return (
       <MainLayout>
