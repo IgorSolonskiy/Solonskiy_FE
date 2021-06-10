@@ -13,7 +13,6 @@ export default function ProfileForm({onSubmit}) {
   const formik = useFormik({
     initialValues: {
       name: profile.name,
-      _method: 'PUT'
     },
     validationSchema: Yup.object({
       name: Yup.string().

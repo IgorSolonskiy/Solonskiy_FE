@@ -17,12 +17,3 @@ export const setProfileAsync = () => ({
     },
   },
 });
-
-export const changeProfileAsync = updatedProfile => ({
-  type: profileActionTypes.SET_PROFILE,
-  request: {
-    url: `profile`,
-    method: "post",
-    params: updatedProfile,
-  },
-});
