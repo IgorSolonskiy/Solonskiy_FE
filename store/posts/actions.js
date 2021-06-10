@@ -1,5 +1,3 @@
-import {metaDataAddPost, metaDataByPaginate} from "./requestConfig";
-
 export const postsActionTypes = {
   SET_POSTS_LIST: "POSTS.SET_POSTS_LIST",
   ADD_ONE_POST_LIST: "POSTS.ADD_POST_LIST",
@@ -16,20 +14,38 @@ export const setPost = () => ({
   type: postsActionTypes.SET_POST,
 });
 
-export const getPostsListAsync = (username, cursor = "") => ({
+export const getPostsListAsync = (username, cursor = "", prevPosts = []) => ({
   type: postsActionTypes.SET_POSTS_LIST,
   request: {
     url: `users/${username}/posts?cursor=${cursor}`,
   },
-  meta: metaDataByPaginate,
+  meta: {
+    getData: (data) => {
+      return {
+        posts: [...prevPosts, ...data.data],
+        cursor: data.links.next
+            ? data.links.next.match(/cursor=(\w+)/)[1]
+            : data.links.next,
+      };
+    },
+  },
 });
 
-export const getPostsByTagAsync = (tag, cursor) => ({
+export const getPostsByTagAsync = (tag, cursor = "", prevPosts = []) => ({
   type: postsActionTypes.SET_POSTS_LIST,
   request: {
     url: `tags/${tag}/posts?cursor=${cursor}`,
   },
-  meta: metaDataByPaginate,
+  meta: {
+    getData: (data) => {
+      return {
+        posts: [...prevPosts, ...data.data],
+        cursor: data.links.next
+            ? data.links.next.match(/cursor=(\w+)/)[1]
+            : data.links.next,
+      };
+    },
+  },
 });
 
 export const addOnePostListAsync = ({content}) => ({
@@ -41,7 +57,18 @@ export const addOnePostListAsync = ({content}) => ({
     },
     method: "post",
   },
-  meta: metaDataAddPost,
+  meta: {
+    mutations: {
+      [postsActionTypes.SET_POSTS_LIST]: {
+        updateData: (prevState, post) => {
+          return prevState.cursor ? prevState : {
+            ...prevState,
+            posts: [...prevState.posts, post],
+          };
+        },
+      },
+    },
+  },
 });
 
 export const setPostAsync = (id) => ({

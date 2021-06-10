@@ -18,7 +18,7 @@ import {getQuerySelector} from "@redux-requests/core";
 export default function Home({auth}) {
   const dispatch = useDispatch();
   const {data: {user}} = useSelector(getQuerySelector(setUser()));
-  const {data: {cursor}} = useSelector(getQuerySelector(setPostsList()));
+  const {data: {cursor,posts}} = useSelector(getQuerySelector(setPostsList()));
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -36,7 +36,7 @@ export default function Home({auth}) {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getPostsListAsync(user.username, cursor));
+      dispatch(getPostsListAsync(user.username, cursor, posts));
     }
   };
 

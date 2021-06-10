@@ -17,7 +17,7 @@ import {getQuerySelector} from "@redux-requests/core";
 
 export default function PostsByTag({tag}) {
   const dispatch = useDispatch();
-  const {data: {cursor}} = useSelector(getQuerySelector(setPostsList()));
+  const {data: {cursor, posts}} = useSelector(getQuerySelector(setPostsList()));
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -36,7 +36,7 @@ export default function PostsByTag({tag}) {
     if (scrollHeight <= (scrollTop + window.innerHeight) &&
         cursor) {
 
-      dispatch(getPostsByTagAsync(tag, cursor));
+      dispatch(getPostsByTagAsync(tag, cursor, posts));
     }
   };
 

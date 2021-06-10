@@ -1,5 +1,3 @@
-import {metaDataByPaginate} from "./requestConfig";
-
 export const commentsActionTypes = {
   SET_COMMENTS_LIST: "COMMENTS.SET_COMMENTS_LIST",
   ADD_COMMENT: "COMMENTS.ADD_COMMENT",
@@ -11,12 +9,19 @@ export const setCommentsList = () => ({
   type: commentsActionTypes.SET_COMMENTS_LIST,
 });
 
-export const setCommentsListAsync = (id, cursor = "") => ({
+export const setCommentsListAsync = (id, cursor = "", prevComments = []) => ({
   type: commentsActionTypes.SET_COMMENTS_LIST,
   request: {
     url: `posts/${id}/comments?cursor=${cursor}`,
   },
-  meta: metaDataByPaginate
+  meta: {
+    getData: (data) => {
+      return {
+        comments: [...prevComments, ...data.data],
+        cursor: data.links.next && data.links.next.match(/cursor=(\w+)/)[1],
+      };
+    },
+  },
 });
 
 export const addCommentAsync = (id, comment) => ({

@@ -28,7 +28,8 @@ export default function Post() {
   const router = useRouter();
   const {data: {post}} = useSelector(getQuerySelector(setPost()));
   const {data: {user}} = useSelector(getQuerySelector(setUser()));
-  const {data: {cursor}} = useSelector(getQuerySelector(setCommentsList()));
+  const {data: {cursor, comments}} = useSelector(
+      getQuerySelector(setCommentsList()));
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -40,7 +41,7 @@ export default function Post() {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(setCommentsListAsync(post.id, cursor));
+      dispatch(setCommentsListAsync(post.id, cursor, comments));
     }
   };
 
