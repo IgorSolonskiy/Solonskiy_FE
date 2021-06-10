@@ -1,5 +1,9 @@
 export const usersActionTypes = {
   SET_USERS: "USERS.SET_USERS",
+  SET_FOLLOWERS: "USERS.SET_FOLLOWERS",
+  SET_FOLLOWING: "USERS.SET_FOLLOWING",
+  ADD_FOLLOW: "USERS.ADD_FOLLOW",
+  REMOVE_FOLLOW: "USERS.REMOVE_FOLLOW",
   SET_USER: "USERS.SET_USER",
 };
 
@@ -8,6 +12,9 @@ export const setUsers = () => ({
 });
 export const setUser = () => ({
   type: usersActionTypes.SET_USER,
+});
+export const setFollowers = () => ({
+  type: usersActionTypes.SET_FOLLOWERS,
 });
 
 export const searchUsersAsync = (
@@ -55,6 +62,47 @@ export const addUserAsync = (username) => ({
       return {
         user: data,
       };
+    },
+  },
+});
+
+export const followUserAsync = (username) => ({
+  type: usersActionTypes.ADD_FOLLOW,
+  request: {
+    url: `users/${username}/follow`,
+  },
+});
+
+export const getFollowersAsync = (username) => ({
+  type: usersActionTypes.SET_FOLLOWERS,
+  request: {
+    url: `users/${username}/followers`,
+  },
+  meta: {
+    getData: (data) => {
+      return {
+        followers: data.map(user => user.username),
+      };
+    },
+  },
+});
+
+export const unfollowUserAsync = (username) => ({
+  type: usersActionTypes.REMOVE_FOLLOW,
+  request: {
+    url: `users/${username}/unfollow`,
+  },
+  meta: {
+    mutations: {
+      [usersActionTypes.SET_FOLLOWERS]: {
+        updateData: (prevState) => {
+          return {
+            ...prevState,
+            followers: prevState.followers.filter(
+                user => user.username !== username),
+          };
+        },
+      },
     },
   },
 });

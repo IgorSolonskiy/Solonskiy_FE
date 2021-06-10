@@ -9,9 +9,9 @@ import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
 import {
-  addUserAsync,
+  addUserAsync, followUserAsync, getFollowersAsync,
   getUsersAsync, searchUsersAsync,
-  setUsers,
+  setUsers, unfollowUserAsync,
 } from "../../store/user/actions";
 import {getQuerySelector} from "@redux-requests/core";
 
@@ -30,11 +30,21 @@ export default function Users() {
     return dispatch(getUsersAsync(1));
   };
 
+  const handleFollowUser = username => {
+    dispatch(followUserAsync(username));
+  };
+
+  const handleUnfollowUser = username => {
+    dispatch(unfollowUserAsync(username));
+  };
+
   const handlePaginateUsers = page => dispatch(
       searchName ? searchUsersAsync(searchName, page) : getUsersAsync(page));
 
   const usersLists = users ?
-      <UsersList onPaginationChange={handlePaginateUsers}/>
+      <UsersList onFollow={handleFollowUser}
+                 onUnfollow={handleUnfollowUser}
+                 onPaginationChange={handlePaginateUsers}/>
       :
       <div
           className="w-100 h-100 d-flex align-items-center justify-content-center">
@@ -60,6 +70,7 @@ export const getServerSideProps = withRedux(
       await Promise.all([
         dispatch(getUsersAsync()),
         dispatch(addUserAsync(user.username)),
+        dispatch(getFollowersAsync(user.username)),
       ]);
 
       return {props: {}};
