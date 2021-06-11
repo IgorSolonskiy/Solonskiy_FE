@@ -13,7 +13,12 @@ import {
 import {getQuerySelector} from "@redux-requests/core";
 import {useEffect} from "react";
 import {Button} from "antd";
-import {addUserAsync, setUser} from "../../store/user/actions";
+import {
+  addUserAsync,
+  getFollowingAsync, setFollowing,
+  setFollowings,
+  setUser, setUsers,
+} from "../../store/user/actions";
 import Link from "next/link";
 
 export default function Profile() {
@@ -21,7 +26,8 @@ export default function Profile() {
   const dispatch = useDispatch();
   const {data: {cursor}} = useSelector(getQuerySelector(setPostsList()));
   const {data: {user}} = useSelector(getQuerySelector(setUser()));
-
+  const data   = useSelector(getQuerySelector(setUsers()));
+  console.log(data)
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
 
@@ -53,11 +59,11 @@ export default function Profile() {
           </div>
           <div className="d-flex w-100 justify-content-center mt-2">
             <Link href={"/profile/following"}>
-              <Button>{user.followings.length} Following</Button>
+              <Button>{} Following</Button>
             </Link>
             <Link href={"/profile/followers"}>
               <Button
-                  className="mx-3">{user.followers.length} Followers</Button>
+                  className="mx-3">{} Followers</Button>
             </Link>
           </div>
           <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>
@@ -72,6 +78,7 @@ export const getServerSideProps = withRedux(
             await Promise.all([
               dispatch(getPostsListAsync(auth.user.username)),
               dispatch(addUserAsync(auth.user.username)),
+              dispatch(getFollowingAsync(auth.user.username)),
             ]);
 
             return {props: {}};

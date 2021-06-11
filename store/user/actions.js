@@ -1,7 +1,7 @@
 export const usersActionTypes = {
   SET_USERS: "USERS.SET_USERS",
   SET_FOLLOWERS: "USERS.SET_FOLLOWERS",
-  SET_FOLLOWINGS: "USERS.SET_FOLLOWINGS",
+  SET_FOLLOWING: "USERS.SET_FOLLOWING",
   ADD_FOLLOW: "USERS.ADD_FOLLOW",
   REMOVE_FOLLOW: "USERS.REMOVE_FOLLOW",
   SET_USER: "USERS.SET_USER",
@@ -17,8 +17,8 @@ export const setFollowers = () => ({
   type: usersActionTypes.SET_FOLLOWERS,
 });
 
-export const setFollowings = () => ({
-  type: usersActionTypes.SET_FOLLOWINGS,
+export const setFollowing = () => ({
+  type: usersActionTypes.SET_FOLLOWING,
 });
 
 export const searchUsersAsync = (
@@ -74,7 +74,6 @@ export const followUserAsync = (username) => ({
   type: usersActionTypes.ADD_FOLLOW,
   request: {
     url: `users/${username}/follow`,
-    method:'post'
   },
   meta: {
     mutations: {
@@ -92,35 +91,39 @@ export const followUserAsync = (username) => ({
   },
 });
 
-export const getFollowingAsync = (username,page = 1, limit = 6) => ({
-  type: usersActionTypes.SET_USERS,
+export const getFollowingAsync = (username, page = 1, limit = 6) => ({
+  type: usersActionTypes.SET_FOLLOWING,
   request: {
     url: `users/${username}/followings?page=${page}&limit=${limit}`,
   },
   meta: {
-    getData: (data) => {
-      return {
-        users: data.data,
-        total: data.meta.total,
-        perPage: data.meta.per_page,
-        currentPage: data.meta.current_page,
-      };
+    mutations: {
+      [usersActionTypes.SET_USERS]: {
+        updateData: (data, updateData) => {
+          return {
+            users: updateData.data,
+            total: updateData.meta.total,
+            perPage: updateData.meta.per_page,
+            currentPage: updateData.meta.current_page,
+          };
+        },
+      },
     },
   },
 });
 
-export const getFollowersAsync = (username,page = 1, limit = 6) => ({
+export const getFollowersAsync = (username, page = 1, limit = 6) => ({
   type: usersActionTypes.SET_USERS,
   request: {
     url: `users/${username}/followers?page=${page}&limit=${limit}`,
   },
   meta: {
-    getData: (data) => {
+    updateData: (data, updateData) => {
       return {
-        users: data.data,
-        total: data.meta.total,
-        perPage: data.meta.per_page,
-        currentPage: data.meta.current_page,
+        users: updateData.data,
+        total: updateData.meta.total,
+        perPage: updateData.meta.per_page,
+        currentPage: updateData.meta.current_page,
       };
     },
   },
