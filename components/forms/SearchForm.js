@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
-import Btn from "../btn/Btn";
+import { Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 export default function SearchForm ({ onSubmit }) {
   const formik = useFormik({
@@ -13,13 +14,11 @@ export default function SearchForm ({ onSubmit }) {
   });
 
   return (
-    <div className="w-100 d-flex justify-content-end">
+    <div className="w-100 d-flex justify-content-end mt-3">
       <form autoComplete="off" className="d-flex flex-column h-100 w-100" onSubmit={formik.handleSubmit}>
-        <label htmlFor="name "
-               className="form-label h3">User search &#8981;</label>
-        <input type="text" id="name" className='form-control form-control-sm' value={formik.values.name}
+        <input type="text" id="name" className='form-control form-control-sm mb-1' value={formik.values.name}
                onChange={formik.handleChange} placeholder="Username?"/>
-        <Btn name="Search" classBtn="btn btn-outline-info w-100 mt-3" type="submit"/>
+        <Button type='submit' icon={<SearchOutlined />}>Search</Button>
       </form>
     </div>
   );
