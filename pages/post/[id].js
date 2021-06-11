@@ -89,7 +89,6 @@ export const getServerSideProps = withRedux(
 
             return {props: {}};
           } catch (e) {
-            console.log(e);
             return {
               notFound: true,
             };
