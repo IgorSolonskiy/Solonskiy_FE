@@ -2,7 +2,7 @@ import {Avatar} from "../image/Avatar";
 import {useRouter} from "next/router";
 import {useState} from "react";
 import {getQuerySelector} from "@redux-requests/core";
-import {setProfile} from "../../store/profile/actions";
+import {getProfile} from "../../store/profile/actions";
 import {useSelector} from "react-redux";
 
 import Btn from "../btn/Btn";
@@ -10,7 +10,7 @@ import EditPostForm from "../forms/EditPostForm";
 import DynamicContent from "../parser/DynamicContent";
 
 export default function Post({post, onDelete, onChange}) {
-  const {data: {profile}} = useSelector(getQuerySelector(setProfile()));
+  const {data: {profile}} = useSelector(getQuerySelector(getProfile()));
   const [editing, setEditing] = useState(false);
   const router = useRouter();
   const showControls = profile.id === post.author.id;

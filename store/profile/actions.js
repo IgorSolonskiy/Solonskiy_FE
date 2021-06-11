@@ -1,11 +1,12 @@
 export const profileActionTypes = {
-  SET_PROFILE: "PROFILE.SET_PROFILE",
+  GET_PROFILE: "PROFILE.GET_PROFILE",
+  UPDATE_PROFILE: "PROFILE.UPDATE_PROFILE",
 };
 
-export const setProfile = () => ({type: profileActionTypes.SET_PROFILE});
+export const getProfile = () => ({type: profileActionTypes.GET_PROFILE});
 
-export const setProfileAsync = () => ({
-  type: profileActionTypes.SET_PROFILE,
+export const getProfileAsync = () => ({
+  type: profileActionTypes.GET_PROFILE,
   request: {
     url: `profile`,
   },
@@ -18,14 +19,25 @@ export const setProfileAsync = () => ({
   },
 });
 
-export const changeProfileAsync = (updateData) => ({
-  type: profileActionTypes.SET_PROFILE,
+export const updateProfileAsync = (updateData) => ({
+  type: profileActionTypes.UPDATE_PROFILE,
   request: {
     url: `profile`,
     method: "post",
     data: updateData,
     headers: {
       "Content-Type": "multipart/form-data",
+    },
+  },
+  meta: {
+    mutations: {
+      [profileActionTypes.GET_PROFILE]: {
+        updateData: (data, mutateData) => {
+          return {
+            profile: mutateData,
+          };
+        },
+      },
     },
   },
 });

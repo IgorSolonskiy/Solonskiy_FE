@@ -8,16 +8,15 @@ import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import PostsList from "../../components/list/PostsList";
 import {
-  changePostAsync,
-  deletePostAsync,
-  getPostsByTagAsync, setPostsList,
+  deletePostAsync, getPosts,
+  getPostsByTagAsync, updatePostAsync,
 } from "../../store/posts/actions";
-import {addUserAsync} from "../../store/user/actions";
+import {getUser} from "../../store/user/actions";
 import {getQuerySelector} from "@redux-requests/core";
 
 export default function PostsByTag({tag}) {
   const dispatch = useDispatch();
-  const {data: {cursor, posts}} = useSelector(getQuerySelector(setPostsList()));
+  const {data: {cursor, posts}} = useSelector(getQuerySelector(getPosts()));
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -28,7 +27,7 @@ export default function PostsByTag({tag}) {
   const handlePostDelete = (deletedPost) => dispatch(
       deletePostAsync(deletedPost.id));
   const handleEditPost = async (editPost, newPost) => await dispatch(
-      changePostAsync(editPost.id, newPost));
+      updatePostAsync(editPost.id, newPost));
 
   const handleInfiniteScroll = (e) => {
     const {scrollHeight, scrollTop} = e.target.documentElement;
@@ -55,7 +54,7 @@ export const getServerSideProps = withRedux(
           try {
             await Promise.all([
               dispatch(getPostsByTagAsync(ctx.query.tag)),
-              dispatch(addUserAsync(user.username)),
+              dispatch(getUser(user.username)),
             ]);
 
             return {props: {tag: ctx.query.tag}};

@@ -1,21 +1,21 @@
 export const postsActionTypes = {
-  SET_POSTS_LIST: "POSTS.SET_POSTS_LIST",
-  ADD_ONE_POST_LIST: "POSTS.ADD_POST_LIST",
-  REMOVE_POST: "POSTS.REMOVE_POST",
+  GET_POSTS: "POSTS.GET_POSTS",
+  GET_POST: "POSTS.GET_POST",
   SET_POST: "POSTS.SET_POST",
-  CHANGE_POST: "POSTS.CHANGE_POST",
+  DELETE_POST: "POSTS.DELETE_POST",
+  UPDATE_POST: "POSTS.UPDATE_POST",
 };
 
-export const setPostsList = () => ({
-  type: postsActionTypes.SET_POSTS_LIST,
+export const getPosts = () => ({
+  type: postsActionTypes.GET_POSTS,
 });
 
-export const setPost = () => ({
-  type: postsActionTypes.SET_POST,
+export const getPost = () => ({
+  type: postsActionTypes.GET_POST,
 });
 
-export const getPostsListAsync = (username, cursor = "") => ({
-  type: postsActionTypes.SET_POSTS_LIST,
+export const getPostsAsync = (username, cursor = "") => ({
+  type: postsActionTypes.GET_POSTS,
   request: {
     url: `users/${username}/posts?cursor=${cursor}`,
   },
@@ -32,7 +32,7 @@ export const getPostsListAsync = (username, cursor = "") => ({
 });
 
 export const getPostsByTagAsync = (tag, cursor = "") => ({
-  type: postsActionTypes.SET_POSTS_LIST,
+  type: postsActionTypes.GET_POSTS,
   request: {
     url: `tags/${tag}/posts?cursor=${cursor}`,
   },
@@ -48,8 +48,8 @@ export const getPostsByTagAsync = (tag, cursor = "") => ({
   },
 });
 
-export const addOnePostListAsync = (content) => ({
-  type: postsActionTypes.ADD_ONE_POST_LIST,
+export const createPostAsync = (content) => ({
+  type: postsActionTypes.SET_POST,
   request: {
     url: "posts",
     params: content,
@@ -57,7 +57,7 @@ export const addOnePostListAsync = (content) => ({
   },
   meta: {
     mutations: {
-      [postsActionTypes.SET_POSTS_LIST]: {
+      [postsActionTypes.GET_POSTS]: {
         updateData: (prevState, post) => {
           return {
             ...prevState,
@@ -69,8 +69,8 @@ export const addOnePostListAsync = (content) => ({
   },
 });
 
-export const setPostAsync = (id) => ({
-  type: postsActionTypes.SET_POST,
+export const getPostAsync = (id) => ({
+  type: postsActionTypes.GET_POST,
   request: {
     url: `posts/${id}`,
   },
@@ -84,8 +84,8 @@ export const setPostAsync = (id) => ({
   },
 });
 
-export const changePostAsync = (id, post) => ({
-  type: postsActionTypes.CHANGE_POST,
+export const updatePostAsync = (id, post) => ({
+  type: postsActionTypes.UPDATE_POST,
   request: {
     url: `posts/${id}`,
     method: "put",
@@ -93,7 +93,7 @@ export const changePostAsync = (id, post) => ({
   },
   meta: {
     mutations: {
-      [postsActionTypes.SET_POSTS_LIST]: {
+      [postsActionTypes.GET_POSTS]: {
         updateData: (prevState, changedPost) => {
           return {
             ...prevState,
@@ -102,7 +102,7 @@ export const changePostAsync = (id, post) => ({
           };
         },
       },
-      [postsActionTypes.SET_POST]: {
+      [postsActionTypes.GET_POST]: {
         updateData: (prevState, updatePost) => {
           return {
             ...prevState,
@@ -115,14 +115,14 @@ export const changePostAsync = (id, post) => ({
 });
 
 export const deletePostAsync = (id) => ({
-  type: postsActionTypes.REMOVE_POST,
+  type: postsActionTypes.DELETE_POST,
   request: {
     url: `posts/${id}`,
     method: "delete",
   },
   meta: {
     mutations: {
-      [postsActionTypes.SET_POSTS_LIST]: {
+      [postsActionTypes.GET_POSTS]: {
         updateData: (prevState) => {
           return {
             ...prevState,

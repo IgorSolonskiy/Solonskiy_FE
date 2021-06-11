@@ -1,16 +1,16 @@
 export const commentsActionTypes = {
-  SET_COMMENTS_LIST: "COMMENTS.SET_COMMENTS_LIST",
-  ADD_COMMENT: "COMMENTS.ADD_COMMENT",
-  REMOVE_COMMENT: "COMMENTS.REMOVE_COMMENT",
-  CHANGE_COMMENT: "COMMENTS.CHANGE_COMMENT",
+  GET_COMMENTS: "COMMENTS.GET_COMMENTS",
+  SET_COMMENT: "COMMENTS.SET_COMMENT",
+  DELETE_COMMENT: "COMMENTS.DELETE_COMMENT",
+  UPDATE_COMMENT: "COMMENTS.UPDATE_COMMENT",
 };
 
-export const setCommentsList = () => ({
-  type: commentsActionTypes.SET_COMMENTS_LIST,
+export const getComments = () => ({
+  type: commentsActionTypes.GET_COMMENTS,
 });
 
-export const setCommentsListAsync = (id, cursor = "") => ({
-  type: commentsActionTypes.SET_COMMENTS_LIST,
+export const getCommentsAsync = (id, cursor = "") => ({
+  type: commentsActionTypes.GET_COMMENTS,
   request: {
     url: `posts/${id}/comments?cursor=${cursor}`,
   },
@@ -24,8 +24,8 @@ export const setCommentsListAsync = (id, cursor = "") => ({
   },
 });
 
-export const addCommentAsync = (id, comment) => ({
-  type: commentsActionTypes.ADD_COMMENT,
+export const createCommentAsync = (id, comment) => ({
+  type: commentsActionTypes.SET_COMMENT,
   request: {
     url: `posts/${id}/comments`,
     params: comment,
@@ -33,7 +33,7 @@ export const addCommentAsync = (id, comment) => ({
   },
   meta: {
     mutations: {
-      [commentsActionTypes.SET_COMMENTS_LIST]: {
+      [commentsActionTypes.GET_COMMENTS]: {
         updateData: (prevState, comment) => {
           return {
             ...prevState,
@@ -46,14 +46,14 @@ export const addCommentAsync = (id, comment) => ({
 });
 
 export const deleteCommentAsync = (id) => ({
-  type: commentsActionTypes.REMOVE_COMMENT,
+  type: commentsActionTypes.DELETE_COMMENT,
   request: {
     url: `comments/${id}`,
     method: "delete",
   },
   meta: {
     mutations: {
-      [commentsActionTypes.SET_COMMENTS_LIST]: {
+      [commentsActionTypes.GET_COMMENTS]: {
         updateData: (prevState) => {
           return {
             ...prevState,
@@ -65,8 +65,8 @@ export const deleteCommentAsync = (id) => ({
   },
 });
 
-export const changeCommentAsync = (id, comment) => ({
-  type: commentsActionTypes.CHANGE_COMMENT,
+export const updateCommentAsync = (id, comment) => ({
+  type: commentsActionTypes.UPDATE_COMMENT,
   request: {
     url: `comments/${id}`,
     params: comment,
@@ -74,7 +74,7 @@ export const changeCommentAsync = (id, comment) => ({
   },
   meta: {
     mutations: {
-      [commentsActionTypes.SET_COMMENTS_LIST]: {
+      [commentsActionTypes.GET_COMMENTS]: {
         updateData: (prevState, changedPost) => {
           return {
             ...prevState,

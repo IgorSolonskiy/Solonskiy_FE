@@ -10,26 +10,23 @@ import CommentsList from "../../components/list/CommentsList";
 import CreateCommentForm from "../../components/forms/CreateCommentForm";
 import {useEffect} from "react";
 import {getQuerySelector} from "@redux-requests/core";
-import {addUserAsync, setUser} from "../../store/user/actions";
+import {getUser, getUserAsync} from "../../store/user/actions";
 import {
-  changePostAsync, deletePostAsync,
-  setPost,
-  setPostAsync,
+  deletePostAsync, getPost, getPostAsync,
+  updatePostAsync,
 } from "../../store/posts/actions";
 import {
-  addCommentAsync,
-  changeCommentAsync,
-  deleteCommentAsync, setCommentsList,
-  setCommentsListAsync,
+  createCommentAsync,
+  deleteCommentAsync, getComments, getCommentsAsync, updateCommentAsync,
 } from "../../store/comments/actions";
 
 export default function Post() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const {data: {post}} = useSelector(getQuerySelector(setPost()));
-  const {data: {user}} = useSelector(getQuerySelector(setUser()));
-  const {data: {cursor, comments}} = useSelector(
-      getQuerySelector(setCommentsList()));
+  const {data: {post}} = useSelector(getQuerySelector(getPost()));
+  const {data: {user}} = useSelector(getQuerySelector(getUser()));
+  const {data: {cursor}} = useSelector(
+      getQuerySelector(getComments()));
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -41,7 +38,7 @@ export default function Post() {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(setCommentsListAsync(post.id, cursor));
+      dispatch(getComments(post.id, cursor));
     }
   };
 
@@ -53,11 +50,11 @@ export default function Post() {
   const handleDeleteComment = (deletedComment) => dispatch(
       deleteCommentAsync(deletedComment.id));
   const handleEditComment = async (comment, changeComment) => await dispatch(
-      changeCommentAsync(comment.id, changeComment));
+      updateCommentAsync(comment.id, changeComment));
   const handleEditPost = async (editPost, newPost) => await dispatch(
-      changePostAsync(editPost.id, newPost));
+      updatePostAsync(editPost.id, newPost));
   const handleCreateComment = (newComment) => dispatch(
-      addCommentAsync(post.id, newComment));
+      createCommentAsync(post.id, newComment));
 
   return (
       <MainLayout>
@@ -78,14 +75,14 @@ export const getServerSideProps = withRedux(
     withAuth(async (ctx, {user}, {dispatch, getState}) => {
           try {
             await Promise.all([
-              dispatch(setPostAsync(ctx.query.id)),
-              dispatch(setCommentsListAsync(ctx.query.id)),
+              dispatch(getPostAsync(ctx.query.id)),
+              dispatch(getCommentsAsync(ctx.query.id)),
             ]);
 
             const data = getState();
-            const author = data.requests.queries["POSTS.SET_POST"].data.post.author;
+            const author = data.requests.queries["POSTS.GET_POST"].data.post.author;
 
-            await dispatch(addUserAsync(author.username));
+            await dispatch(getUserAsync(author.username));
 
             return {props: {}};
           } catch (e) {

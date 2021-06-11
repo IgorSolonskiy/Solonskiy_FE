@@ -3,11 +3,11 @@ import {Pagination} from "antd";
 
 import UserInfo from "../user/UserInfo";
 import {getQuerySelector} from "@redux-requests/core";
-import {setUsers} from "../../store/user/actions";
+import {getUsers} from "../../store/user/actions";
 
 export default function UsersList({onPaginationChange, onFollow, onUnfollow}) {
   const {data: {users, total, perPage, currentPage}} = useSelector(
-      getQuerySelector(setUsers()));
+      getQuerySelector(getUsers()));
 
   return (
       <div className="d-flex flex-column w-100 flex-grow-1 align-items-center">

@@ -8,17 +8,18 @@ import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import CreatePostForm from "../../components/forms/CreatePostForm";
 import {
-  addOnePostListAsync, changePostAsync,
-  deletePostAsync,
-  getPostsListAsync, setPostsList,
+  createPostAsync, deletePostAsync, getPosts, getPostsAsync, updatePostAsync,
 } from "../../store/posts/actions";
-import {addUserAsync, setUser} from "../../store/user/actions";
+import {
+  getUser,
+  getUserAsync,
+} from "../../store/user/actions";
 import {getQuerySelector} from "@redux-requests/core";
 
 export default function Home({auth}) {
   const dispatch = useDispatch();
-  const {data: {user}} = useSelector(getQuerySelector(setUser()));
-  const {data: {cursor,posts}} = useSelector(getQuerySelector(setPostsList()));
+  const {data: {user}} = useSelector(getQuerySelector(getUser()));
+  const {data: {cursor}} = useSelector(getQuerySelector(getPosts()));
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -28,15 +29,15 @@ export default function Home({auth}) {
 
   const handlePostDelete = (deletedPost) => dispatch(
       deletePostAsync(deletedPost.id));
-  const handlePostCreate = (newPost) => dispatch(addOnePostListAsync(newPost));
+  const handlePostCreate = (newPost) => dispatch(createPostAsync(newPost));
   const handleEditPost = async (editPost, newPost) => await dispatch(
-      changePostAsync(editPost.id, newPost));
+      updatePostAsync(editPost.id, newPost));
 
   const handleInfiniteScroll = (e) => {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getPostsListAsync(user.username, cursor));
+      dispatch(getPostsAsync(user.username, cursor));
     }
   };
 
@@ -56,8 +57,8 @@ export const getServerSideProps = withRedux(
     withAuth(async (ctx, auth, {dispatch}) => {
           try {
             await Promise.all([
-              dispatch(getPostsListAsync(ctx.query.username)),
-              dispatch(addUserAsync(ctx.query.username)),
+              dispatch(getPostsAsync(ctx.query.username)),
+              dispatch(getUserAsync(ctx.query.username)),
             ]);
 
             return {props: {}};

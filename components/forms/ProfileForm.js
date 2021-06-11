@@ -2,13 +2,13 @@ import {Avatar} from "../image/Avatar";
 import {useFormik} from "formik";
 import {useSelector} from "react-redux";
 import {getQuerySelector} from "@redux-requests/core";
-import {setProfile} from "../../store/profile/actions";
+import {getProfile} from "../../store/profile/actions";
 
 import * as Yup from "yup";
 import Btn from "../btn/Btn";
 
 export default function ProfileForm({onSubmit}) {
-  const {data: {profile}} = useSelector(getQuerySelector(setProfile()));
+  const {data: {profile}} = useSelector(getQuerySelector(getProfile()));
 
   const formik = useFormik({
     initialValues: {

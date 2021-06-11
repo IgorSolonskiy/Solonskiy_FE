@@ -3,12 +3,12 @@ import {Avatar} from "../image/Avatar";
 import {getQuerySelector} from "@redux-requests/core";
 
 import Link from "next/link";
-import {setUser} from "../../store/user/actions";
-import {setPost} from "../../store/posts/actions";
+import {getUser} from "../../store/user/actions";
+import {getPost} from "../../store/posts/actions";
 
 export default function UserProfile() {
-  const {data: {user}} = useSelector(getQuerySelector(setUser()));
-  const {data} = useSelector(getQuerySelector(setPost()));
+  const {data: {user}} = useSelector(getQuerySelector(getUser()));
+  const {data} = useSelector(getQuerySelector(getPost()));
   const post = data ? data.post : data;
 
   const returnBackLink = post ?
