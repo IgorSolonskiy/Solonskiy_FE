@@ -36,7 +36,7 @@ export default function Home({auth}) {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getPostsListAsync(user.username, cursor, posts));
+      dispatch(getPostsListAsync(user.username, cursor));
     }
   };
 

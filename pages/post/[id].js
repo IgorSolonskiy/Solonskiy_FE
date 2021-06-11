@@ -41,7 +41,7 @@ export default function Post() {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(setCommentsListAsync(post.id, cursor, comments));
+      dispatch(setCommentsListAsync(post.id, cursor));
     }
   };
 
