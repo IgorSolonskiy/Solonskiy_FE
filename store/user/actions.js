@@ -78,9 +78,9 @@ export const followUserAsync = (username) => ({
   meta: {
     mutations: {
       [usersActionTypes.SET_FOLLOWINGS]: {
-        updateData: ({followers}) => {
+        updateData: ({followings}) => {
           return {
-            followings: [...followers, username],
+            followings: [...followings, username],
           };
         },
       },
