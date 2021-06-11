@@ -74,6 +74,7 @@ export const followUserAsync = (username) => ({
   type: usersActionTypes.ADD_FOLLOW,
   request: {
     url: `users/${username}/follow`,
+    method:'post'
   },
   meta: {
     mutations: {
