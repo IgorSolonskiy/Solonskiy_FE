@@ -91,23 +91,36 @@ export const followUserAsync = (username) => ({
   },
 });
 
-export const getFollowingsAsync = (username) => ({
-  type: usersActionTypes.SET_FOLLOWINGS,
+export const getFollowingAsync = (username,page = 1, limit = 6) => ({
+  type: usersActionTypes.SET_USERS,
   request: {
-    url: `users/${username}/followings`,
+    url: `users/${username}/followings?page=${page}&limit=${limit}`,
   },
   meta: {
-    mutations: {
-      [usersActionTypes.SET_USERS]: {
-        updateData: (data) => {
-          return {
-            users: data.data,
-            total: data.meta.total,
-            perPage: data.meta.per_page,
-            currentPage: data.meta.current_page,
-          };
-        },
-      },
+    getData: (data) => {
+      return {
+        users: data.data,
+        total: data.meta.total,
+        perPage: data.meta.per_page,
+        currentPage: data.meta.current_page,
+      };
+    },
+  },
+});
+
+export const getFollowersAsync = (username,page = 1, limit = 6) => ({
+  type: usersActionTypes.SET_USERS,
+  request: {
+    url: `users/${username}/followers?page=${page}&limit=${limit}`,
+  },
+  meta: {
+    getData: (data) => {
+      return {
+        users: data.data,
+        total: data.meta.total,
+        perPage: data.meta.per_page,
+        currentPage: data.meta.current_page,
+      };
     },
   },
 });

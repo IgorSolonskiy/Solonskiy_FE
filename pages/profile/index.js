@@ -12,11 +12,15 @@ import {
 } from "../../store/posts/actions";
 import {getQuerySelector} from "@redux-requests/core";
 import {useEffect} from "react";
+import {Button} from "antd";
+import {addUserAsync, setUser} from "../../store/user/actions";
+import Link from "next/link";
 
-export default function Profile({auth}) {
+export default function Profile() {
 
   const dispatch = useDispatch();
   const {data: {cursor}} = useSelector(getQuerySelector(setPostsList()));
+  const {data: {user}} = useSelector(getQuerySelector(setUser()));
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -37,7 +41,7 @@ export default function Profile({auth}) {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getPostsListAsync(auth.user.username, cursor));
+      dispatch(getPostsListAsync(user.username, cursor));
     }
   };
 
@@ -46,6 +50,15 @@ export default function Profile({auth}) {
         <div className="container mt-3 ">
           <div className="main-body ">
             <ProfileForm onSubmit={handleChangeProfile}/>
+          </div>
+          <div className="d-flex w-100 justify-content-center mt-2">
+            <Link href={"/profile/following"}>
+              <Button>{user.followings.length} Following</Button>
+            </Link>
+            <Link href={"/profile/followers"}>
+              <Button
+                  className="mx-3">{user.followers.length} Followers</Button>
+            </Link>
           </div>
           <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>
         </div>
@@ -56,7 +69,10 @@ export default function Profile({auth}) {
 export const getServerSideProps = withRedux(
     withAuth(async (ctx, auth, {dispatch}) => {
           try {
-            await dispatch(getPostsListAsync(auth.user.username));
+            await Promise.all([
+              dispatch(getPostsListAsync(auth.user.username)),
+              dispatch(addUserAsync(auth.user.username)),
+            ]);
 
             return {props: {}};
           } catch (e) {

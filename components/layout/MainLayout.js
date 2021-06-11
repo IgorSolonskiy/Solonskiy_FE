@@ -21,8 +21,8 @@ export default function MainLayout({children}) {
           className="container-fluid justify-content-center d-flex align-items-start  p-0 pb-3 min-vh-100">
         <main
             className="d-flex align-items-start justify-content-between w-75 m-auto position-relative ">
-          <div style={{zIndex: 30}}
-               className="mx-3 w-25 d-flex flex-column align-items-start position-fixed">
+          <div style={{zIndex: 30, width:'100px'}}
+               className="mx-3 d-flex flex-column align-items-start position-fixed">
             <Link href={`/users/${profile.username}`}><span
                 className="btn btn-outline-secondary mt-2">Home</span></Link>
             <Link href={`/users`}><span
