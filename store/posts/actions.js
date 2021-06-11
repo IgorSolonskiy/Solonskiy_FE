@@ -14,15 +14,15 @@ export const setPost = () => ({
   type: postsActionTypes.SET_POST,
 });
 
-export const getPostsListAsync = (username, cursor = "", prevPosts = []) => ({
+export const getPostsListAsync = (username, cursor = "") => ({
   type: postsActionTypes.SET_POSTS_LIST,
   request: {
     url: `users/${username}/posts?cursor=${cursor}`,
   },
   meta: {
-    getData: (data) => {
+    getData: (data, prevState) => {
       return {
-        posts: [...prevPosts, ...data.data],
+        posts: prevState ? [...prevState.posts, ...data.data] : data.data,
         cursor: data.links.next
             ? data.links.next.match(/cursor=(\w+)/)[1]
             : data.links.next,
@@ -31,15 +31,15 @@ export const getPostsListAsync = (username, cursor = "", prevPosts = []) => ({
   },
 });
 
-export const getPostsByTagAsync = (tag, cursor = "", prevPosts = []) => ({
+export const getPostsByTagAsync = (tag, cursor = "") => ({
   type: postsActionTypes.SET_POSTS_LIST,
   request: {
     url: `tags/${tag}/posts?cursor=${cursor}`,
   },
   meta: {
-    getData: (data) => {
+    getData: (data, prevState) => {
       return {
-        posts: [...prevPosts, ...data.data],
+        posts: prevState ? [...prevState.posts, ...data.data] : data.data,
         cursor: data.links.next
             ? data.links.next.match(/cursor=(\w+)/)[1]
             : data.links.next,

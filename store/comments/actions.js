@@ -9,15 +9,15 @@ export const setCommentsList = () => ({
   type: commentsActionTypes.SET_COMMENTS_LIST,
 });
 
-export const setCommentsListAsync = (id, cursor = "", prevComments = []) => ({
+export const setCommentsListAsync = (id, cursor = "") => ({
   type: commentsActionTypes.SET_COMMENTS_LIST,
   request: {
     url: `posts/${id}/comments?cursor=${cursor}`,
   },
   meta: {
-    getData: (data) => {
+    getData: (data, prevState) => {
       return {
-        comments: [...prevComments, ...data.data],
+        comments: prevState ? [...prevState.comments, ...data.data] : data.data,
         cursor: data.links.next && data.links.next.match(/cursor=(\w+)/)[1],
       };
     },
