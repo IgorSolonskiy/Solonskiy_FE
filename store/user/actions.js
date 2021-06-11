@@ -1,18 +1,18 @@
 export const usersActionTypes = {
-  SET_USERS: "USERS.SET_USERS",
-  SET_USER: "USERS.SET_USER",
+  GET_USERS: "USERS.GET_USERS",
+  GET_USER: "USERS.GET_USER",
 };
 
-export const setUsers = () => ({
-  type: usersActionTypes.SET_USERS,
+export const getUsers = () => ({
+  type: usersActionTypes.GET_USERS,
 });
-export const setUser = () => ({
-  type: usersActionTypes.SET_USER,
+export const getUser = () => ({
+  type: usersActionTypes.GET_USER,
 });
 
 export const searchUsersAsync = (
     username, page = 1, limit = 6) => ({
-  type: usersActionTypes.SET_USERS,
+  type: usersActionTypes.GET_USERS,
   request: {
     url: `users?username=${username}&limit=${limit}&page=${page}`,
   },
@@ -29,7 +29,7 @@ export const searchUsersAsync = (
 });
 
 export const getUsersAsync = (page = 1, limit = 6) => ({
-  type: usersActionTypes.SET_USERS,
+  type: usersActionTypes.GET_USERS,
   request: {
     url: `users?page=${page}&limit=${limit}`,
   },
@@ -45,8 +45,8 @@ export const getUsersAsync = (page = 1, limit = 6) => ({
   },
 });
 
-export const addUserAsync = (username) => ({
-  type: usersActionTypes.SET_USER,
+export const getUserAsync = (username) => ({
+  type: usersActionTypes.GET_USER,
   request: {
     url: `users/${username}`,
   },

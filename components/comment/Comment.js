@@ -7,12 +7,12 @@ import Btn from "../btn/Btn";
 import EditCommentForm from "../forms/EditCommentForm";
 import DynamicContent from "../parser/DynamicContent";
 import {getQuerySelector} from "@redux-requests/core";
-import {setProfile} from "../../store/profile/actions";
-import {setUser} from "../../store/user/actions";
+import {getProfile} from "../../store/profile/actions";
+import {getUser} from "../../store/user/actions";
 
 export default function Comment({comment, onDelete, onSubmit}) {
-  const {data: {profile}} = useSelector(getQuerySelector(setProfile()));
-  const {data: {user}} = useSelector(getQuerySelector(setUser()));
+  const {data: {profile}} = useSelector(getQuerySelector(getProfile()));
+  const {data: {user}} = useSelector(getQuerySelector(getUser()));
   const [editing, setEditing] = useState(false);
 
   const handleEditComment = async (comment, changeComment) => {

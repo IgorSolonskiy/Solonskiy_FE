@@ -9,14 +9,13 @@ import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
 import {
-  addUserAsync,
+  getUserAsync, getUsers,
   getUsersAsync, searchUsersAsync,
-  setUsers,
 } from "../../store/user/actions";
 import {getQuerySelector} from "@redux-requests/core";
 
 export default function Users() {
-  const {data: {users}} = useSelector(getQuerySelector(setUsers()));
+  const {data: {users}} = useSelector(getQuerySelector(getUsers()));
   const [searchName, setSearchName] = useState(false);
   const dispatch = useDispatch();
 
@@ -59,7 +58,7 @@ export const getServerSideProps = withRedux(
     withAuth(async (ctx, {user}, {dispatch}) => {
       await Promise.all([
         dispatch(getUsersAsync()),
-        dispatch(addUserAsync(user.username)),
+        dispatch(getUserAsync(user.username)),
       ]);
 
       return {props: {}};

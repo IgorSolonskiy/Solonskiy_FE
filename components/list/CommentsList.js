@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
 import Comment from "../comment/Comment";
 import {getQuerySelector} from "@redux-requests/core";
-import {setCommentsList} from "../../store/comments/actions";
+import {getComments} from "../../store/comments/actions";
 
 export default function CommentsList ({ onDelete, onSubmit }) {
-  const {data: {comments}} = useSelector(getQuerySelector(setCommentsList()));
+  const {data: {comments}} = useSelector(getQuerySelector(getComments()));
 
   return (
     <ul className="ps-5 list-group list-group-flush w-100 mb-3 mt-3 vh-100">
