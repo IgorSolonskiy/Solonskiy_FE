@@ -77,10 +77,13 @@ export const followUserAsync = (username) => ({
   },
   meta: {
     mutations: {
-      [usersActionTypes.SET_FOLLOWINGS]: {
-        updateData: ({followings}) => {
+      [usersActionTypes.SET_USER]: {
+        updateData: ({user}, following) => {
           return {
-            followings: [...followings, username],
+            user: {
+              ...user,
+              followings: [...user.followings, following],
+            },
           };
         },
       },
@@ -94,10 +97,17 @@ export const getFollowingsAsync = (username) => ({
     url: `users/${username}/followings`,
   },
   meta: {
-    getData: (data) => {
-      return {
-        followings: data.map(user => user.username),
-      };
+    mutations: {
+      [usersActionTypes.SET_USERS]: {
+        updateData: (data) => {
+          return {
+            users: data.data,
+            total: data.meta.total,
+            perPage: data.meta.per_page,
+            currentPage: data.meta.current_page,
+          };
+        },
+      },
     },
   },
 });
@@ -110,12 +120,14 @@ export const unfollowUserAsync = (username) => ({
   },
   meta: {
     mutations: {
-      [usersActionTypes.SET_FOLLOWINGS]: {
-        updateData: (prevState) => {
+      [usersActionTypes.SET_USER]: {
+        updateData: ({user}) => {
           return {
-            ...prevState,
-            followings: prevState.followings.filter(
-                user => user !== username),
+            user: {
+              ...user,
+              followings: user.followings.filter(
+                  user => user.username !== username),
+            },
           };
         },
       },

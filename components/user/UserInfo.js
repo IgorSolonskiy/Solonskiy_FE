@@ -3,13 +3,14 @@ import {Avatar} from "../image/Avatar";
 import Link from "next/link";
 import {useSelector} from "react-redux";
 import {getQuerySelector} from "@redux-requests/core";
-import {setFollowers, setFollowings} from "../../store/user/actions";
+import {setUser} from "../../store/user/actions";
 
 export default function UserInfo({user, onFollow, onUnfollow}) {
-  const {data: {followings}} = useSelector(
-      getQuerySelector(setFollowings()));
+  const {data: {user: authUser}} = useSelector(
+      getQuerySelector(setUser()));
 
-  const controls = followings.includes(user.username)
+  const controls = authUser.followings.map(user => user.username).
+      includes(user.username)
       ? <button onClick={() => onUnfollow(user.username)} type="button"
                 className="btn btn-outline-danger mx-3">Unfollow
       </button>

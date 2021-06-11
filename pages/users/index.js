@@ -66,7 +66,6 @@ export const getServerSideProps = withRedux(
       await Promise.all([
         dispatch(getUsersAsync()),
         dispatch(addUserAsync(user.username)),
-        dispatch(getFollowingsAsync(user.username)),
       ]);
 
       return {props: {}};
