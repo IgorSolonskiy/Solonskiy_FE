@@ -48,13 +48,11 @@ export const getPostsByTagAsync = (tag, cursor = "", prevPosts = []) => ({
   },
 });
 
-export const addOnePostListAsync = ({content}) => ({
+export const addOnePostListAsync = (content) => ({
   type: postsActionTypes.ADD_ONE_POST_LIST,
   request: {
     url: "posts",
-    params: {
-      content,
-    },
+    params: content,
     method: "post",
   },
   meta: {
@@ -101,6 +99,14 @@ export const changePostAsync = (id, post) => ({
             ...prevState,
             posts: prevState.posts.map(
                 post => post.id === id ? changedPost : post),
+          };
+        },
+      },
+      [postsActionTypes.SET_POST]: {
+        updateData: (prevState, updatePost) => {
+          return {
+            ...prevState,
+            post: updatePost,
           };
         },
       },
