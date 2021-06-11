@@ -1,7 +1,7 @@
 export const usersActionTypes = {
   SET_USERS: "USERS.SET_USERS",
   SET_FOLLOWERS: "USERS.SET_FOLLOWERS",
-  SET_FOLLOWING: "USERS.SET_FOLLOWING",
+  SET_FOLLOWINGS: "USERS.SET_FOLLOWINGS",
   ADD_FOLLOW: "USERS.ADD_FOLLOW",
   REMOVE_FOLLOW: "USERS.REMOVE_FOLLOW",
   SET_USER: "USERS.SET_USER",
@@ -15,6 +15,10 @@ export const setUser = () => ({
 });
 export const setFollowers = () => ({
   type: usersActionTypes.SET_FOLLOWERS,
+});
+
+export const setFollowings = () => ({
+  type: usersActionTypes.SET_FOLLOWINGS,
 });
 
 export const searchUsersAsync = (
@@ -73,10 +77,10 @@ export const followUserAsync = (username) => ({
   },
   meta: {
     mutations: {
-      [usersActionTypes.SET_FOLLOWERS]: {
+      [usersActionTypes.SET_FOLLOWINGS]: {
         updateData: ({followers}) => {
           return {
-            followers: [...followers, username],
+            followings: [...followers, username],
           };
         },
       },
@@ -84,15 +88,15 @@ export const followUserAsync = (username) => ({
   },
 });
 
-export const getFollowersAsync = (username) => ({
-  type: usersActionTypes.SET_FOLLOWERS,
+export const getFollowingsAsync = (username) => ({
+  type: usersActionTypes.SET_FOLLOWINGS,
   request: {
     url: `users/${username}/followings`,
   },
   meta: {
     getData: (data) => {
       return {
-        followers: data.map(user => user.username),
+        followings: data.map(user => user.username),
       };
     },
   },
@@ -106,11 +110,11 @@ export const unfollowUserAsync = (username) => ({
   },
   meta: {
     mutations: {
-      [usersActionTypes.SET_FOLLOWERS]: {
+      [usersActionTypes.SET_FOLLOWINGS]: {
         updateData: (prevState) => {
           return {
             ...prevState,
-            followers: prevState.followers.filter(
+            followings: prevState.followings.filter(
                 user => user !== username),
           };
         },

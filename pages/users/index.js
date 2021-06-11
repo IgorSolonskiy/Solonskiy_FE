@@ -9,7 +9,7 @@ import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
 import {
-  addUserAsync, followUserAsync, getFollowersAsync,
+  addUserAsync, followUserAsync, getFollowingsAsync,
   getUsersAsync, searchUsersAsync,
   setUsers, unfollowUserAsync,
 } from "../../store/user/actions";
@@ -66,7 +66,7 @@ export const getServerSideProps = withRedux(
       await Promise.all([
         dispatch(getUsersAsync()),
         dispatch(addUserAsync(user.username)),
-        dispatch(getFollowersAsync(user.username)),
+        dispatch(getFollowingsAsync(user.username)),
       ]);
 
       return {props: {}};
