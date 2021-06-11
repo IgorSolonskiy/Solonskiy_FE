@@ -2,11 +2,11 @@ import {Button, Tooltip} from "antd";
 import {ArrowLeftOutlined} from "@ant-design/icons";
 import {useSelector} from "react-redux";
 import {getQuerySelector} from "@redux-requests/core";
-import {setProfile} from "../../store/profile/actions";
+import {getProfile} from "../../store/profile/actions";
 import Link from "next/link";
 
 export default function ProfileCard() {
-  const {data: {profile}} = useSelector(getQuerySelector(setProfile()));
+  const {data: {profile}} = useSelector(getQuerySelector(getProfile()));
 
   return (
       <div className="d-flex align-items-center w-100">
@@ -16,7 +16,8 @@ export default function ProfileCard() {
           </Tooltip>
         </Link>
         <div className="mx-3">
-          <div className="mb-3 mt-1 fs-3" style={{marginBottom:'0px'}}>{profile.name}</div>
+          <div className="mb-3 mt-1 fs-3"
+               style={{marginBottom: "0px"}}>{profile.name}</div>
           <div className="fs-4 text-muted">@{profile.username}</div>
         </div>
       </div>

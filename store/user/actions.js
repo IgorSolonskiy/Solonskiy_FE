@@ -1,6 +1,12 @@
+import {profileActionTypes} from "../profile/actions";
+
 export const usersActionTypes = {
   GET_USERS: "USERS.GET_USERS",
   GET_USER: "USERS.GET_USER",
+  GET_FOLLOWING: "USERS.GET_FOLLOWING",
+  SET_FOLLOW: "USERS.SET_FOLLOW",
+  DELETE_FOLLOW: "USERS.DELETE_FOLLOW",
+
 };
 
 export const getUsers = () => ({
@@ -60,18 +66,19 @@ export const getUserAsync = (username) => ({
 });
 
 export const followUserAsync = (username) => ({
-  type: usersActionTypes.ADD_FOLLOW,
+  type: usersActionTypes.SET_FOLLOW,
   request: {
     url: `users/${username}/follow`,
+    method: "post",
   },
   meta: {
     mutations: {
-      [usersActionTypes.SET_USER]: {
-        updateData: ({user}, following) => {
+      [profileActionTypes.GET_PROFILE]: {
+        updateData: ({profile}, following) => {
           return {
-            user: {
-              ...user,
-              followings: [...user.followings, following],
+            profile: {
+              ...profile,
+              followings: [...profile.followings, following],
             },
           };
         },
@@ -81,57 +88,53 @@ export const followUserAsync = (username) => ({
 });
 
 export const getFollowingAsync = (username, page = 1, limit = 6) => ({
-  type: usersActionTypes.SET_FOLLOWING,
+  type: usersActionTypes.GET_USERS,
   request: {
     url: `users/${username}/followings?page=${page}&limit=${limit}`,
   },
   meta: {
-    mutations: {
-      [usersActionTypes.SET_USERS]: {
-        updateData: (data, updateData) => {
-          return {
-            users: updateData.data,
-            total: updateData.meta.total,
-            perPage: updateData.meta.per_page,
-            currentPage: updateData.meta.current_page,
-          };
-        },
-      },
+    getData: (data) => {
+      return {
+        users: data.data,
+        total: data.meta.total,
+        perPage: data.meta.per_page,
+        currentPage: data.meta.current_page,
+      };
     },
   },
 });
 
 export const getFollowersAsync = (username, page = 1, limit = 6) => ({
-  type: usersActionTypes.SET_USERS,
+  type: usersActionTypes.GET_USERS,
   request: {
     url: `users/${username}/followers?page=${page}&limit=${limit}`,
   },
   meta: {
-    updateData: (data, updateData) => {
+    getData: (data) => {
       return {
-        users: updateData.data,
-        total: updateData.meta.total,
-        perPage: updateData.meta.per_page,
-        currentPage: updateData.meta.current_page,
+        users: data.data,
+        total: data.meta.total,
+        perPage: data.meta.per_page,
+        currentPage: data.meta.current_page,
       };
     },
   },
 });
 
 export const unfollowUserAsync = (username) => ({
-  type: usersActionTypes.REMOVE_FOLLOW,
+  type: usersActionTypes.DELETE_FOLLOW,
   request: {
     url: `users/${username}/unfollow`,
     method: "delete",
   },
   meta: {
     mutations: {
-      [usersActionTypes.SET_USER]: {
-        updateData: ({user}) => {
+      [profileActionTypes.GET_PROFILE]: {
+        updateData: ({profile}) => {
           return {
-            user: {
-              ...user,
-              followings: user.followings.filter(
+            profile: {
+              ...profile,
+              followings: profile.followings.filter(
                   user => user.username !== username),
             },
           };

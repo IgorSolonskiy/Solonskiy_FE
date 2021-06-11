@@ -3,7 +3,10 @@ import {withRedux} from "../../hof/withRedux";
 import {withAuth} from "../../hof/withAuth";
 import ProfileCard from "../../components/profile/ProfileCard";
 import {
-  addUserAsync, getFollowersAsync, getFollowingAsync,
+  followUserAsync,
+  getFollowersAsync,
+  getFollowingAsync,
+  getUserAsync, unfollowUserAsync,
 } from "../../store/user/actions";
 import UsersList from "../../components/list/UsersList";
 import {useDispatch} from "react-redux";
@@ -16,6 +19,10 @@ export default function Follow({follow, auth}) {
       follow === "following"
           ? getFollowingAsync(auth.user.username, page)
           : getFollowersAsync(page));
+
+  const handleFollowUser = username => dispatch(followUserAsync(username));
+
+  const handleUnfollowUser = username => dispatch(unfollowUserAsync(username));
 
   const followingClass = follow === "following"
       ? "border-bottom border-3 border-info text-info"
@@ -37,7 +44,8 @@ export default function Follow({follow, auth}) {
               className={`fs-4  ${followersClass}`}>Followers</span>
       </Link>
     </div>
-    <UsersList onPaginationChange={handlePaginateUsers}/>
+    <UsersList onPaginationChange={handlePaginateUsers}
+               onFollow={handleFollowUser} onUnfollow={handleUnfollowUser}/>
   </MainLayout>;
 }
 
@@ -49,7 +57,7 @@ export const getServerSideProps = withRedux(
                 notFound: true,
               };
             }
-            await dispatch(addUserAsync(user.username)),
+            await dispatch(getUserAsync(user.username)),
                 ctx.query.follow === "following" ?
                     await dispatch(getFollowingAsync(user.username))
                     :
@@ -57,6 +65,7 @@ export const getServerSideProps = withRedux(
 
             return {props: {follow: ctx.query.follow}};
           } catch (e) {
+            console.log(e);
             return {
               notFound: true,
             };

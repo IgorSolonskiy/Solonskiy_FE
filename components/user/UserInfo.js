@@ -3,13 +3,15 @@ import {Avatar} from "../image/Avatar";
 import Link from "next/link";
 import {useSelector} from "react-redux";
 import {getQuerySelector} from "@redux-requests/core";
-import {setUser} from "../../store/user/actions";
+import {getProfile} from "../../store/profile/actions";
 
 export default function UserInfo({user, onFollow, onUnfollow}) {
-  const {data: {user: authUser}} = useSelector(
-      getQuerySelector(setUser()));
+  const {data: {profile: {followings, username}}} = useSelector(
+      getQuerySelector(getProfile()));
 
-  const controls = authUser.followings.map(user => user.username).
+  const showControls = user.username !== username;
+
+  const controls = followings.map(user => user.username).
       includes(user.username)
       ? <button onClick={() => onUnfollow(user.username)} type="button"
                 className="btn btn-outline-danger mx-3">Unfollow
@@ -31,7 +33,7 @@ export default function UserInfo({user, onFollow, onUnfollow}) {
             <h5 className="card-title">Login: {user.username}</h5>
             <Link href={`/users/${user.username}`}><span
                 className="btn btn-primary">Page</span></Link>
-            {controls}
+            {showControls && controls}
           </div>
         </div>
       </li>

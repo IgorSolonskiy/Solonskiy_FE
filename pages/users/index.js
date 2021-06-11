@@ -9,8 +9,9 @@ import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
 import {
+  followUserAsync,
   getUserAsync, getUsers,
-  getUsersAsync, searchUsersAsync,
+  getUsersAsync, searchUsersAsync, unfollowUserAsync,
 } from "../../store/user/actions";
 import {getQuerySelector} from "@redux-requests/core";
 
