@@ -1,13 +1,11 @@
-import {useSelector} from "react-redux";
 import {Pagination} from "antd";
+import {getUsers} from "../../store/user/actions";
+import {useQuery} from "@redux-requests/react";
 
 import UserInfo from "../user/UserInfo";
-import {getQuerySelector} from "@redux-requests/core";
-import {getUsers} from "../../store/user/actions";
 
 export default function UsersList({onPaginationChange}) {
-  const {data: {users, total, perPage, currentPage}} = useSelector(
-      getQuerySelector(getUsers()));
+  const {data: {users, total, perPage, currentPage}} = useQuery(getUsers());
 
   return (
       <div className="d-flex flex-column w-100 flex-grow-1 align-items-center">

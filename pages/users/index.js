@@ -2,7 +2,7 @@ import {Spin} from "antd";
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
@@ -12,10 +12,10 @@ import {
   getUserAsync, getUsers,
   getUsersAsync, searchUsersAsync,
 } from "../../store/user/actions";
-import {getQuerySelector} from "@redux-requests/core";
+import {useQuery} from "@redux-requests/react";
 
 export default function Users() {
-  const {data: {users}} = useSelector(getQuerySelector(getUsers()));
+  const {data: {users}} = useQuery(getUsers());
   const [searchName, setSearchName] = useState(false);
   const dispatch = useDispatch();
 

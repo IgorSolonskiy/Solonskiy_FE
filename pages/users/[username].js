@@ -1,6 +1,6 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 
 import PostsList from "../../components/list/PostsList";
@@ -14,12 +14,12 @@ import {
   getUser,
   getUserAsync,
 } from "../../store/user/actions";
-import {getQuerySelector} from "@redux-requests/core";
+import {useQuery} from "@redux-requests/react";
 
 export default function Home({auth}) {
   const dispatch = useDispatch();
-  const {data: {user}} = useSelector(getQuerySelector(getUser()));
-  const {data: {cursor}} = useSelector(getQuerySelector(getPosts()));
+  const {data: {user}} = useQuery(getUser());
+  const {data: {cursor}} = useQuery(getPosts());
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);

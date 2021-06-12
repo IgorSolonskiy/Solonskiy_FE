@@ -1,6 +1,6 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useEffect} from "react";
 import {Tag} from "antd";
 
@@ -12,11 +12,11 @@ import {
   getPostsByTagAsync, updatePostAsync,
 } from "../../store/posts/actions";
 import {getUser} from "../../store/user/actions";
-import {getQuerySelector} from "@redux-requests/core";
+import {useQuery} from "@redux-requests/react";
 
 export default function PostsByTag({tag}) {
   const dispatch = useDispatch();
-  const {data: {cursor, posts}} = useSelector(getQuerySelector(getPosts()));
+  const {data: {cursor, posts}} = useQuery(getPosts());
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);

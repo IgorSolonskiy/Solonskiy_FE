@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 
 import MainLayout from "../../components/layout/MainLayout";
 import Posts from "../../components/post/Post";
@@ -9,7 +9,6 @@ import UserProfile from "../../components/user/UserProfile";
 import CommentsList from "../../components/list/CommentsList";
 import CreateCommentForm from "../../components/forms/CreateCommentForm";
 import {useEffect} from "react";
-import {getQuerySelector} from "@redux-requests/core";
 import {getUser, getUserAsync} from "../../store/user/actions";
 import {
   deletePostAsync, getPost, getPostAsync,
@@ -19,14 +18,14 @@ import {
   createCommentAsync,
   deleteCommentAsync, getComments, getCommentsAsync, updateCommentAsync,
 } from "../../store/comments/actions";
+import {useQuery} from "@redux-requests/react";
 
 export default function Post() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const {data: {post}} = useSelector(getQuerySelector(getPost()));
-  const {data: {user}} = useSelector(getQuerySelector(getUser()));
-  const {data: {cursor}} = useSelector(
-      getQuerySelector(getComments()));
+  const {data: {post}} = useQuery(getPost());
+  const {data: {user}} = useQuery(getUser());
+  const {data: {cursor}} = useQuery(getComments());
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
