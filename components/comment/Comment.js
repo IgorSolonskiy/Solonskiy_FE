@@ -8,11 +8,11 @@ import EditCommentForm from "../forms/EditCommentForm";
 import DynamicContent from "../parser/DynamicContent";
 import {getQuerySelector} from "@redux-requests/core";
 import {getProfile} from "../../store/profile/actions";
-import {getUser} from "../../store/user/actions";
+import {getPost} from "../../store/posts/actions";
 
 export default function Comment({comment, onDelete, onSubmit}) {
   const {data: {profile}} = useSelector(getQuerySelector(getProfile()));
-  const {data: {user}} = useSelector(getQuerySelector(getUser()));
+  const {data: {post}} = useSelector(getQuerySelector(getPost()));
   const [editing, setEditing] = useState(false);
 
   const handleEditComment = async (comment, changeComment) => {
@@ -33,7 +33,9 @@ export default function Comment({comment, onDelete, onSubmit}) {
       <Btn name="Change" type="button" onClick={() => setEditing(!editing)}
            classBtn="btn btn-outline-info btn-sm ms-3"/>;
 
-  const controls = (!user || profile.id === comment.author.id) ?
+
+  const controls = (profile.id === comment.author.id || post.author.id ===
+      profile.id) ?
       <div className="w-100 d-flex justify-content-end align-items-center">
         {changeCommentButton}
         <Btn name="Delete"
