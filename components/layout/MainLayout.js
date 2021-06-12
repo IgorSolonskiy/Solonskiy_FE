@@ -1,14 +1,13 @@
 import {useRouter} from "next/router";
-import {useSelector} from "react-redux";
-import {getQuerySelector} from "@redux-requests/core";
 import {getProfile} from "../../store/profile/actions";
 import {Api} from "../../api";
+import {useQuery} from "@redux-requests/react";
 
 import Link from "next/link";
 import Btn from "../btn/Btn";
 
 export default function MainLayout({children}) {
-  const {data: {profile}} = useSelector(getQuerySelector(getProfile()));
+  const {data: {profile}} = useQuery(getProfile());
   const router = useRouter();
 
   const handleLogout = async () => {
