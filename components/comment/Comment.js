@@ -33,7 +33,8 @@ export default function Comment({comment, onDelete, onSubmit}) {
       <Btn name="Change" type="button" onClick={() => setEditing(!editing)}
            classBtn="btn btn-outline-info btn-sm ms-3"/>;
 
-  const controls = (!user || profile.id === comment.author.id) ?
+  const controls = (profile.id === comment.author.id || post.author.id ===
+      profile.id) ?
       <div className="w-100 d-flex justify-content-end align-items-center">
         {changeCommentButton}
         <Btn name="Delete"
