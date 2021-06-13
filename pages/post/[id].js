@@ -16,16 +16,15 @@ import {
 } from "../../store/posts/actions";
 import {
   createCommentAsync,
-  deleteCommentAsync, getComments, getCommentsAsync, updateCommentAsync,
+  deleteCommentAsync ,updateCommentAsync,
 } from "../../store/comments/actions";
 import {useQuery} from "@redux-requests/react";
 
 export default function Post() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const {data: {post}} = useQuery(getPost());
+  const {data: {post,cursor}} = useQuery(getPost());
   const {data: {user}} = useQuery(getUser());
-  const {data: {cursor}} = useQuery(getComments());
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -37,7 +36,7 @@ export default function Post() {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getComments(post.id, cursor));
+      dispatch(getPostAsync(post.id, cursor));
     }
   };
 
@@ -75,7 +74,6 @@ export const getServerSideProps = withRedux(
           try {
             await Promise.all([
               dispatch(getPostAsync(ctx.query.id)),
-              dispatch(getCommentsAsync(ctx.query.id)),
             ]);
 
             const data = getState();
