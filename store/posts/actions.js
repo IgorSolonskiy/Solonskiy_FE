@@ -69,16 +69,16 @@ export const createPostAsync = (content) => ({
   },
 });
 
-export const getPostAsync = (id, cursor = "") => ({
+export const getPostAsync = (id) => ({
   type: postsActionTypes.GET_POST,
-  request: [{url: `posts/${id}`}, {url: `posts/${id}/comments?cursor=${cursor}`}],
+  request: {
+    url: `posts/${id}`,
+  },
   meta: {
-    getData: (data, prevState) => {
+    getData: (data) => {
       return {
-        post: data[0],
-        postId: data[0].id,
-        comments: prevState ? [...prevState.comments, ...data[1].data] : data[1].data,
-        cursor: data[1].links.next && data[1].links.next.match(/cursor=(\w+)/)[1],
+        post: data,
+        postId: data.id,
       };
     },
   },
