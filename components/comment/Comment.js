@@ -7,11 +7,9 @@ import Link from "next/link";
 import Btn from "../btn/Btn";
 import EditCommentForm from "../forms/EditCommentForm";
 import DynamicContent from "../parser/DynamicContent";
-import {getPost} from "../../store/posts/actions";
 
 export default function Comment({comment, onDelete, onSubmit}) {
   const {data: {profile}} = useQuery(getProfile());
-  const {data: {post}} = useQuery(getPost());
   const [editing, setEditing] = useState(false);
 
   const handleEditComment = async (comment, changeComment) => {
@@ -32,7 +30,7 @@ export default function Comment({comment, onDelete, onSubmit}) {
       <Btn name="Change" type="button" onClick={() => setEditing(!editing)}
            classBtn="btn btn-outline-info btn-sm ms-3"/>;
 
-  const controls = (profile.id === comment.author.id || post.author.id ===
+  const controls = (profile.id === comment.author.id || comment.author.id ===
       profile.id) ?
       <div className="w-100 d-flex justify-content-end align-items-center">
         {changeCommentButton}
