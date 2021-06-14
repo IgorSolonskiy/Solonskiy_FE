@@ -50,8 +50,12 @@ export default function Post({post, onDelete, onChange}) {
           <div onClick={() => !editing && router.push(`/post/${post.id}`)}>
             <div className="w-100">
               <div className=" ms-2 me-auto w-100">
-                <div
-                    className="d-flex justify-content-center align-items-center ">
+                <div onClick={(event)=>{
+                  event.stopPropagation();
+                  router.push(`/users/${post.author.username}`)
+                }}
+                     style={{fontSize:'14px'}}
+                    className="d-flex justify-content-center align-items-center btn p-0">
                   <Avatar avatar={post.author.avatar} name={post.author.name}
                           size={40}/>
                   <div style={{width: "200px"}}

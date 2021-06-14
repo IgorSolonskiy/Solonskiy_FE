@@ -8,7 +8,12 @@ import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import CreatePostForm from "../../components/forms/CreatePostForm";
 import {
-  createPostAsync, deletePostAsync, getPosts, getPostsAsync, updatePostAsync,
+  createPostAsync,
+  deletePostAsync,
+  getPosts,
+  getPostsAsync,
+  getPostsByFollowingsAsync,
+  updatePostAsync,
 } from "../../store/posts/actions";
 import {
   getUser,
@@ -37,7 +42,7 @@ export default function Home({auth}) {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
     if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getPostsAsync(user.username, cursor));
+      dispatch(getPostsByFollowingsAsync(user.username, cursor));
     }
   };
 
@@ -57,7 +62,9 @@ export const getServerSideProps = withRedux(
     withAuth(async (ctx, auth, {dispatch}) => {
           try {
             await Promise.all([
-              dispatch(getPostsAsync(ctx.query.username)),
+              ctx.query.username === auth.user.username
+                  ? dispatch(getPostsByFollowingsAsync(ctx.query.username))
+                  : dispatch(getPostsAsync(ctx.query.username)),
               dispatch(getUserAsync(ctx.query.username)),
             ]);
 
