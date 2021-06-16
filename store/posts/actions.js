@@ -48,10 +48,10 @@ export const getPostsByTagAsync = (tag, cursor = "") => ({
   },
 });
 
-export const getPostsByFollowingsAsync = (username, cursor = "") => ({
+export const getPostsFeedAsync = ( cursor = "") => ({
   type: postsActionTypes.GET_POSTS,
   request: {
-    url: `users/${username}/followings/posts?cursor=${cursor}`,
+    url: `posts/feed?cursor=${cursor}`,
   },
   meta: {
     getData: (data, prevState) => {
@@ -59,7 +59,7 @@ export const getPostsByFollowingsAsync = (username, cursor = "") => ({
         posts: prevState ? [...prevState.posts, ...data.data] : data.data,
         cursor: data.links.next
             ? data.links.next.match(/cursor=(\w+)/)[1]
-            : data.links.next,
+            : null,
       };
     },
   },
