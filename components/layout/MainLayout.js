@@ -6,7 +6,7 @@ import {useQuery} from "@redux-requests/react";
 import Link from "next/link";
 import Btn from "../btn/Btn";
 
-export default function MainLayout({children,onClick}) {
+export default function MainLayout({children}) {
   const {data: {profile}} = useQuery(getProfile());
   const router = useRouter();
 
@@ -24,7 +24,7 @@ export default function MainLayout({children,onClick}) {
                className="mx-3 w-25 d-flex flex-column align-items-start position-fixed">
             <Link href={`/users/${profile.username}`}><span
                 className="btn btn-outline-secondary mt-2">Home</span></Link>
-            <Link href={`/users`}><span onClick={()=>onClick(1)}
+            <Link shallow={true} href={`/users`}><span
                 className="btn btn-outline-secondary mt-2">Users</span></Link>
             <Link href="/profile"><span
                 className="btn btn-outline-secondary mt-2">Profile</span></Link>

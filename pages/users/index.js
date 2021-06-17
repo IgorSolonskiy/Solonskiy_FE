@@ -1,43 +1,31 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
-import {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
+import {useState} from "react";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
 import {
-    getUserAsync,
-    getUsersAsync, searchUsersAsync,
+    getUserAsync, getUsersAsync,
 } from "../../store/user/actions";
 
 export default function Users() {
     const [page, setPage] = useState(1);
-    const [searchName, setSearchName] = useState(false);
-    const dispatch = useDispatch();
+    const [searchName, setSearchName] = useState('');
 
-    const handleSearchUsers = (username) => {
-        if (username) {
-            setSearchName(username);
-            return dispatch(searchUsersAsync(username));
-        }
-
-        setSearchName(false);
-        setPage(1);
-        return dispatch(getUsersAsync(1));
+    const handleSearchUsers = async (username) => {
+        setPage(1)
+        setSearchName(username)
     };
 
-    const handlePaginateUsers =async nextPage => {
-       await dispatch(searchName ? searchUsersAsync(searchName, nextPage) : getUsersAsync(nextPage));
-       setPage(nextPage)
-    };
+    const handlePaginateUsers = async nextPage => setPage(nextPage);
 
     return (
-        <MainLayout onClick={setPage}>
+        <MainLayout>
             <UserProfile/>
             <div className="d-flex w-100 h-100">
-                <UsersList page={page} onPaginationChange={handlePaginateUsers}/>
+                <UsersList searchName={searchName} page={page} onPaginationChange={handlePaginateUsers}/>
                 <div
                     className="d-flex flex-column align-items-start w-50 position-relative h-75 mx-3">
                     <SearchForm onSubmit={handleSearchUsers}/>
