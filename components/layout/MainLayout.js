@@ -24,7 +24,7 @@ export default function MainLayout({children}) {
                className="mx-3 w-25 d-flex flex-column align-items-start position-fixed">
             <Link href={`/users/${profile.username}`}><span
                 className="btn btn-outline-secondary mt-2">Home</span></Link>
-            <Link shallow={true} href={`/users`}><span
+            <Link shallow={true} href={`/users?page=1`}><span
                 className="btn btn-outline-secondary mt-2">Users</span></Link>
             <Link href="/profile"><span
                 className="btn btn-outline-secondary mt-2">Profile</span></Link>

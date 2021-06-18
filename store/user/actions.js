@@ -9,22 +9,23 @@ export const getUsers = (page = 1, searchName = '') => ({
     multiple: true,
     autoLoad: true,
     action: getUsersAsync,
-    variables: [searchName, page, true]
+    variables: [searchName, page]
 });
+
 export const getUser = (requestKey) => ({
     type: usersActionTypes.GET_USER,
     requestKey
 });
 
 export const getUsersAsync = (
-    username = '', page = 1, cache = false) => ({
+    username = '', page = 1) => ({
     type: usersActionTypes.GET_USERS,
     request: {
         url: `users?username=${username}&limit=6&page=${page}`,
     },
     meta: {
         requestKey: username + page,
-        cache,
+        cache: 60,
         getData: (data) => {
             return {
                 users: data.data,
