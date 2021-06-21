@@ -10,7 +10,7 @@ export const withAuth = getServerSideProps => (async (ctx, storeData) => {
       await storeData.dispatch(getProfileAsync());
 
       const data = storeData.getState();
-      const user = data.requests.queries["PROFILE.GET_PROFILE"].data.profile;
+      const user = data.requests.queries["GET_PROFILE"].data.profile;
 
       const auth = {token, user};
 

@@ -1,4 +1,4 @@
-import {commentsActionTypes} from "./actions";
+import {createCommentAsync, deleteCommentAsync, getCommentsAsync, updateCommentAsync} from "./actions";
 
 const initialState = {
     comments: [],
@@ -7,7 +7,7 @@ const initialState = {
 
 export const commentsReducer = (state = initialState, action) => {
     switch (action.type) {
-        case commentsActionTypes.GET_COMMENTS:
+        case getCommentsAsync.toString():
             if (!action.payload || state.nextCursor === action.payload.nextCursor) return state;
 
             return {
@@ -15,18 +15,18 @@ export const commentsReducer = (state = initialState, action) => {
                 nextCursor: action.payload.nextCursor
             };
 
-        case commentsActionTypes.SET_COMMENT:
+        case createCommentAsync.toString():
             if (!action.payload) return state;
 
-            return {...state, comments: [action.payload,...state.comments]};
+            return {...state, comments: [action.payload, ...state.comments]};
 
 
-        case commentsActionTypes.DELETE_COMMENT:
+        case deleteCommentAsync.toString():
             if (!action.payload) return state;
 
             return {...state, comments: state.comments.filter(comment => comment.id !== action.payload)};
 
-        case commentsActionTypes.UPDATE_COMMENT:
+        case updateCommentAsync.toString():
             if (!action.payload) return state;
 
             return {

@@ -1,45 +1,37 @@
-export const usersActionTypes = {
-    GET_USERS: "USERS.GET_USERS",
-    GET_USER: "USERS.GET_USER",
-};
+import {createAction} from "redux-smart-actions";
 
 export const getUsers = (page = 1, searchName = '') => ({
-    type: usersActionTypes.GET_USERS,
+    type: getUsersAsync,
     requestKey: searchName + page,
     multiple: true,
     autoLoad: true,
-    action: getUsersAsync,
     variables: [searchName, page]
 });
 
 export const getUser = (requestKey) => ({
-    type: usersActionTypes.GET_USER,
+    type: getUserAsync.toString(),
     requestKey
 });
 
-export const getUsersAsync = (
-    username = '', page = 1) => ({
-    type: usersActionTypes.GET_USERS,
+export const getUsersAsync = createAction('GET_USERS', (username = '', page = 1) => ({
     request: {
-        url: `users?username=${username}&limit=6&page=${page}`,
-    },
-    meta: {
-        requestKey: username + page,
+    url: `users?username=${username}&limit=6&page=${page}`,
+},
+meta: {
+    requestKey: username + page,
         cache: 60,
         getData: (data) => {
-            return {
-                users: data.data,
-                total: data.meta.total,
-                perPage: data.meta.per_page,
-                currentPage: data.meta.current_page,
-            };
-        },
+        return {
+            users: data.data,
+            total: data.meta.total,
+            perPage: data.meta.per_page,
+            currentPage: data.meta.current_page,
+        };
     },
-});
+},
+}));
 
-
-export const getUserAsync = (username) => ({
-    type: usersActionTypes.GET_USER,
+export const getUserAsync = createAction('GET_USERS', (username = '') => ({
     request: {
         url: `users/${username}`,
     },
@@ -50,4 +42,4 @@ export const getUserAsync = (username) => ({
             };
         },
     },
-});
+}));

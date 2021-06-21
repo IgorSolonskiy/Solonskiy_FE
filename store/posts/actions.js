@@ -1,39 +1,26 @@
-export const postsActionTypes = {
-    GET_POSTS: "POSTS.GET_POSTS",
-    GET_POST: "POSTS.GET_POST",
-    SET_POSTS: "POSTS.SET_POSTS",
-    SET_POST: "POSTS.SET_POST",
-    DELETE_POST: "POSTS.DELETE_POST",
-    UPDATE_POST: "POSTS.UPDATE_POST",
-};
+import {createAction} from "redux-smart-actions";
 
 export const getPosts = (username, cursor = '') => ({
-    type: postsActionTypes.GET_POSTS,
+    type: getPostsAsync,
     requestKey: cursor,
     multiple: true,
     autoLoad: true,
-    action: getPostsAsync,
-    autoReset: true,
     variables: [username, cursor]
 });
 
 export const getPostsByTag = (tag, cursor = '') => ({
-    type: postsActionTypes.GET_POSTS,
+    type: getPostsByTagAsync,
     requestKey: cursor,
     multiple: true,
     autoLoad: true,
-    action: getPostsByTagAsync,
-    autoReset: true,
     variables: [tag, cursor]
 });
 
-
 export const getPost = () => ({
-    type: postsActionTypes.GET_POST,
+    type: getPostAsync.toString(),
 });
 
-export const getPostsAsync = (username, cursor) => ({
-    type: postsActionTypes.GET_POSTS,
+export const getPostsAsync = createAction('GET_POSTS', (username, cursor) => ({
     request: {
         url: `users/${username}/posts?cursor=${cursor}`,
     },
@@ -48,15 +35,14 @@ export const getPostsAsync = (username, cursor) => ({
             };
         },
         onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: postsActionTypes.GET_POSTS, payload: response.data})
+            store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
         },
-    },
-});
+    }
+}));
 
-export const getPostsByTagAsync = (tag, cursor = "") => ({
-    type: postsActionTypes.GET_POSTS,
+export const getPostsByTagAsync = createAction('GET_POSTS', (tag, cursor = "") => ({
     request: {
         url: `tags/${tag}/posts?cursor=${cursor}`,
     },
@@ -64,22 +50,21 @@ export const getPostsByTagAsync = (tag, cursor = "") => ({
         requestKey: cursor,
         getData: (data) => {
             return {
-                posts:  data.data,
+                posts: data.data,
                 nextCursor: data.links.next
                     ? data.links.next.match(/cursor=(\w+)/)[1]
                     : data.links.next,
             };
         },
         onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: postsActionTypes.GET_POSTS, payload: response.data})
+            store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
         },
     },
-});
+}));
 
-export const createPostAsync = (content) => ({
-    type: postsActionTypes.SET_POST,
+export const createPostAsync = createAction('CREATE_POST', (content) => ({
     request: {
         url: "posts",
         params: content,
@@ -87,12 +72,12 @@ export const createPostAsync = (content) => ({
     },
     meta: {
         onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: postsActionTypes.SET_POST, payload: response.data})
+            store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
         },
         mutations: {
-            [postsActionTypes.GET_POSTS]: {
+            getPostsAsync: {
                 updateData: (prevState, post) => {
                     return prevState.cursor ? prevState : {
                         ...prevState,
@@ -102,10 +87,9 @@ export const createPostAsync = (content) => ({
             },
         },
     },
-});
+}));
 
-export const getPostAsync = (id) => ({
-    type: postsActionTypes.GET_POST,
+export const getPostAsync = createAction('GET_POST', (id= null) => ({
     request: {
         url: `posts/${id}`,
     },
@@ -117,10 +101,9 @@ export const getPostAsync = (id) => ({
             };
         },
     },
-});
+}));
 
-export const updatePostAsync = (id, post, cursor = '') => ({
-    type: postsActionTypes.UPDATE_POST,
+export const updatePostAsync = createAction('UPDATE_POST', (id, post) => ({
     request: {
         url: `posts/${id}`,
         method: "put",
@@ -128,12 +111,12 @@ export const updatePostAsync = (id, post, cursor = '') => ({
     },
     meta: {
         onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: postsActionTypes.UPDATE_POST, payload: response.data})
+            store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
         },
         mutations: {
-            [postsActionTypes.GET_POSTS + cursor]: {
+            getPostsAsync: {
                 updateData: (prevState, changedPost) => {
                     return {
                         ...prevState,
@@ -142,7 +125,7 @@ export const updatePostAsync = (id, post, cursor = '') => ({
                     };
                 },
             },
-            [postsActionTypes.GET_POST]: {
+            getPostAsync: {
                 updateData: (prevState, updatePost) => {
                     return {
                         ...prevState,
@@ -152,22 +135,21 @@ export const updatePostAsync = (id, post, cursor = '') => ({
             },
         },
     },
-});
+}));
 
-export const deletePostAsync = (id) => ({
-    type: postsActionTypes.DELETE_POST,
+export const deletePostAsync = createAction('DELETE_POST', (id) => ({
     request: {
         url: `posts/${id}`,
         method: "delete",
     },
     meta: {
         onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: postsActionTypes.DELETE_POST, payload: id})
+            store.dispatch({type: requestAction.type, payload: id})
 
             return response;
         },
         mutations: {
-            [postsActionTypes.GET_POSTS]: {
+            getPostsAsync: {
                 updateData: (prevState) => {
                     return {
                         ...prevState,
@@ -177,4 +159,5 @@ export const deletePostAsync = (id) => ({
             },
         },
     },
-});
+}));
+

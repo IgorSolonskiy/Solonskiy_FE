@@ -79,7 +79,7 @@ export const getServerSideProps = withRedux(
                 ]);
 
                 const data = getState();
-                const author = data.requests.queries["POSTS.GET_POST"].data.post.author;
+                const author = data.requests.queries["GET_POST"].data.post.author;
 
                 await dispatch(getUserAsync(author.username));
 

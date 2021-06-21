@@ -1,12 +1,8 @@
-export const profileActionTypes = {
-  GET_PROFILE: "PROFILE.GET_PROFILE",
-  UPDATE_PROFILE: "PROFILE.UPDATE_PROFILE",
-};
+import {createAction} from "redux-smart-actions";
 
-export const getProfile = () => ({type: profileActionTypes.GET_PROFILE});
+export const getProfile = () => ({type: getProfileAsync.toString()});
 
-export const getProfileAsync = () => ({
-  type: profileActionTypes.GET_PROFILE,
+export const getProfileAsync = createAction('GET_PROFILE', () => ({
   request: {
     url: `profile`,
   },
@@ -17,10 +13,9 @@ export const getProfileAsync = () => ({
       };
     },
   },
-});
+}));
 
-export const updateProfileAsync = (updateData) => ({
-  type: profileActionTypes.UPDATE_PROFILE,
+export const updateProfileAsync = createAction('UPDATE_PROFILE', (updateData) => ({
   request: {
     url: `profile`,
     method: "post",
@@ -31,7 +26,7 @@ export const updateProfileAsync = (updateData) => ({
   },
   meta: {
     mutations: {
-      [profileActionTypes.GET_PROFILE]: {
+      getProfileAsync: {
         updateData: (data, mutateData) => {
           return {
             profile: mutateData,
@@ -40,4 +35,4 @@ export const updateProfileAsync = (updateData) => ({
       },
     },
   },
-});
+}));

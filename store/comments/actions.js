@@ -1,22 +1,14 @@
-export const commentsActionTypes = {
-    GET_COMMENTS: "COMMENTS.GET_COMMENTS",
-    SET_COMMENT: "COMMENTS.SET_COMMENT",
-    DELETE_COMMENT: "COMMENTS.DELETE_COMMENT",
-    UPDATE_COMMENT: "COMMENTS.UPDATE_COMMENT",
-};
+import {createAction} from "redux-smart-actions";
 
-export const getComments = (id,cursor = '') => ({
-    type: commentsActionTypes.GET_COMMENTS,
+export const getComments = (id, cursor = '') => ({
+    type: getCommentsAsync,
     requestKey: id + cursor,
     multiple: true,
     autoLoad: true,
-    action: getCommentsAsync,
-    autoReset: true,
     variables: [id, cursor]
 });
 
-export const getCommentsAsync = (id, cursor = "") => ({
-    type: commentsActionTypes.GET_COMMENTS,
+export const getCommentsAsync = createAction('GET_COMMENTS', (id, cursor = "") => ({
     request: {
         url: `posts/${id}/comments?cursor=${cursor}`,
     },
@@ -31,15 +23,14 @@ export const getCommentsAsync = (id, cursor = "") => ({
             };
         },
         onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: commentsActionTypes.GET_COMMENTS, payload: response.data})
+            store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
         },
-    },
-});
+    }
+}));
 
-export const createCommentAsync = (id, comment) => ({
-    type: commentsActionTypes.SET_COMMENT,
+export const createCommentAsync = createAction('SET_COMMENT', (id, comment) => ({
     request: {
         url: `posts/${id}/comments`,
         params: comment,
@@ -47,12 +38,12 @@ export const createCommentAsync = (id, comment) => ({
     },
     meta: {
         onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: commentsActionTypes.SET_COMMENT, payload: response.data})
+            store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
         },
         mutations: {
-            [commentsActionTypes.GET_COMMENTS]: {
+            getCommentsAsync: {
                 updateData: (prevState, comment) => {
                     return {
                         ...prevState,
@@ -62,22 +53,21 @@ export const createCommentAsync = (id, comment) => ({
             },
         },
     },
-});
+}));
 
-export const deleteCommentAsync = (id) => ({
-    type: commentsActionTypes.DELETE_COMMENT,
+export const deleteCommentAsync = createAction('DELETE_COMMENT', id => ({
     request: {
         url: `comments/${id}`,
         method: "delete",
     },
     meta: {
         onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: commentsActionTypes.DELETE_COMMENT, payload: id})
+            store.dispatch({type: requestAction.type, payload: id})
 
             return response;
         },
         mutations: {
-            [commentsActionTypes.GET_COMMENTS]: {
+            getCommentsAsync: {
                 updateData: (prevState) => {
                     return {
                         ...prevState,
@@ -87,10 +77,9 @@ export const deleteCommentAsync = (id) => ({
             },
         },
     },
-});
+}));
 
-export const updateCommentAsync = (id, comment) => ({
-    type: commentsActionTypes.UPDATE_COMMENT,
+export const updateCommentAsync = createAction('UPDATE_COMMENT', (id, comment) => ({
     request: {
         url: `comments/${id}`,
         params: comment,
@@ -98,7 +87,7 @@ export const updateCommentAsync = (id, comment) => ({
     },
     meta: {
         mutations: {
-            [commentsActionTypes.GET_COMMENTS]: {
+            getCommentsAsync: {
                 updateData: (prevState, changedPost) => {
                     return {
                         ...prevState,
@@ -109,9 +98,9 @@ export const updateCommentAsync = (id, comment) => ({
             },
         },
         onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: commentsActionTypes.UPDATE_COMMENT, payload: response.data})
+            store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
         },
     },
-});
+}));

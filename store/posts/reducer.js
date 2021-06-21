@@ -1,4 +1,4 @@
-import {postsActionTypes} from "./actions";
+import {createPostAsync, deletePostAsync, getPostsAsync, updatePostAsync} from "./actions";
 
 const initialState = {
     posts: [],
@@ -7,7 +7,7 @@ const initialState = {
 
 export const postsReducer = (state = initialState, action) => {
     switch (action.type) {
-        case postsActionTypes.GET_POSTS:
+        case getPostsAsync.toString():
             if (!action.payload || state.nextCursor === action.payload.nextCursor) return state;
 
             return {
@@ -15,18 +15,18 @@ export const postsReducer = (state = initialState, action) => {
                 nextCursor: action.payload.nextCursor
             };
 
-        case postsActionTypes.SET_POST:
+        case createPostAsync.toString():
             if (!action.payload) return state;
 
             return {...state, posts: [action.payload,...state.posts]};
 
 
-        case postsActionTypes.DELETE_POST:
+        case deletePostAsync.toString():
             if (!action.payload) return state;
 
             return {...state, posts: state.posts.filter(post => post.id !== action.payload)};
 
-        case postsActionTypes.UPDATE_POST:
+        case updatePostAsync.toString():
             if (!action.payload) return state;
 
             return {
