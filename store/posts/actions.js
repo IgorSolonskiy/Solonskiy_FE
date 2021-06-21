@@ -17,7 +17,7 @@ export const getPostsByTag = (tag, cursor = '') => ({
 });
 
 export const getPost = () => ({
-    type: getPostAsync.toString(),
+    type: getPostAsync,
 });
 
 export const getPostsAsync = createAction('GET_POSTS', (username, cursor) => ({

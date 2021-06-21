@@ -1,6 +1,6 @@
 import {createAction} from "redux-smart-actions";
 
-export const getProfile = () => ({type: getProfileAsync.toString()});
+export const getProfile = () => ({type: getProfileAsync});
 
 export const getProfileAsync = createAction('GET_PROFILE', () => ({
   request: {

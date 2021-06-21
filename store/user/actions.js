@@ -9,7 +9,7 @@ export const getUsers = (page = 1, searchName = '') => ({
 });
 
 export const getUser = (requestKey) => ({
-    type: getUserAsync.toString(),
+    type: getUserAsync,
     requestKey
 });
 
