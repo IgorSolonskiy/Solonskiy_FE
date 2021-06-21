@@ -1,12 +1,12 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
+import {getUserAsync} from "../../store/user/actions";
+import {useRouter} from "next/router";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
-import {getUserAsync} from "../../store/user/actions";
-import {useRouter} from "next/router";
 
 export default function Users() {
     const {query: {username, page}} = useRouter();

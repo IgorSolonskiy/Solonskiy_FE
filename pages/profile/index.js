@@ -11,8 +11,7 @@ import ProfileForm from "../../components/forms/ProfileForm";
 export default function Profile() {
   const dispatch = useDispatch();
 
-  const handleChangeProfile = (updatedProfile) => dispatch(
-      updateProfileAsync(updatedProfile));
+  const handleChangeProfile = (updatedProfile) => dispatch(updateProfileAsync(updatedProfile));
 
   return (
       <MainLayout>

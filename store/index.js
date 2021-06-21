@@ -2,6 +2,8 @@ import {useMemo} from "react";
 import {createDriver} from "@redux-requests/axios";
 import {handleRequests} from "@redux-requests/core";
 import {createStore, applyMiddleware, combineReducers, compose} from "redux";
+import {postsReducer as posts} from "./posts/reducer";
+import {commentsReducer as comments} from "./comments/reducer";
 
 import apiClient from "../libs/apiClient";
 
@@ -15,6 +17,8 @@ function initStore(preloadedState = {}) {
 
     const reducers = combineReducers({
         requests: requestsReducer,
+        posts,
+        comments
     });
     const composeEnhancers =
         typeof window !== "undefined"

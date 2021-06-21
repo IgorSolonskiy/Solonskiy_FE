@@ -11,83 +11,83 @@ import CreateCommentForm from "../../components/forms/CreateCommentForm";
 import {useEffect} from "react";
 import {getUser, getUserAsync} from "../../store/user/actions";
 import {
-  deletePostAsync, getPost, getPostAsync,
-  updatePostAsync,
+    deletePostAsync, getPost, getPostAsync,
+    updatePostAsync,
 } from "../../store/posts/actions";
 import {
-  createCommentAsync,
-  deleteCommentAsync, getComments, getCommentsAsync, updateCommentAsync,
+    createCommentAsync,
+    deleteCommentAsync, getComments, getCommentsAsync, updateCommentAsync,
 } from "../../store/comments/actions";
 import {useQuery} from "@redux-requests/react";
 
 export default function Post() {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const {data: {post}} = useQuery(getPost());
-  const {data: {user}} = useQuery(getUser());
-  const {data: {cursor}} = useQuery(getComments());
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const {query: {cursor}} = useRouter();
+    const {data: {post}} = useQuery(getPost());
+    const {data: {user}} = useQuery(getUser());
+    const {data: {nextCursor}} = useQuery(getComments(post.id, cursor));
 
-  useEffect(() => {
-    document.addEventListener("scroll", handleInfiniteScroll);
+    useEffect(() => {
+        document.addEventListener("scroll", handleInfiniteScroll);
 
-    return () => document.removeEventListener("scroll", handleInfiniteScroll);
-  });
+        return () => document.removeEventListener("scroll", handleInfiniteScroll);
+    });
 
-  const handleInfiniteScroll = (e) => {
-    const {scrollHeight, scrollTop} = e.target.documentElement;
+    const handleInfiniteScroll = (e) => {
+        const {scrollHeight, scrollTop} = e.target.documentElement;
 
-    if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getCommentsAsync(post.id, cursor));
-    }
-  };
+        if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
+            router.push(`/post/${post.id}${nextCursor ? `?cursor=${nextCursor}` : ''}`, undefined, {shallow: true})
+        }
+    };
 
-  const handleDeletePost = (deletedPost) => {
-    dispatch(deletePostAsync(deletedPost.id));
-    router.push(`/users/${user.username}`);
-  };
+    const handleDeletePost = (deletedPost) => {
+        dispatch(deletePostAsync(deletedPost.id));
+        router.push(`/users/${user.username}`);
+    };
 
-  const handleDeleteComment = (deletedComment) => dispatch(
-      deleteCommentAsync(deletedComment.id));
-  const handleEditComment = async (comment, changeComment) => await dispatch(
-      updateCommentAsync(comment.id, changeComment));
-  const handleEditPost = async (editPost, newPost) => await dispatch(
-      updatePostAsync(editPost.id, newPost));
-  const handleCreateComment = (newComment) => dispatch(
-      createCommentAsync(post.id, newComment));
+    const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment.id));
 
-  return (
-      <MainLayout>
-        <UserProfile/>
-        <Posts onChange={handleEditPost}
-               post={post}
-               onDelete={handleDeletePost}/>
-        <div className="w-100 d-flex mt-3 justify-content-center">
-          <CreateCommentForm onSubmit={handleCreateComment}/>
-        </div>
-        <CommentsList onSubmit={handleEditComment}
-                      onDelete={handleDeleteComment}/>
-      </MainLayout>
-  );
+    const handleEditComment = async (comment, changeComment) => await dispatch(updateCommentAsync(comment.id, changeComment));
+
+    const handleEditPost = async (editPost, newPost) => await dispatch(updatePostAsync(editPost.id, newPost));
+
+    const handleCreateComment = (newComment) => dispatch(createCommentAsync(post.id, newComment));
+
+    return (
+        <MainLayout>
+            <UserProfile/>
+            <Posts onChange={handleEditPost}
+                   post={post}
+                   onDelete={handleDeletePost}/>
+            <div className="w-100 d-flex mt-3 justify-content-center">
+                <CreateCommentForm onSubmit={handleCreateComment}/>
+            </div>
+            <CommentsList onSubmit={handleEditComment}
+                          onDelete={handleDeleteComment}/>
+        </MainLayout>
+    );
 }
 
 export const getServerSideProps = withRedux(
     withAuth(async (ctx, {user}, {dispatch, getState}) => {
-          try {
-            await Promise.all([
-              dispatch(getPostAsync(ctx.query.id)),
-              dispatch(getCommentsAsync(ctx.query.id)),
-            ]);
+            try {
+                await Promise.all([
+                    dispatch(getPostAsync(ctx.query.id)),
+                    dispatch(getCommentsAsync(ctx.query.id)),
+                ]);
 
-            const data = getState();
-            const author = data.requests.queries["POSTS.GET_POST"].data.post.author;
+                const data = getState();
+                const author = data.requests.queries["POSTS.GET_POST"].data.post.author;
 
-            await dispatch(getUserAsync(author.username));
+                await dispatch(getUserAsync(author.username));
 
-            return {props: {}};
-          } catch (e) {
-            return {
-              notFound: true,
-            };
-          }
+                return {props: {}};
+            } catch (e) {
+                return {
+                    notFound: true,
+                };
+            }
         },
     ));
