@@ -1,7 +1,7 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {useDispatch} from "react-redux";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
@@ -19,11 +19,18 @@ import {
     getUserAsync,
 } from "../../store/user/actions";
 import {useQuery} from "@redux-requests/react";
+import {useRouter} from "next/router";
+import {Toaster} from "react-hot-toast";
 
 export default function Home({auth}) {
-    const dispatch = useDispatch();
+    const {query: {cursor = ''}} = useRouter();
     const {data: {user}} = useQuery(getUser());
-    const {data: {cursor}} = useQuery(getPosts());
+    const {data: {nextCursor}} = useQuery(getPosts(user.username, cursor));
+    const [toasterShow, setToasterShow] = useState(false)
+    const router = useRouter();
+    const dispatch = useDispatch();
+
+    useEffect(() => setToasterShow(true))
 
     useEffect(() => {
         document.addEventListener("scroll", handleInfiniteScroll);
@@ -31,17 +38,18 @@ export default function Home({auth}) {
         return () => document.removeEventListener("scroll", handleInfiniteScroll);
     });
 
-    const handlePostDelete = (deletedPost) => dispatch(
-        deletePostAsync(deletedPost.id));
-    const handlePostCreate = (newPost) => dispatch(createPostAsync(newPost));
-    const handleEditPost = async (editPost, newPost) => await dispatch(
-        updatePostAsync(editPost.id, newPost));
+    const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost));
 
-    const handleInfiniteScroll = (e) => {
+    const handlePostCreate = (newPost) => dispatch(createPostAsync(newPost));
+
+    const handleEditPost = (editPost, newPost) => dispatch(updatePostAsync(editPost.id, newPost, cursor));
+
+    const handleInfiniteScroll = async (e) => {
         const {scrollHeight, scrollTop} = e.target.documentElement;
 
-        if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-            dispatch(getPostsFeedAsync(cursor));
+        if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
+            router.push(`/users/${user.username}${nextCursor ? `?cursor=${nextCursor}` : ''}`, undefined,
+                {shallow: true})
         }
     };
 
@@ -50,6 +58,7 @@ export default function Home({auth}) {
 
     return (
         <MainLayout>
+            {toasterShow && <Toaster/>}
             <UserProfile/>
             {profile}
             <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>

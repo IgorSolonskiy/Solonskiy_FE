@@ -1,8 +1,8 @@
 import {Spin} from "antd";
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
-import {useState} from "react";
-import {useDispatch} from "react-redux";
+import {getUserAsync} from "../../store/user/actions";
+import {useRouter} from "next/router";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
@@ -16,19 +16,10 @@ import {
 import {useQuery} from "@redux-requests/react";
 
 export default function Users() {
-  const {data: {users}} = useQuery(getUsers());
-  const [searchName, setSearchName] = useState(false);
-  const dispatch = useDispatch();
+    const {query: {username , page}} = useRouter();
+    const router = useRouter();
 
-  const handleSearchUsers = (username) => {
-    if (username) {
-      setSearchName(username);
-      return dispatch(searchUsersAsync(username));
-    }
-
-    setSearchName(false);
-    return dispatch(getUsersAsync(1));
-  };
+    const handleSearchUsers = async (searchName) => router.push(`/users?page=1${searchName ? `&username=${searchName}` : ''}`,undefined,{shallow: true});
 
   const handleFollowUser = username => dispatch(followUserAsync(username));
 
@@ -47,26 +38,23 @@ export default function Users() {
         <Spin size="large"/>
       </div>;
 
-  return (
-      <MainLayout>
-        <UserProfile/>
-        <div className="d-flex w-100 h-100">
-          {usersLists}
-          <div
-              className="d-flex flex-column align-items-start w-50 position-relative h-75 mx-3">
-            <SearchForm onSubmit={handleSearchUsers}/>
-          </div>
-        </div>
-      </MainLayout>
-  );
+    return (
+        <MainLayout>
+            <UserProfile/>
+            <div className="d-flex w-100 h-100">
+                <UsersList searchName={username} page={page} onPaginationChange={handlePaginateUsers}/>
+                <div
+                    className="d-flex flex-column align-items-start w-50 position-relative h-75 mx-3">
+                    <SearchForm searchUser={username} onSubmit={handleSearchUsers}/>
+                </div>
+            </div>
+        </MainLayout>
+    );
 }
 
 export const getServerSideProps = withRedux(
     withAuth(async (ctx, {user}, {dispatch}) => {
-      await Promise.all([
-        dispatch(getUsersAsync()),
-        dispatch(getUserAsync(user.username)),
-      ]);
+        await dispatch(getUserAsync(user.username))
 
-      return {props: {}};
+        return {props: {}};
     }));

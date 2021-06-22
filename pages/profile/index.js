@@ -33,8 +33,7 @@ export default function Profile() {
     return () => document.removeEventListener("scroll", handleInfiniteScroll);
   });
 
-  const handleChangeProfile = (updatedProfile) => dispatch(
-      updateProfileAsync(updatedProfile));
+  const handleChangeProfile = (updatedProfile) => dispatch(updateProfileAsync(updatedProfile));
 
   const handlePostDelete = (deletedPost) => dispatch(
       deletePostAsync(deletedPost.id));
