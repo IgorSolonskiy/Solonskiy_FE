@@ -34,9 +34,13 @@ export const postsReducer = (state = initialState, action) => {
             return {
                 ...state, posts: state.posts
                     .map(post => {
+
                         if (post.id === action.payload.id) {
                             post.content = action.payload.content
+                            action.payload.mentionedUsers ? post.mentionedUsers = action.payload.mentionedUsers : post.mentionedUsers;
+                            action.payload.hashtags ? post.hashtags = action.payload.hashtags : post.hashtags;
                         }
+
                         return post
                     })
             };

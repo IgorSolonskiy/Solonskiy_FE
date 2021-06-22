@@ -90,7 +90,7 @@ export const createPostAsync = createAction('CREATE_POST', (content) => ({
             return error
         },
         mutations: {
-            getPostsAsync: {
+            [getPostsAsync.toString()]: {
                 updateData: (prevState, post) => {
                     return prevState.cursor ? prevState : {
                         ...prevState,
@@ -123,6 +123,11 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content:
         params: post,
     },
     meta: {
+        onSuccess: (response, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: response.data})
+
+            return response;
+        },
         onRequest: (request, requestAction, store) => {
             store.dispatch({type: requestAction.type, payload: {id, content: post.content}})
 
@@ -139,7 +144,7 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content:
             return error
         },
         mutations: {
-            getPostsAsync: {
+            [getPostsAsync.toString()]: {
                 updateData: (prevState, changedPost) => {
                     return {
                         ...prevState,
@@ -148,7 +153,7 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content:
                     };
                 },
             },
-            getPostAsync: {
+            [getPostAsync.toString()]: {
                 updateData: (prevState, updatePost) => {
                     return {
                         ...prevState,
@@ -178,11 +183,11 @@ export const deletePostAsync = createAction('DELETE_POST', (post) => ({
             return error
         },
         mutations: {
-            getPostsAsync: {
+            [getPostsAsync.toString()]: {
                 updateData: (prevState) => {
                     return {
                         ...prevState,
-                        posts: prevState.posts.filter(post => post.id !== id),
+                        posts: prevState.posts.filter(post => post.id !== post.id),
                     };
                 },
             },
