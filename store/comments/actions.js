@@ -1,6 +1,5 @@
 import {createAction} from "redux-smart-actions";
 import toast from "react-hot-toast";
-import {createPostAsync} from "../posts/actions";
 
 export const getComments = (id, cursor = '') => ({
     type: getCommentsAsync,
