@@ -8,7 +8,7 @@ import Posts from "../../components/post/Post";
 import UserProfile from "../../components/user/UserProfile";
 import CommentsList from "../../components/list/CommentsList";
 import CreateCommentForm from "../../components/forms/CreateCommentForm";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {getUser, getUserAsync} from "../../store/user/actions";
 import {
     deletePostAsync, getPost, getPostAsync,
@@ -19,6 +19,7 @@ import {
     deleteCommentAsync, getComments, getCommentsAsync, updateCommentAsync,
 } from "../../store/comments/actions";
 import {useQuery} from "@redux-requests/react";
+import {Toaster} from "react-hot-toast";
 
 export default function Post() {
     const dispatch = useDispatch();
@@ -27,6 +28,9 @@ export default function Post() {
     const {data: {post}} = useQuery(getPost());
     const {data: {user}} = useQuery(getUser());
     const {data: {nextCursor}} = useQuery(getComments(post.id, cursor));
+    const [toasterShow, setToasterShow] = useState(false)
+
+    useEffect(() => setToasterShow(true))
 
     useEffect(() => {
         document.addEventListener("scroll", handleInfiniteScroll);
@@ -47,17 +51,18 @@ export default function Post() {
         router.push(`/users/${user.username}`);
     };
 
-    const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment.id));
+    const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment));
 
-    const handleEditComment = async (comment, changeComment) => await dispatch(updateCommentAsync(comment.id, changeComment));
+    const handleEditComment =  (comment, changeComment) =>  dispatch(updateCommentAsync(comment.id, changeComment));
 
-    const handleEditPost = async (editPost, newPost) => await dispatch(updatePostAsync(editPost.id, newPost));
+    const handleEditPost =  (editPost, newPost) =>  dispatch(updatePostAsync(editPost.id, newPost));
 
     const handleCreateComment = (newComment) => dispatch(createCommentAsync(post.id, newComment));
 
     return (
         <MainLayout>
             <UserProfile/>
+            {toasterShow && <Toaster/>}
             <Posts onChange={handleEditPost}
                    post={post}
                    onDelete={handleDeletePost}/>

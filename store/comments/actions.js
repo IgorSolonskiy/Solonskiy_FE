@@ -1,8 +1,10 @@
 import {createAction} from "redux-smart-actions";
+import toast from "react-hot-toast";
+import {createPostAsync} from "../posts/actions";
 
 export const getComments = (id, cursor = '') => ({
     type: getCommentsAsync,
-    requestKey: id + cursor,
+    requestKey: cursor,
     multiple: true,
     autoLoad: true,
     variables: [id, cursor]
@@ -13,7 +15,7 @@ export const getCommentsAsync = createAction('GET_COMMENTS', (id, cursor = "") =
         url: `posts/${id}/comments?cursor=${cursor}`,
     },
     meta: {
-        requestKey: id + cursor,
+        requestKey: cursor,
         getData: (data) => {
             return {
                 comments: data.data,
@@ -38,9 +40,21 @@ export const createCommentAsync = createAction('SET_COMMENT', (id, comment) => (
     },
     meta: {
         onSuccess: (response, requestAction, store) => {
+            store.dispatch({type: requestAction.type + 'REMOVE_PRELOAD'})
             store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
+        },
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type + 'PRELOAD', payload: comment})
+
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: requestAction.type + 'REMOVE_PRELOAD'})
+            toast.error(error.message);
+
+            return error
         },
         mutations: {
             getCommentsAsync: {
@@ -55,16 +69,22 @@ export const createCommentAsync = createAction('SET_COMMENT', (id, comment) => (
     },
 }));
 
-export const deleteCommentAsync = createAction('DELETE_COMMENT', id => ({
+export const deleteCommentAsync = createAction('DELETE_COMMENT', comment => ({
     request: {
-        url: `comments/${id}`,
+        url: `comments/${comment.id}`,
         method: "delete",
     },
     meta: {
-        onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: requestAction.type, payload: id})
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: comment.id})
 
-            return response;
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: createCommentAsync.toString(), payload: comment})
+            toast.error(error.message);
+
+            return error
         },
         mutations: {
             getCommentsAsync: {
@@ -86,21 +106,37 @@ export const updateCommentAsync = createAction('UPDATE_COMMENT', (id, comment) =
         method: "put",
     },
     meta: {
-        mutations: {
-            getCommentsAsync: {
-                updateData: (prevState, changedPost) => {
-                    return {
-                        ...prevState,
-                        comments: prevState.comments.map(
-                            comment => comment.id === id ? changedPost : comment),
-                    };
-                },
-            },
-        },
         onSuccess: (response, requestAction, store) => {
             store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
+        },
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: {id, content: comment.content}})
+
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            const state = store.getState();
+            const comments = state.requests.queries[getCommentsAsync.toString()].data.comments;
+            const prevComment = comments.filter(comment => comment.id === id)
+
+            store.dispatch({type: requestAction.type, payload: prevComment[0]})
+            toast.error(error.message);
+
+            return error
+        },
+        mutations: {
+            [getCommentsAsync.toString()]: {
+                updateData: (prevState, changedPost) => {
+                    return changedPost
+                        ? {
+                            ...prevState,
+                            comments: prevState.comments.map(comment => comment.id === id ? changedPost : comment)
+                        }
+                        : prevState;
+                },
+            },
         },
     },
 }));

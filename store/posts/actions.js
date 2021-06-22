@@ -136,7 +136,7 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content:
         onError: (error, requestAction, store) => {
             const state = store.getState();
             const posts = state.requests.queries[getPostsAsync.toString()].data.posts;
-            const prevPost = posts.filter(post => post.id = id)
+            const prevPost = posts.filter(post => post.id === id)
 
             store.dispatch({type: requestAction.type, payload: prevPost[0]})
             toast.error(error.message);
@@ -146,18 +146,16 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content:
         mutations: {
             [getPostsAsync.toString()]: {
                 updateData: (prevState, changedPost) => {
-                    return {
-                        ...prevState,
-                        posts: prevState.posts.map(
-                            post => post.id === id ? changedPost : post),
-                    };
+                    return !changedPost
+                        ? prevState
+                        : {...prevState, posts: prevState.posts.map(post => post.id === id ? changedPost : post)}
                 },
             },
             [getPostAsync.toString()]: {
-                updateData: (prevState, updatePost) => {
+                updateData: (prevState) => {
                     return {
                         ...prevState,
-                        post: updatePost,
+                        post: {...prevState.post, content: post.content},
                     };
                 },
             },

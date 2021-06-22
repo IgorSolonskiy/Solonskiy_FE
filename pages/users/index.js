@@ -9,7 +9,7 @@ import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
 
 export default function Users() {
-    const {query: {username, page}} = useRouter();
+    const {query: {username , page}} = useRouter();
     const router = useRouter();
 
     const handleSearchUsers = async (searchName) => router.push(`/users?page=1${searchName ? `&username=${searchName}` : ''}`,undefined,{shallow: true});
@@ -23,7 +23,7 @@ export default function Users() {
                 <UsersList searchName={username} page={page} onPaginationChange={handlePaginateUsers}/>
                 <div
                     className="d-flex flex-column align-items-start w-50 position-relative h-75 mx-3">
-                    <SearchForm onSubmit={handleSearchUsers}/>
+                    <SearchForm searchUser={username} onSubmit={handleSearchUsers}/>
                 </div>
             </div>
         </MainLayout>
