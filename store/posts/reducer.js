@@ -1,6 +1,7 @@
 import {createPostAsync, deletePostAsync, getPostsAsync, updatePostAsync} from "./actions";
 
 const initialState = {
+    preloadPosts: [],
     posts: [],
     nextCursor: '',
 };
@@ -11,6 +12,7 @@ export const postsReducer = (state = initialState, action) => {
             if (!action.payload || state.nextCursor === action.payload.nextCursor) return state;
 
             return {
+                ...state,
                 posts: [...state.posts, ...action.payload.posts],
                 nextCursor: action.payload.nextCursor
             };
@@ -18,7 +20,7 @@ export const postsReducer = (state = initialState, action) => {
         case createPostAsync.toString():
             if (!action.payload) return state;
 
-            return {...state, posts: [action.payload,...state.posts]};
+            return {...state, posts: [action.payload, ...state.posts].sort((a, b) => b.id - a.id)};
 
 
         case deletePostAsync.toString():
@@ -31,9 +33,21 @@ export const postsReducer = (state = initialState, action) => {
 
             return {
                 ...state, posts: state.posts
-                    .map(post => post.id === action.payload.id ? action.payload : post)
+                    .map(post => {
+                        if (post.id === action.payload.id) {
+                            post.content = action.payload.content
+                        }
+                        return post
+                    })
             };
 
+        case createPostAsync.toString() + 'PRELOAD':
+            if (!action.payload) return state;
+
+            return {...state, preloadPosts: [action.payload, ...state.preloadPosts]};
+
+        case createPostAsync.toString() + 'REMOVE_PRELOAD':
+            return {...state, preloadPosts: []};
 
         default:
             return state;

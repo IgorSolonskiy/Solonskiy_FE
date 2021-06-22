@@ -1,7 +1,7 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {useDispatch} from "react-redux";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
@@ -16,13 +16,17 @@ import {
 } from "../../store/user/actions";
 import {useQuery} from "@redux-requests/react";
 import {useRouter} from "next/router";
+import {Toaster} from "react-hot-toast";
 
 export default function Home({auth}) {
     const {query: {cursor = ''}} = useRouter();
     const {data: {user}} = useQuery(getUser());
     const {data: {nextCursor}} = useQuery(getPosts(user.username, cursor));
+    const [toasterShow, setToasterShow] = useState(false)
     const router = useRouter();
     const dispatch = useDispatch();
+
+    useEffect(() => setToasterShow(true))
 
     useEffect(() => {
         document.addEventListener("scroll", handleInfiniteScroll);
@@ -30,11 +34,11 @@ export default function Home({auth}) {
         return () => document.removeEventListener("scroll", handleInfiniteScroll);
     });
 
-    const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
+    const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost));
 
     const handlePostCreate = (newPost) => dispatch(createPostAsync(newPost));
 
-    const handleEditPost = async (editPost, newPost) => await dispatch(updatePostAsync(editPost.id, newPost, cursor));
+    const handleEditPost = (editPost, newPost) => dispatch(updatePostAsync(editPost.id, newPost, cursor));
 
     const handleInfiniteScroll = async (e) => {
         const {scrollHeight, scrollTop} = e.target.documentElement;
@@ -50,6 +54,7 @@ export default function Home({auth}) {
 
     return (
         <MainLayout>
+            {toasterShow && <Toaster/>}
             <UserProfile/>
             {profile}
             <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>

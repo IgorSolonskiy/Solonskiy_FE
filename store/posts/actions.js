@@ -1,4 +1,5 @@
 import {createAction} from "redux-smart-actions";
+import toast from "react-hot-toast";
 
 export const getPosts = (username, cursor = '') => ({
     type: getPostsAsync,
@@ -17,7 +18,7 @@ export const getPostsByTag = (tag, cursor = '') => ({
 });
 
 export const getPost = () => ({
-    type: getPostAsync,
+    type: getPostAsync.toString(),
 });
 
 export const getPostsAsync = createAction('GET_POSTS', (username, cursor) => ({
@@ -72,9 +73,21 @@ export const createPostAsync = createAction('CREATE_POST', (content) => ({
     },
     meta: {
         onSuccess: (response, requestAction, store) => {
+            store.dispatch({type: requestAction.type + 'REMOVE_PRELOAD'})
             store.dispatch({type: requestAction.type, payload: response.data})
 
             return response;
+        },
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type + 'PRELOAD', payload: content})
+
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: requestAction.type + 'REMOVE_PRELOAD'})
+            toast.error(error.message);
+
+            return error
         },
         mutations: {
             getPostsAsync: {
@@ -89,7 +102,7 @@ export const createPostAsync = createAction('CREATE_POST', (content) => ({
     },
 }));
 
-export const getPostAsync = createAction('GET_POST', (id= null) => ({
+export const getPostAsync = createAction('GET_POST', (id = null) => ({
     request: {
         url: `posts/${id}`,
     },
@@ -103,17 +116,27 @@ export const getPostAsync = createAction('GET_POST', (id= null) => ({
     },
 }));
 
-export const updatePostAsync = createAction('UPDATE_POST', (id, post) => ({
+export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content: ''}) => ({
     request: {
         url: `posts/${id}`,
         method: "put",
         params: post,
     },
     meta: {
-        onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: requestAction.type, payload: response.data})
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: {id, content: post.content}})
 
-            return response;
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            const state = store.getState();
+            const posts = state.requests.queries[getPostsAsync.toString()].data.posts;
+            const prevPost = posts.filter(post => post.id = id)
+
+            store.dispatch({type: requestAction.type, payload: prevPost[0]})
+            toast.error(error.message);
+
+            return error
         },
         mutations: {
             getPostsAsync: {
@@ -137,16 +160,22 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post) => ({
     },
 }));
 
-export const deletePostAsync = createAction('DELETE_POST', (id) => ({
+export const deletePostAsync = createAction('DELETE_POST', (post) => ({
     request: {
-        url: `posts/${id}`,
+        url: `posts/${post.id}`,
         method: "delete",
     },
     meta: {
-        onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: requestAction.type, payload: id})
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: post.id})
 
-            return response;
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: createPostAsync.toString(), payload: post})
+            toast.error(error.message);
+
+            return error
         },
         mutations: {
             getPostsAsync: {
