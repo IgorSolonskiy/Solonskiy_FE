@@ -10,22 +10,24 @@ import MainLayout from "../../components/layout/MainLayout";
 import ProfileForm from "../../components/forms/ProfileForm";
 import PostsList from "../../components/list/PostsList";
 import {
-  deletePostAsync, getPosts, getPostsAsync, updatePostAsync,
+  deletePostAsync, getPostsFeed, getPostsFeedAsync, updatePostAsync,
 } from "../../store/posts/actions";
-import {getQuerySelector} from "@redux-requests/core";
 import {useEffect} from "react";
 import {Button} from "antd";
 import {
-  getFollowingAsync, getUser, getUserAsync, getUsers,
+  getFollowingAsync, getUser, getUserAsync
 } from "../../store/user/actions";
 import Link from "next/link";
+import {useQuery} from "@redux-requests/react";
+import {useRouter} from "next/router";
 
 export default function Profile() {
-
+  const {query: {cursor = ''}} = useRouter();
+  const {data: {user}} = useQuery(getUser());
+  const {data: {nextCursor}} = useQuery(getPostsFeed(user.username,cursor));
+  const {data:{profile:{followings,followers}}} = useQuery(getProfile());
   const dispatch = useDispatch();
-  const {data: {cursor}} = useSelector(getQuerySelector(getPosts()));
-  const {data: {user}} = useSelector(getQuerySelector(getUser()));
-  const {data:{profile:{followings,followers}}} = useSelector(getQuerySelector(getProfile()));
+  const router = useRouter();
 
   useEffect(() => {
     document.addEventListener("scroll", handleInfiniteScroll);
@@ -44,8 +46,8 @@ export default function Profile() {
   const handleInfiniteScroll = (e) => {
     const {scrollHeight, scrollTop} = e.target.documentElement;
 
-    if (scrollHeight <= (scrollTop + window.innerHeight) && cursor) {
-      dispatch(getPostsAsync(user.username, cursor));
+    if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
+      router.push(`/profile${nextCursor ? `?cursor=${nextCursor}` : ''}`, undefined, {shallow: true})
     }
   };
 
@@ -56,7 +58,7 @@ export default function Profile() {
             <ProfileForm onSubmit={handleChangeProfile}/>
           </div>
           <div className="d-flex w-100 justify-content-center mt-2">
-            <Link href={"/profile/following"}>
+            <Link href={"/profile/followings"}>
               <Button>{followings.length} Following</Button>
             </Link>
             <Link href={"/profile/followers"}>
@@ -74,9 +76,8 @@ export const getServerSideProps = withRedux(
     withAuth(async (ctx, auth, {dispatch}) => {
           try {
             await Promise.all([
-              dispatch(getPostsAsync(auth.user.username)),
-              dispatch(getUserAsync(auth.user.username)),
-              dispatch(getFollowingAsync(auth.user.username)),
+              dispatch(getPostsFeedAsync(auth.user.username)),
+              dispatch(getUserAsync(auth.user.username))
             ]);
 
             return {props: {}};

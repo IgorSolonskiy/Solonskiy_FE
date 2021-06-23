@@ -1,4 +1,4 @@
-import {createPostAsync, deletePostAsync, getPostsAsync, updatePostAsync} from "./actions";
+import {createPostAsync, deletePostAsync, getPostsFeedAsync, updatePostAsync} from "./actions";
 
 const initialState = {
     preloadPosts: [],
@@ -8,7 +8,7 @@ const initialState = {
 
 export const postsReducer = (state = initialState, action) => {
     switch (action.type) {
-        case getPostsAsync.toString():
+        case getPostsFeedAsync.toString():
             if (!action.payload || state.nextCursor === action.payload.nextCursor) return state;
 
             return {
@@ -52,6 +52,7 @@ export const postsReducer = (state = initialState, action) => {
 
         case createPostAsync.toString() + 'REMOVE_PRELOAD':
             return {...state, preloadPosts: []};
+
 
         default:
             return state;

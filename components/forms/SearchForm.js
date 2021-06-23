@@ -16,10 +16,10 @@ export default function SearchForm({onSubmit, searchUser}) {
 
   return (
     <div className="w-100 d-flex justify-content-end mt-3">
-      <form autoComplete="off" className="d-flex flex-column h-100 w-100" onSubmit={formik.handleSubmit}>
+      <form autoComplete="off" className="d-flex flex-column h-100 w-100">
         <input type="text" id="name" className='form-control form-control-sm mb-1' value={formik.values.name}
                onChange={formik.handleChange} placeholder="Username?"/>
-        <Button type='submit' icon={<SearchOutlined />}>Search</Button>
+        <Button type='default' onClick={formik.handleSubmit} icon={<SearchOutlined />}>Search</Button>
       </form>
     </div>
   );

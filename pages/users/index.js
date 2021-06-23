@@ -1,7 +1,5 @@
-import {Spin} from "antd";
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
-import {getUserAsync} from "../../store/user/actions";
 import {useRouter} from "next/router";
 
 import MainLayout from "../../components/layout/MainLayout";
@@ -9,40 +7,33 @@ import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
 import {
-  followUserAsync,
-  getUserAsync, getUsers,
-  getUsersAsync, searchUsersAsync, unfollowUserAsync,
+    followUserAsync,
+    getUserAsync, unfollowUserAsync,
 } from "../../store/user/actions";
-import {useQuery} from "@redux-requests/react";
+import {useDispatch} from "react-redux";
 
 export default function Users() {
-    const {query: {username , page}} = useRouter();
+    const {query: {username, page}} = useRouter();
+    const dispatch = useDispatch();
     const router = useRouter();
 
-    const handleSearchUsers = async (searchName) => router.push(`/users?page=1${searchName ? `&username=${searchName}` : ''}`,undefined,{shallow: true});
 
-  const handleFollowUser = username => dispatch(followUserAsync(username));
+    const handleFollowUser = followUsername => dispatch(followUserAsync(followUsername));
 
-  const handleUnfollowUser = username => dispatch(unfollowUserAsync(username));
+    const handleUnfollowUser = unfollowUsername => dispatch(unfollowUserAsync(unfollowUsername));
 
-  const handlePaginateUsers = page => dispatch(
-      searchName ? searchUsersAsync(searchName, page) : getUsersAsync(page));
+    const handleSearchUsers = async (searchName) => router.push(`/users?page=1${searchName ? `&username=${searchName}` : ''}`, undefined, {shallow: true});
 
-  const usersLists = users ?
-      <UsersList onFollow={handleFollowUser}
-                 onUnfollow={handleUnfollowUser}
-                 onPaginationChange={handlePaginateUsers}/>
-      :
-      <div
-          className="w-100 h-100 d-flex align-items-center justify-content-center">
-        <Spin size="large"/>
-      </div>;
+    const handlePaginateUsers = async pageNumber => router.push(`/users?page=${pageNumber}${username ? `&username=${username}` : ''}`, undefined, {shallow: true});
 
     return (
         <MainLayout>
-            <UserProfile/>
+            <UserProfile />
             <div className="d-flex w-100 h-100">
-                <UsersList searchName={username} page={page} onPaginationChange={handlePaginateUsers}/>
+                <UsersList searchName={username} onFollow={handleFollowUser}
+                           onUnfollow={handleUnfollowUser}
+                           onPaginationChange={handlePaginateUsers} page={page}
+                           onPaginationChange={handlePaginateUsers}/>
                 <div
                     className="d-flex flex-column align-items-start w-50 position-relative h-75 mx-3">
                     <SearchForm searchUser={username} onSubmit={handleSearchUsers}/>

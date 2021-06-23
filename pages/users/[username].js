@@ -9,9 +9,7 @@ import UserProfile from "../../components/user/UserProfile";
 import CreatePostForm from "../../components/forms/CreatePostForm";
 import {
     createPostAsync,
-    deletePostAsync,
-    getPosts,
-    getPostsAsync, getPostsFeedAsync,
+    deletePostAsync, getPostsFeed, getPostsFeedAsync,
     updatePostAsync,
 } from "../../store/posts/actions";
 import {
@@ -25,7 +23,7 @@ import {Toaster} from "react-hot-toast";
 export default function Home({auth}) {
     const {query: {cursor = ''}} = useRouter();
     const {data: {user}} = useQuery(getUser());
-    const {data: {nextCursor}} = useQuery(getPosts(user.username, cursor));
+    const {data: {nextCursor}} = useQuery(getPostsFeed(auth.user.username === user.username ? '' : user.username, cursor));
     const [toasterShow, setToasterShow] = useState(false)
     const router = useRouter();
     const dispatch = useDispatch();
@@ -69,15 +67,16 @@ export default function Home({auth}) {
 export const getServerSideProps = withRedux(
     withAuth(async (ctx, auth, {dispatch}) => {
             try {
+                const username = ctx.query.username === auth.user.username ? '' : ctx.query.username;
+
                 await Promise.all([
-                    ctx.query.username === auth.user.username
-                        ? dispatch(getPostsFeedAsync())
-                        : dispatch(getPostsAsync(ctx.query.username)),
+                    dispatch(getPostsFeedAsync(username)),
                     dispatch(getUserAsync(ctx.query.username)),
                 ]);
 
                 return {props: {}};
             } catch (e) {
+
                 return {
                     notFound: true,
                 };

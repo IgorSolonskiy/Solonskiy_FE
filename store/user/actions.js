@@ -1,4 +1,5 @@
 import {createAction} from "redux-smart-actions";
+import {getProfileAsync} from "../profile/actions";
 
 export const getUsers = (page = 1, searchName = '') => ({
     type: getUsersAsync,
@@ -8,30 +9,45 @@ export const getUsers = (page = 1, searchName = '') => ({
     variables: [searchName, page]
 });
 
-export const getUser = (requestKey) => ({
-    type: getUserAsync,
-    requestKey
+export const getFollowings = (page = 1, username = '') => ({
+    type: getFollowingAsync,
+    requestKey: username + page,
+    multiple: true,
+    autoLoad: true,
+    variables: [username, page]
+});
+
+export const getFollowers = (page = 1, username = '') => ({
+    type: getFollowersAsync,
+    requestKey: username + page,
+    multiple: true,
+    autoLoad: true,
+    variables: [username, page]
+});
+
+export const getUser = () => ({
+    type: getUserAsync
 });
 
 export const getUsersAsync = createAction('GET_USERS', (username = '', page = 1) => ({
     request: {
-    url: `users?username=${username}&limit=6&page=${page}`,
-},
-meta: {
-    requestKey: username + page,
+        url: `users?username=${username}&limit=6&page=${page}`,
+    },
+    meta: {
+        requestKey: username + page,
         cache: 60,
         getData: (data) => {
-        return {
-            users: data.data,
-            total: data.meta.total,
-            perPage: data.meta.per_page,
-            currentPage: data.meta.current_page,
-        };
+            return {
+                users: data.data,
+                total: data.meta.total,
+                perPage: data.meta.per_page,
+                currentPage: data.meta.current_page,
+            };
+        },
     },
-},
 }));
 
-export const getUserAsync = createAction('GET_USERS', (username = '') => ({
+export const getUserAsync = createAction('GET_USER', (username = '') => ({
     request: {
         url: `users/${username}`,
     },
@@ -44,81 +60,81 @@ export const getUserAsync = createAction('GET_USERS', (username = '') => ({
     },
 }));
 
-export const followUserAsync = (username) => ({
-  type: usersActionTypes.SET_FOLLOW,
-  request: {
-    url: `users/${username}/follow`,
-    method: "post",
-  },
-  meta: {
-    mutations: {
-      [profileActionTypes.GET_PROFILE]: {
-        updateData: ({profile}, following) => {
-          return {
-            profile: {
-              ...profile,
-              followings: [...profile.followings, following],
+export const followUserAsync = createAction('SET_FOLLOW', (username = '') => ({
+    request: {
+        url: `users/${username}/follow`,
+        method: "post",
+    },
+    meta: {
+        mutations: {
+            [getProfileAsync.toString()]: {
+                updateData: ({profile}, following) => {
+                    return {
+                        profile: {
+                            ...profile,
+                            followings: [...profile.followings, following],
+                        },
+                    };
+                },
             },
-          };
         },
-      },
     },
-  },
-});
+}));
 
-export const getFollowingAsync = (username, page = 1, limit = 6) => ({
-  type: usersActionTypes.GET_USERS,
-  request: {
-    url: `users/${username}/followings?page=${page}&limit=${limit}`,
-  },
-  meta: {
-    getData: (data) => {
-      return {
-        users: data.data,
-        total: data.meta.total,
-        perPage: data.meta.per_page,
-        currentPage: data.meta.current_page,
-      };
+export const getFollowingAsync = createAction('GET_FOLLOWINGS', (username, page = 1) => ({
+    request: {
+        url: `users/${username}/followings?page=${page}&limit=6`,
     },
-  },
-});
-
-export const getFollowersAsync = (username, page = 1, limit = 6) => ({
-  type: usersActionTypes.GET_USERS,
-  request: {
-    url: `users/${username}/followers?page=${page}&limit=${limit}`,
-  },
-  meta: {
-    getData: (data) => {
-      return {
-        users: data.data,
-        total: data.meta.total,
-        perPage: data.meta.per_page,
-        currentPage: data.meta.current_page,
-      };
+    meta: {
+        requestKey: username + page,
+        cache: 60,
+        getData: (data) => {
+            return {
+                followings: data.data,
+                total: data.meta.total,
+                perPage: data.meta.per_page,
+                currentPage: data.meta.current_page,
+            };
+        },
     },
-  },
-});
+}));
 
-export const unfollowUserAsync = (username) => ({
-  type: usersActionTypes.DELETE_FOLLOW,
-  request: {
-    url: `users/${username}/unfollow`,
-    method: "delete",
-  },
-  meta: {
-    mutations: {
-      [profileActionTypes.GET_PROFILE]: {
-        updateData: ({profile}) => {
-          return {
-            profile: {
-              ...profile,
-              followings: profile.followings.filter(
-                  user => user.username !== username),
+export const getFollowersAsync = createAction('GET_FOLLOWERS', (username = '', page = 1) => ({
+    request: {
+        url: `users/${username}/followers?page=${page}&limit=6`,
+    },
+    meta: {
+        requestKey: username + page,
+        cache: 60,
+        getData: (data) => {
+            return {
+                followers: data.data,
+                total: data.meta.total,
+                perPage: data.meta.per_page,
+                currentPage: data.meta.current_page,
+            };
+        },
+    },
+}));
+
+export const unfollowUserAsync = createAction('DELETE_FOLLOW', (username = '') => ({
+    request: {
+        url: `users/${username}/unfollow`,
+        method: "delete",
+    },
+    meta: {
+        mutations: {
+            [getProfileAsync.toString()]: {
+                updateData: ({profile}) => {
+                    return {
+                        profile: {
+                            ...profile,
+                            followings: profile.followings.filter(
+                                user => user.username !== username),
+                        },
+                    };
+                },
             },
-          };
         },
-      },
     },
-  },
-});
+}));
