@@ -22,7 +22,7 @@ export const getPost = () => ({
     type: getPostAsync.toString(),
 });
 
-export const getPostsFeedAsync = createAction('GET_POSTS', (username,cursor = '') => ({
+export const getPostsFeedAsync = createAction('GET_POSTS', (username, cursor = '') => ({
     request: {
         url: !username ? `posts/feed?cursor=${cursor}` : `users/${username}/posts?cursor=${cursor}`,
     },
@@ -93,7 +93,7 @@ export const createPostAsync = createAction('CREATE_POST', (content) => ({
         mutations: {
             [getPostsFeedAsync.toString()]: {
                 updateData: (prevState, post) => {
-                    return prevState.cursor ? prevState : {
+                    return !post ? prevState : {
                         ...prevState,
                         posts: [...prevState.posts, post],
                     };
@@ -164,30 +164,30 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content:
     },
 }));
 
-export const deletePostAsync = createAction('DELETE_POST', (post) => ({
+export const deletePostAsync = createAction('DELETE_POST', (deletedPost) => ({
     request: {
-        url: `posts/${post.id}`,
+        url: `posts/${deletedPost.id}`,
         method: "delete",
     },
     meta: {
         onRequest: (request, requestAction, store) => {
-            store.dispatch({type: requestAction.type, payload: post.id})
+            store.dispatch({type: requestAction.type, payload: deletedPost.id})
 
             return request;
         },
         onError: (error, requestAction, store) => {
-            store.dispatch({type: createPostAsync.toString(), payload: post})
+            store.dispatch({type: createPostAsync.toString(), payload: deletedPost})
             toast.error(error.message);
 
             return error
         },
         mutations: {
             [getPostsFeedAsync.toString()]: {
-                updateData: (prevState) => {
-                    return {
+                updateData: (prevState, currentData) => {
+                    return currentData === null ? {
                         ...prevState,
-                        posts: prevState.posts.filter(post => post.id !== post.id),
-                    };
+                        posts: prevState.posts.filter(post => post.id !== deletedPost.id),
+                    } : prevState;
                 },
             },
         },
