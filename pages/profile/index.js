@@ -1,90 +1,73 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
-import {useDispatch, useSelector} from "react-redux";
-import {
-  getProfile,
-  updateProfileAsync,
-} from "../../store/profile/actions";
+import {useDispatch} from "react-redux";
+import {updateProfileAsync,} from "../../store/profile/actions";
+import {deletePostAsync, getPostsFeed, getPostsFeedAsync, updatePostAsync} from "../../store/posts/actions";
+import {useEffect} from "react";
+import {getUser, getUserAsync} from "../../store/user/actions";
+import {useQuery} from "@redux-requests/react";
+import {useRouter} from "next/router";
 
 import MainLayout from "../../components/layout/MainLayout";
 import ProfileForm from "../../components/forms/ProfileForm";
 import PostsList from "../../components/list/PostsList";
-import {
-  deletePostAsync, getPostsFeed, getPostsFeedAsync, updatePostAsync,
-} from "../../store/posts/actions";
-import {useEffect} from "react";
-import {Button} from "antd";
-import {
-  getFollowingAsync, getUser, getUserAsync
-} from "../../store/user/actions";
-import Link from "next/link";
-import {useQuery} from "@redux-requests/react";
-import {useRouter} from "next/router";
+import FollowMenu from "../../components/menu/FollowMenu";
 
 export default function Profile() {
-  const {query: {cursor = ''}} = useRouter();
-  const {data: {user}} = useQuery(getUser());
-  const {data: {nextCursor}} = useQuery(getPostsFeed(user.username,cursor));
-  const {data:{profile:{followings,followers}}} = useQuery(getProfile());
-  const dispatch = useDispatch();
-  const router = useRouter();
+    const {query: {cursor = ''}} = useRouter();
+    const {data: {user: {username}}} = useQuery(getUser());
+    const {data: {nextCursor}} = useQuery(getPostsFeed(username, cursor));
+    const dispatch = useDispatch();
+    const router = useRouter();
 
-  useEffect(() => {
-    document.addEventListener("scroll", handleInfiniteScroll);
+    useEffect(() => {
+        document.addEventListener("scroll", handleInfiniteScroll);
 
-    return () => document.removeEventListener("scroll", handleInfiniteScroll);
-  });
+        return () => document.removeEventListener("scroll", handleInfiniteScroll);
+    });
 
-  const handleChangeProfile = (updatedProfile) => dispatch(updateProfileAsync(updatedProfile));
+    const handleChangeProfile = (updatedProfile) => dispatch(updateProfileAsync(updatedProfile));
 
-  const handlePostDelete = (deletedPost) => dispatch(
-      deletePostAsync(deletedPost.id));
+    const handlePostDelete = (deletedPost) => dispatch(
+        deletePostAsync(deletedPost.id));
 
-  const handleEditPost = async (editPost, newPost) => await dispatch(
-      updatePostAsync(editPost.id, newPost));
+    const handleEditPost = async (editPost, newPost) => await dispatch(
+        updatePostAsync(editPost.id, newPost));
 
-  const handleInfiniteScroll = (e) => {
-    const {scrollHeight, scrollTop} = e.target.documentElement;
+    const handleInfiniteScroll = (e) => {
+        const {scrollHeight, scrollTop} = e.target.documentElement;
 
-    if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
-      router.push(`/profile${nextCursor ? `?cursor=${nextCursor}` : ''}`, undefined, {shallow: true})
-    }
-  };
+        if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
+            router.push(`/profile${nextCursor ? `?cursor=${nextCursor}` : ''}`, undefined, {shallow: true})
+        }
+    };
 
-  return (
-      <MainLayout>
-        <div className="container mt-3 ">
-          <div className="main-body ">
-            <ProfileForm onSubmit={handleChangeProfile}/>
-          </div>
-          <div className="d-flex w-100 justify-content-center mt-2">
-            <Link href={"/profile/followings"}>
-              <Button>{followings.length} Following</Button>
-            </Link>
-            <Link href={"/profile/followers"}>
-              <Button
-                  className="mx-3">{followers.length} Followers</Button>
-            </Link>
-          </div>
-          <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>
-        </div>
-      </MainLayout>
-  );
+    return (
+        <MainLayout>
+            <div className="container mt-3 ">
+                <div className="main-body ">
+                    <ProfileForm onSubmit={handleChangeProfile}/>
+                </div>
+                <FollowMenu />
+                <PostsList onChange={handleEditPost} onDelete={handlePostDelete}/>
+            </div>
+        </MainLayout>
+    );
 }
 
 export const getServerSideProps = withRedux(
     withAuth(async (ctx, auth, {dispatch}) => {
-          try {
-            await Promise.all([
-              dispatch(getPostsFeedAsync(auth.user.username)),
-              dispatch(getUserAsync(auth.user.username))
-            ]);
+            try {
+                await Promise.all([
+                    dispatch(getPostsFeedAsync(auth.user.username)),
+                    dispatch(getUserAsync(auth.user.username))
+                ]);
 
-            return {props: {}};
-          } catch (e) {
-            return {
-              notFound: true,
-            };
-          }
+                return {props: {}};
+            } catch (e) {
+                return {
+                    notFound: true,
+                };
+            }
         },
     ));

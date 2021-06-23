@@ -1,11 +1,11 @@
 import {Avatar} from "../image/Avatar";
 
 import Link from "next/link";
-import {getProfile} from "../../store/profile/actions";
 import {useQuery} from "@redux-requests/react";
+import {getUser} from "../../store/user/actions";
 
 export default function UserInfo({user, onFollow, onUnfollow}) {
-  const {data: {profile: {followings, username}}} = useQuery(getProfile());
+  const {data: {user: {followings, username}}} = useQuery(getUser());
 
   const showControls = user.username !== username;
 

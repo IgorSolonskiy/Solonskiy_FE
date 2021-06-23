@@ -1,5 +1,4 @@
 import {createAction} from "redux-smart-actions";
-import {getProfileAsync} from "../profile/actions";
 
 export const getUsers = (page = 1, searchName = '') => ({
     type: getUsersAsync,
@@ -67,12 +66,12 @@ export const followUserAsync = createAction('SET_FOLLOW', (username = '') => ({
     },
     meta: {
         mutations: {
-            [getProfileAsync.toString()]: {
-                updateData: ({profile}, following) => {
+            [getUserAsync.toString()]: {
+                updateData: ({user}, following) => {
                     return {
-                        profile: {
-                            ...profile,
-                            followings: [...profile.followings, following],
+                        user: {
+                            ...user,
+                            followings: [...user.followings, following],
                         },
                     };
                 },
@@ -124,12 +123,12 @@ export const unfollowUserAsync = createAction('DELETE_FOLLOW', (username = '') =
     },
     meta: {
         mutations: {
-            [getProfileAsync.toString()]: {
-                updateData: ({profile}) => {
+            [getUserAsync.toString()]: {
+                updateData: ({user}) => {
                     return {
-                        profile: {
-                            ...profile,
-                            followings: profile.followings.filter(
+                        user: {
+                            ...user,
+                            followings: user.followings.filter(
                                 user => user.username !== username),
                         },
                     };

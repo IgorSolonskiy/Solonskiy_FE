@@ -19,6 +19,7 @@ import {
 import {useQuery} from "@redux-requests/react";
 import {useRouter} from "next/router";
 import {Toaster} from "react-hot-toast";
+import FollowMenu from "../../components/menu/FollowMenu";
 
 export default function Home({auth}) {
     const {query: {cursor = ''}} = useRouter();
@@ -52,7 +53,7 @@ export default function Home({auth}) {
     };
 
     const profile = auth.user.id === user.id ? <CreatePostForm
-        onSubmit={handlePostCreate}/> : null;
+        onSubmit={handlePostCreate}/> : <FollowMenu />;
 
     return (
         <MainLayout>
