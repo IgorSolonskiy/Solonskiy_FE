@@ -1,16 +1,18 @@
-import { setProfileAsync } from "../store/profile";
 import apiClient from "../libs/apiClient";
+import {getProfileAsync} from "../store/profile/actions";
 
 export const withAuth = getServerSideProps => (async (ctx, storeData) => {
-  const { token } = ctx.req.cookies;
+  const {token} = ctx.req.cookies;
   if (token) {
     try {
       apiClient.defaults.headers["Authorization"] = `Bearer ${token}`;
 
-      await storeData.dispatch(setProfileAsync());
+      await storeData.dispatch(getProfileAsync());
 
-      const { profile: { profile: user } } = storeData.getState();
-      const auth = { token, user };
+      const data = storeData.getState();
+      const user = data.requests.queries["GET_PROFILE"].data.profile;
+
+      const auth = {token, user};
 
       if (getServerSideProps) {
         const result = await getServerSideProps(ctx, auth, storeData);
@@ -18,14 +20,14 @@ export const withAuth = getServerSideProps => (async (ctx, storeData) => {
           ...result,
           props: {
             auth,
-            ...result.props
-          }
+            ...result.props,
+          },
         };
       }
       return {
         props: {
           auth,
-        }
+        },
       };
     } catch (e) {
       return {

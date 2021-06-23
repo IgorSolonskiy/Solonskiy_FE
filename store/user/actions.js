@@ -1,36 +1,45 @@
-import apiClient from "../../libs/apiClient";
+import {createAction} from "redux-smart-actions";
 
-export const usersActionTypes = {
-  SET_USERS: "USERS.SET_USERS",
-  SET_USER: "USERS.SET_USER",
-};
-
-export const setUsers = (payload) => ({
-  type: usersActionTypes.SET_USERS,
-  payload,
-});
-export const setUser = (payload) => ({
-  type: usersActionTypes.SET_USER,
-  payload,
+export const getUsers = (page = 1, searchName = '') => ({
+    type: getUsersAsync,
+    requestKey: searchName + page,
+    multiple: true,
+    autoLoad: true,
+    variables: [searchName, page]
 });
 
-export const searchUsersAsync = (
-    username, page = 1, limit = 6) => async dispatch => {
-  const {data: response} = await apiClient.get(
-      `users?username=${username}&limit=${limit}&page=${page}`);
+export const getUser = (requestKey) => ({
+    type: getUserAsync,
+    requestKey
+});
 
-  dispatch(setUsers(response));
-};
+export const getUsersAsync = createAction('GET_USERS', (username = '', page = 1) => ({
+    request: {
+    url: `users?username=${username}&limit=6&page=${page}`,
+},
+meta: {
+    requestKey: username + page,
+        cache: 60,
+        getData: (data) => {
+        return {
+            users: data.data,
+            total: data.meta.total,
+            perPage: data.meta.per_page,
+            currentPage: data.meta.current_page,
+        };
+    },
+},
+}));
 
-export const getUsersAsync = (page, limit = 6) => async dispatch => {
-  const {data: response} = await apiClient.get(
-      `users?page=${page}&limit=${limit}`);
-
-  dispatch(setUsers(response));
-};
-
-export const addUserAsync = username => async dispatch => {
-  const {data: response} = await apiClient.get(`users/${username}`);
-
-  dispatch(setUser(response));
-};
+export const getUserAsync = createAction('GET_USERS', (username = '') => ({
+    request: {
+        url: `users/${username}`,
+    },
+    meta: {
+        getData: (data) => {
+            return {
+                user: data,
+            };
+        },
+    },
+}));

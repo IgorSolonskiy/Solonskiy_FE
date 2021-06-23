@@ -1,87 +1,195 @@
-import apiClient from "../../libs/apiClient";
+import {createAction} from "redux-smart-actions";
+import toast from "react-hot-toast";
 
-export const postsActionTypes = {
-  SET_POSTS_LIST: "POSTS.SET_POSTS_LIST",
-  ADD_ONE_POST_LIST: "POSTS.ADD_POST_LIST",
-  REMOVE_POST: "POSTS.REMOVE_POST",
-  SET_POST: "POSTS.SET_POST",
-  CHANGE_POST: "POSTS.CHANGE_POST",
-  SET_POST_ID: "POSTS.SET_POST_ID",
-  SET_FETCHING: "POSTS.SET_FETCHING",
-};
-
-export const setPostsList = (payload) => ({
-  type: postsActionTypes.SET_POSTS_LIST,
-  payload,
-});
-export const addOnePostList = (payload) => ({
-  type: postsActionTypes.ADD_ONE_POST_LIST,
-  payload,
-});
-export const setPost = (payload) => ({
-  type: postsActionTypes.SET_POST,
-  payload,
-});
-export const removePost = (payload) => ({
-  type: postsActionTypes.REMOVE_POST,
-  payload,
-});
-export const changePost = (payload) => ({
-  type: postsActionTypes.CHANGE_POST,
-  payload,
-});
-export const setPostId = (payload) => ({
-  type: postsActionTypes.SET_POST_ID,
-  payload,
-});
-export const setFetching = (payload) => ({
-  type: postsActionTypes.SET_FETCHING,
-  payload,
+export const getPosts = (username, cursor = '') => ({
+    type: getPostsAsync,
+    requestKey: cursor,
+    multiple: true,
+    autoLoad: true,
+    variables: [username, cursor]
 });
 
-export const getPostsByTagAsync = (tag, cursor) => async dispatch => {
-  try {
-    dispatch(setFetching(true));
-    const {data: response} = await apiClient.get(
-        `tags/${tag}/posts?cursor=${cursor}`);
+export const getPostsByTag = (tag, cursor = '') => ({
+    type: getPostsByTagAsync,
+    requestKey: cursor,
+    multiple: true,
+    autoLoad: true,
+    variables: [tag, cursor]
+});
 
-    dispatch(setPostsList(response));
-  } finally {
-    dispatch(setFetching(false));
-  }
-};
+export const getPost = () => ({
+    type: getPostAsync.toString(),
+});
 
-export const getPostsListAsync = (username, cursor) => async dispatch => {
-  try {
-    dispatch(setFetching(true));
-    const {data: response} = await apiClient.get(
-        `users/${username}/posts?cursor=${cursor}`);
+export const getPostsAsync = createAction('GET_POSTS', (username, cursor) => ({
+    request: {
+        url: `users/${username}/posts?cursor=${cursor}`,
+    },
+    meta: {
+        requestKey: cursor,
+        getData: (data) => {
+            return {
+                posts: data.data,
+                nextCursor: data.links.next
+                    ? data.links.next.match(/cursor=(\w+)/)[1]
+                    : data.links.next,
+            };
+        },
+        onSuccess: (response, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: response.data})
 
-    dispatch(setPostsList(response));
-  } finally {
-    dispatch(setFetching(false));
-  }
-};
+            return response;
+        },
+    }
+}));
 
-export const addOnePostListAsync = (post) => async dispatch => {
-  const {data: response} = await apiClient.post("posts", post);
+export const getPostsByTagAsync = createAction('GET_POSTS', (tag, cursor = "") => ({
+    request: {
+        url: `tags/${tag}/posts?cursor=${cursor}`,
+    },
+    meta: {
+        requestKey: cursor,
+        getData: (data) => {
+            return {
+                posts: data.data,
+                nextCursor: data.links.next
+                    ? data.links.next.match(/cursor=(\w+)/)[1]
+                    : data.links.next,
+            };
+        },
+        onSuccess: (response, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: response.data})
 
-  dispatch(addOnePostList(response));
-};
+            return response;
+        },
+    },
+}));
 
-export const setPostAsync = (id) => async dispatch => {
-  const {data: response} = await apiClient.get(`posts/${id}`);
+export const createPostAsync = createAction('CREATE_POST', (content) => ({
+    request: {
+        url: "posts",
+        params: content,
+        method: "post",
+    },
+    meta: {
+        onSuccess: (response, requestAction, store) => {
+            store.dispatch({type: requestAction.type + 'REMOVE_PRELOAD'})
+            store.dispatch({type: requestAction.type, payload: response.data})
 
-  dispatch(setPost(response));
-};
+            return response;
+        },
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type + 'PRELOAD', payload: content})
 
-export const changePostAsync = (id, post) => async dispatch => {
-  const {data: response} = await apiClient.put(`posts/${id}`, post);
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: requestAction.type + 'REMOVE_PRELOAD'})
+            toast.error(error.message);
 
-  dispatch(changePost(response));
-};
+            return error
+        },
+        mutations: {
+            [getPostsAsync.toString()]: {
+                updateData: (prevState, post) => {
+                    return prevState.cursor ? prevState : {
+                        ...prevState,
+                        posts: [...prevState.posts, post],
+                    };
+                },
+            },
+        },
+    },
+}));
 
-export const deletePostAsync = (id) => async dispatch => {
-  await apiClient.delete(`posts/${id}`);
-  dispatch(removePost(id));
-};
+export const getPostAsync = createAction('GET_POST', (id = null) => ({
+    request: {
+        url: `posts/${id}`,
+    },
+    meta: {
+        getData: (data) => {
+            return {
+                post: data,
+                postId: data.id,
+            };
+        },
+    },
+}));
+
+export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content: ''}) => ({
+    request: {
+        url: `posts/${id}`,
+        method: "put",
+        params: post,
+    },
+    meta: {
+        onSuccess: (response, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: response.data})
+
+            return response;
+        },
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: {id, content: post.content}})
+
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            const state = store.getState();
+            const posts = state.requests.queries[getPostsAsync.toString()].data.posts;
+            const prevPost = posts.filter(post => post.id === id)
+
+            store.dispatch({type: requestAction.type, payload: prevPost[0]})
+            toast.error(error.message);
+
+            return error
+        },
+        mutations: {
+            [getPostsAsync.toString()]: {
+                updateData: (prevState, changedPost) => {
+                    return !changedPost
+                        ? prevState
+                        : {...prevState, posts: prevState.posts.map(post => post.id === id ? changedPost : post)}
+                },
+            },
+            [getPostAsync.toString()]: {
+                updateData: (prevState) => {
+                    return {
+                        ...prevState,
+                        post: {...prevState.post, content: post.content},
+                    };
+                },
+            },
+        },
+    },
+}));
+
+export const deletePostAsync = createAction('DELETE_POST', (post) => ({
+    request: {
+        url: `posts/${post.id}`,
+        method: "delete",
+    },
+    meta: {
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: post.id})
+
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: createPostAsync.toString(), payload: post})
+            toast.error(error.message);
+
+            return error
+        },
+        mutations: {
+            [getPostsAsync.toString()]: {
+                updateData: (prevState) => {
+                    return {
+                        ...prevState,
+                        posts: prevState.posts.filter(post => post.id !== post.id),
+                    };
+                },
+            },
+        },
+    },
+}));
+

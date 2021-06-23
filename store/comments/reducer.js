@@ -1,42 +1,60 @@
-import { commentsActionTypes } from "./actions";
-import { postsActionTypes } from "../posts";
+import {createCommentAsync, deleteCommentAsync, getCommentsAsync, updateCommentAsync} from "./actions";
 
 const initialState = {
-  comments: [],
-  pagination: {
-    cursor: null
-  },
-  fetching: false,
-  idComment: null,
+    preloadComments: [],
+    comments: [],
+    nextCursor: '',
 };
 
 export const commentsReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case commentsActionTypes.SET_COMMENTS_LIST:
-      return {
-        ...state, comments: [...state.comments, ...action.payload.data],
-        pagination: {
-          ...state.pagination,
-          cursor: action.payload.links.next && action.payload.links.next.match(/cursor=(\w+)/)[1]
-        }
-      };
+    switch (action.type) {
+        case getCommentsAsync.toString():
+            if (!action.payload || state.nextCursor === action.payload.nextCursor) return state;
 
-    case postsActionTypes.SET_FETCHING:
-      return { ...state, fetching: action.payload };
+            return {
+                ...state,
+                comments: [...state.comments, ...action.payload.comments],
+                nextCursor: action.payload.nextCursor
+            };
 
-    case commentsActionTypes.ADD_COMMENT:
-      return state.pagination.cursor ? state : { ...state, comments: [...state.comments, action.payload] };
+        case createCommentAsync.toString():
+            if (!action.payload) return state;
 
-    case commentsActionTypes.REMOVE_COMMENT:
-      return { ...state, comments: state.comments.filter(comment => comment.id !== action.payload) };
+            return {...state, comments: [...state.comments, action.payload].sort((a, b) => a.id - b.id)};
 
-    case commentsActionTypes.CHANGE_COMMENT:
-      return {
-        ...state, comments: [...state.comments
-          .map(comment => comment.id === action.payload.id ? action.payload : comment)]
-      };
 
-    default:
-      return state;
-  }
+        case deleteCommentAsync.toString():
+            if (!action.payload) return state;
+
+            return {...state, comments: state.comments.filter(comment => comment.id !== action.payload)};
+
+        case updateCommentAsync.toString():
+            if (!action.payload) return state;
+
+            return {
+                ...state, comments: state.comments
+                    .map(comment => {
+
+                        if (comment.id === action.payload.id) {
+                            comment.content = action.payload.content
+                            action.payload.mentionedUsers ? comment.mentionedUsers = action.payload.mentionedUsers : comment.mentionedUsers;
+                            action.payload.hashtags ? comment.hashtags = action.payload.hashtags : comment.hashtags;
+                        }
+
+                        return comment
+                    })
+            };
+
+        case createCommentAsync.toString() + "PRELOAD":
+            if (!action.payload) return state;
+
+            return {...state, preloadComments: [action.payload, ...state.preloadComments]};
+
+        case createCommentAsync.toString() + "REMOVE_PRELOAD":
+            return {...state, preloadComments: []};
+
+
+        default:
+            return state;
+    }
 };

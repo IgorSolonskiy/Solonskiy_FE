@@ -1,48 +1,59 @@
-import { postsActionTypes } from "./actions";
+import {createPostAsync, deletePostAsync, getPostsAsync, updatePostAsync} from "./actions";
 
 const initialState = {
-  posts: [],
-  pagination: {
-    cursor: null
-  },
-  fetching: false,
-  post: null,
-  postId: null,
+    preloadPosts: [],
+    posts: [],
+    nextCursor: '',
 };
 
 export const postsReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case postsActionTypes.SET_POSTS_LIST:
-      return {
-        ...state, posts: [...state.posts, ...action.payload.data],
-        pagination: {
-          ...state.pagination,
-          cursor: action.payload.links.next && action.payload.links.next.match(/cursor=(\w+)/)[1]
-        }
-      };
+    switch (action.type) {
+        case getPostsAsync.toString():
+            if (!action.payload || state.nextCursor === action.payload.nextCursor) return state;
 
-    case postsActionTypes.SET_FETCHING:
-      return { ...state, fetching: action.payload };
+            return {
+                ...state,
+                posts: [...state.posts, ...action.payload.posts],
+                nextCursor: action.payload.nextCursor
+            };
 
-    case postsActionTypes.ADD_ONE_POST_LIST:
-      return state.pagination.cursor ? state : { ...state, posts: [...state.posts, action.payload] };
+        case createPostAsync.toString():
+            if (!action.payload) return state;
 
-    case postsActionTypes.SET_POST:
-      return { ...state, post: action.payload };
+            return {...state, posts: [action.payload, ...state.posts].sort((a, b) => b.id - a.id)};
 
-    case postsActionTypes.SET_POST_ID:
-      return { ...state, postId: action.payload };
 
-    case postsActionTypes.REMOVE_POST:
-      return { ...state, posts: state.posts.filter(post => post.id !== action.payload) };
+        case deletePostAsync.toString():
+            if (!action.payload) return state;
 
-    case postsActionTypes.CHANGE_POST:
-      return {
-        ...state, post: action.payload, posts: state.posts
-          .map(post => post.id === action.payload.id ? action.payload : post)
-      };
+            return {...state, posts: state.posts.filter(post => post.id !== action.payload)};
 
-    default:
-      return state;
-  }
+        case updatePostAsync.toString():
+            if (!action.payload) return state;
+
+            return {
+                ...state, posts: state.posts
+                    .map(post => {
+
+                        if (post.id === action.payload.id) {
+                            post.content = action.payload.content
+                            action.payload.mentionedUsers ? post.mentionedUsers = action.payload.mentionedUsers : post.mentionedUsers;
+                            action.payload.hashtags ? post.hashtags = action.payload.hashtags : post.hashtags;
+                        }
+
+                        return post
+                    })
+            };
+
+        case createPostAsync.toString() + 'PRELOAD':
+            if (!action.payload) return state;
+
+            return {...state, preloadPosts: [action.payload, ...state.preloadPosts]};
+
+        case createPostAsync.toString() + 'REMOVE_PRELOAD':
+            return {...state, preloadPosts: []};
+
+        default:
+            return state;
+    }
 };
