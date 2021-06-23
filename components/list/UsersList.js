@@ -12,7 +12,9 @@ export default function UsersList({onPaginationChange, page, searchName, onFollo
         <Spinner/>
         :
         <>
-            {users.map(user => <UserInfo onFollow={onFollow} onUnfollow={onUnfollow} user={user} key={user.id}/>)}
+            <div className='flex-grow-1 w-100'>
+                {users.map(user => <UserInfo onFollow={onFollow} onUnfollow={onUnfollow} user={user} key={user.id}/>)}
+            </div>
             <Pagination current={currentPage} pageSize={perPage} total={total} onChange={onPaginationChange}
                         style={{zIndex: 1,}} className=" mb-3"/>
         </>;
