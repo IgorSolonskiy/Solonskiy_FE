@@ -54,8 +54,8 @@ export default function Post({post, onDelete, onChange}) {
                   event.stopPropagation();
                   router.push(`/users/${post.author.username}`)
                 }}
-                     style={{fontSize:'14px'}}
-                    className="d-flex justify-content-center align-items-center btn p-0">
+                     style={{fontSize:'14px',margin:'0 auto'}}
+                    className="d-flex w-25 justify-content-center align-items-center btn p-0">
                   <Avatar avatar={post.author.avatar} name={post.author.name}
                           size={40}/>
                   <div style={{width: "200px"}}
