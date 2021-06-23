@@ -1,19 +1,19 @@
-import MainLayout from "../../../components/layout/MainLayout";
 import {withRedux} from "../../../hof/withRedux";
 import {withAuth} from "../../../hof/withAuth";
-import ProfileCard from "../../../components/profile/ProfileCard";
-import {
-    followUserAsync, getUser,
-    getUserAsync, unfollowUserAsync,
-} from "../../../store/user/actions";
-import {useDispatch} from "react-redux";
-import FollowingsList from "../../../components/list/FollowingsList";
-import FollowersList from "../../../components/list/FollowersList";
 import {useRouter} from "next/router";
 import {useQuery} from "@redux-requests/react";
+import {useDispatch} from "react-redux";
+import {followUserAsync, getUser, getUserAsync, unfollowUserAsync,} from "../../../store/user/actions";
+
+import FollowingsList from "../../../components/list/FollowingsList";
+import FollowersList from "../../../components/list/FollowersList";
+import ProfileCard from "../../../components/profile/ProfileCard";
+import MainLayout from "../../../components/layout/MainLayout";
+import classNames from "classnames";
+
 
 export default function Follow({follow}) {
-    const {data: {user:  {username}}} = useQuery(getUser());
+    const {data: {user: {username}}} = useQuery(getUser());
     const {query: {page = 1}} = useRouter();
     const dispatch = useDispatch();
     const router = useRouter();
@@ -24,13 +24,19 @@ export default function Follow({follow}) {
 
     const handleUnfollowUser = username => dispatch(unfollowUserAsync(username));
 
-    const followingClass = follow === "followings"
-        ? "border-bottom border-3 border-info text-info"
-        : "text-muted";
+    const handleLinkFollowings = () => follow !== 'followings' ? router.push(`/users/${username}/followings?page=1`) : null
 
-    const followersClass = follow === "followers"
-        ? "border-bottom border-3 border-info text-info"
-        : "text-muted";
+    const handleLinkFollowers = () => follow !== 'followers' ? router.push(`/users/${username}/followers?page=1`) : null
+
+    const followingClass = classNames({
+        'border-bottom border-3 border-info text-info': follow === "followings",
+        "text-muted": follow !== "followings"
+    })
+
+    const followersClass = classNames({
+        'border-bottom border-3 border-info text-info': follow === "followers",
+        "text-muted": follow !== "followers"
+    })
 
     const followController = follow === "followings"
         ?
@@ -43,15 +49,9 @@ export default function Follow({follow}) {
     return <MainLayout>
         <ProfileCard/>
         <div className="d-flex w-50 justify-content-around">
-        <span style={{cursor: "pointer"}} onClick={() => {
-            if (follow === 'followings') return null;
-            router.push(`/users/${username}/followings?page=1`)
-        }}
-              className={`fs-4 ${followingClass}`}>Following</span>
-            <span style={{cursor: "pointer"}} onClick={() => {
-                if (follow === 'followers') return null;
-                router.push(`/users/${username}/followers?page=1`)
-            }}
+            <span style={{cursor: "pointer"}} onClick={handleLinkFollowings}
+                  className={`fs-4 ${followingClass}`}>Following</span>
+            <span style={{cursor: "pointer"}} onClick={handleLinkFollowers}
                   className={`fs-4  ${followersClass}`}>Followers</span>
         </div>
         {followController}

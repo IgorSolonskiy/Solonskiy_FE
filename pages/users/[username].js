@@ -2,22 +2,15 @@ import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {useDispatch} from "react-redux";
 import {useEffect, useState} from "react";
+import {getUser, getUserAsync,} from "../../store/user/actions";
+import {useQuery} from "@redux-requests/react";
+import {Toaster} from "react-hot-toast";
+import {createPostAsync, deletePostAsync, getPostsFeed, getPostsFeedAsync, updatePostAsync,} from "../../store/posts/actions";
 
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import CreatePostForm from "../../components/forms/CreatePostForm";
-import {
-    createPostAsync,
-    deletePostAsync, getPostsFeed, getPostsFeedAsync,
-    updatePostAsync,
-} from "../../store/posts/actions";
-import {
-    getUser,
-    getUserAsync,
-} from "../../store/user/actions";
-import {useQuery} from "@redux-requests/react";
-import {Toaster} from "react-hot-toast";
 import FollowMenu from "../../components/menu/FollowMenu";
 
 export default function Home({auth}) {
@@ -49,8 +42,7 @@ export default function Home({auth}) {
         }
     };
 
-    const profile = auth.user.id === user.id ? <CreatePostForm
-        onSubmit={handlePostCreate}/> : <FollowMenu/>;
+    const profile = auth.user.id === user.id ? <CreatePostForm onSubmit={handlePostCreate}/> : <FollowMenu/>;
 
     return (
         <MainLayout>

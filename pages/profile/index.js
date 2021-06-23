@@ -26,11 +26,9 @@ export default function Profile() {
 
     const handleChangeProfile = (updatedProfile) => dispatch(updateProfileAsync(updatedProfile));
 
-    const handlePostDelete = (deletedPost) => dispatch(
-        deletePostAsync(deletedPost.id));
+    const handlePostDelete = (deletedPost) => dispatch(deletePostAsync(deletedPost.id));
 
-    const handleEditPost = async (editPost, newPost) => await dispatch(
-        updatePostAsync(editPost.id, newPost));
+    const handleEditPost = async (editPost, newPost) => await dispatch(updatePostAsync(editPost.id, newPost));
 
     const handleInfiniteScroll = (e) => {
         const {scrollHeight, scrollTop} = e.target.documentElement;

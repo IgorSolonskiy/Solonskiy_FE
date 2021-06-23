@@ -1,16 +1,13 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {useRouter} from "next/router";
+import {useDispatch} from "react-redux";
+import {followUserAsync, getUserAsync, unfollowUserAsync,} from "../../store/user/actions";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
-import {
-    followUserAsync,
-    getUserAsync, unfollowUserAsync,
-} from "../../store/user/actions";
-import {useDispatch} from "react-redux";
 
 export default function Users() {
     const {query: {username, page}} = useRouter();
@@ -32,8 +29,7 @@ export default function Users() {
             <div className="d-flex w-100 h-100">
                 <UsersList searchName={username} onFollow={handleFollowUser}
                            onUnfollow={handleUnfollowUser}
-                           onPaginationChange={handlePaginateUsers} page={page}
-                           onPaginationChange={handlePaginateUsers}/>
+                           onPaginationChange={handlePaginateUsers} page={page}/>
                 <div
                     className="d-flex flex-column align-items-start w-50 position-relative h-75 mx-3">
                     <SearchForm searchUser={username} onSubmit={handleSearchUsers}/>
