@@ -17,16 +17,14 @@ import {
     getUserAsync,
 } from "../../store/user/actions";
 import {useQuery} from "@redux-requests/react";
-import {useRouter} from "next/router";
 import {Toaster} from "react-hot-toast";
 import FollowMenu from "../../components/menu/FollowMenu";
 
 export default function Home({auth}) {
-    const {query: {cursor = ''}} = useRouter();
+    const [cursor, setCursor] = useState('');
+    const [toasterShow, setToasterShow] = useState(false)
     const {data: {user}} = useQuery(getUser());
     const {data: {nextCursor}} = useQuery(getPostsFeed(auth.user.username === user.username ? '' : user.username, cursor));
-    const [toasterShow, setToasterShow] = useState(false)
-    const router = useRouter();
     const dispatch = useDispatch();
 
     useEffect(() => setToasterShow(true))
@@ -47,13 +45,12 @@ export default function Home({auth}) {
         const {scrollHeight, scrollTop} = e.target.documentElement;
 
         if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
-            router.push(`/users/${user.username}${nextCursor ? `?cursor=${nextCursor}` : ''}`, undefined,
-                {shallow: true})
+            setCursor(nextCursor)
         }
     };
 
     const profile = auth.user.id === user.id ? <CreatePostForm
-        onSubmit={handlePostCreate}/> : <FollowMenu />;
+        onSubmit={handlePostCreate}/> : <FollowMenu/>;
 
     return (
         <MainLayout>

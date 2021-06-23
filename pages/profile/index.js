@@ -3,10 +3,9 @@ import {withRedux} from "../../hof/withRedux";
 import {useDispatch} from "react-redux";
 import {updateProfileAsync,} from "../../store/profile/actions";
 import {deletePostAsync, getPostsFeed, getPostsFeedAsync, updatePostAsync} from "../../store/posts/actions";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {getUser, getUserAsync} from "../../store/user/actions";
 import {useQuery} from "@redux-requests/react";
-import {useRouter} from "next/router";
 
 import MainLayout from "../../components/layout/MainLayout";
 import ProfileForm from "../../components/forms/ProfileForm";
@@ -14,11 +13,10 @@ import PostsList from "../../components/list/PostsList";
 import FollowMenu from "../../components/menu/FollowMenu";
 
 export default function Profile() {
-    const {query: {cursor = ''}} = useRouter();
+    const [cursor, setCursor] = useState('');
     const {data: {user: {username}}} = useQuery(getUser());
     const {data: {nextCursor}} = useQuery(getPostsFeed(username, cursor));
     const dispatch = useDispatch();
-    const router = useRouter();
 
     useEffect(() => {
         document.addEventListener("scroll", handleInfiniteScroll);
@@ -38,7 +36,7 @@ export default function Profile() {
         const {scrollHeight, scrollTop} = e.target.documentElement;
 
         if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
-            router.push(`/profile${nextCursor ? `?cursor=${nextCursor}` : ''}`, undefined, {shallow: true})
+            setCursor(nextCursor)
         }
     };
 
