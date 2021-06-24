@@ -2,16 +2,14 @@ import {Avatar} from "../image/Avatar";
 
 import Link from "next/link";
 import {useQuery} from "@redux-requests/react";
-import {getUser} from "../../store/user/actions";
 import {getProfile} from "../../store/profile/actions";
 
 export default function UserInfo({user, onFollow, onUnfollow}) {
-    const {data: {user: {followings}}} = useQuery(getUser());
     const {data: {profile}} = useQuery(getProfile());
 
     const showControls = user.username !== profile.username;
 
-    const controls = followings.map(user => user.username).includes(user.username)
+    const controls = user.following
         ? <button onClick={() => onUnfollow(user.username)} type="button"
                   className="btn btn-outline-danger mx-3">Unfollow
         </button>

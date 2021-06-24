@@ -8,16 +8,19 @@ import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
+import {useEffect, useState} from "react";
 
 export default function Users() {
-    const {query: {username, page}} = useRouter();
+    const {query: {username = '', page = 1}} = useRouter();
+    const [requestKey, setRequestKey] = useState('');
     const dispatch = useDispatch();
     const router = useRouter();
 
+    useEffect(() => setRequestKey(username + page), [username, page])
 
-    const handleFollowUser = followUsername => dispatch(followUserAsync(followUsername));
+    const handleFollowUser = followUsername => dispatch(followUserAsync(followUsername, requestKey));
 
-    const handleUnfollowUser = unfollowUsername => dispatch(unfollowUserAsync(unfollowUsername));
+    const handleUnfollowUser = unfollowUsername => dispatch(unfollowUserAsync(unfollowUsername, requestKey));
 
     const handleSearchUsers = async (searchName) => router.push(`/users?page=1${searchName ? `&username=${searchName}` : ''}`, undefined, {shallow: true});
 
@@ -25,7 +28,7 @@ export default function Users() {
 
     return (
         <MainLayout>
-            <UserProfile />
+            <UserProfile/>
             <div className="d-flex w-100 h-100">
                 <UsersList searchName={username} onFollow={handleFollowUser}
                            onUnfollow={handleUnfollowUser}

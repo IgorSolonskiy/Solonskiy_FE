@@ -59,20 +59,23 @@ export const getUserAsync = createAction('GET_USER', (username = '') => ({
     },
 }));
 
-export const followUserAsync = createAction('SET_FOLLOW', (username = '') => ({
+export const followUserAsync = createAction('SET_FOLLOW', (username = '',requestKey= '') => ({
     request: {
         url: `users/${username}/follow`,
         method: "post",
     },
     meta: {
         mutations: {
-            [getUserAsync.toString()]: {
-                updateData: ({user}, following) => {
+            [getUsersAsync.toString() + requestKey]: {
+                updateData: (prevState) => {
                     return {
-                        user: {
-                            ...user,
-                            followings: [...user.followings, following],
-                        },
+                        ...prevState,
+                        users: prevState.users.map(user => {
+                            if (user.username === username) {
+                                user.following = true
+                            }
+                            return user;
+                        })
                     };
                 },
             },
@@ -116,21 +119,23 @@ export const getFollowersAsync = createAction('GET_FOLLOWERS', (username = '', p
     },
 }));
 
-export const unfollowUserAsync = createAction('DELETE_FOLLOW', (username = '') => ({
+export const unfollowUserAsync = createAction('DELETE_FOLLOW', (username = '',requestKey) => ({
     request: {
         url: `users/${username}/unfollow`,
         method: "delete",
     },
     meta: {
         mutations: {
-            [getUserAsync.toString()]: {
-                updateData: ({user}) => {
+            [getUsersAsync.toString() + requestKey]: {
+                updateData: (prevState) => {
                     return {
-                        user: {
-                            ...user,
-                            followings: user.followings.filter(
-                                user => user.username !== username),
-                        },
+                        ...prevState,
+                        users: prevState.users.map(user => {
+                            if (user.username === username) {
+                                user.following = false
+                            }
+                            return user;
+                        })
                     };
                 },
             },
