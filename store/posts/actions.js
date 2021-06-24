@@ -18,6 +18,14 @@ export const getPostsByTag = (tag, cursor = '') => ({
     variables: [tag, cursor]
 });
 
+export const getUsersWhoLikedPost = (id, page = 1) => ({
+    type: getUsersWhoLikedPostAsync,
+    requestKey: id + page,
+    multiple: true,
+    autoLoad: true,
+    variables: [id, page]
+});
+
 export const getPost = () => ({
     type: getPostAsync.toString(),
 });
@@ -194,3 +202,116 @@ export const deletePostAsync = createAction('DELETE_POST', (deletedPost) => ({
     },
 }));
 
+export const likePostAsync = createAction('LIKE_POST', (id) => ({
+    request: {
+        url: `posts/${id}/like`,
+        method: "post",
+    },
+    meta: {
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: id})
+
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: unlikePostAsync.toString(), payload: id})
+            toast.error(error.message);
+
+            return error
+        },
+        mutations: {
+            [getPostAsync.toString()]: {
+                updateData: (prevState) => {
+                    return {
+                        post: {
+                            ...prevState.post,
+                            liked: true,
+                            liked_count: prevState.post.liked_count + 1
+                        },
+                        postId: data.id,
+                    };
+                },
+            },
+            [getPostsFeedAsync.toString()]: {
+                updateData: (prevState) => {
+                    return {
+                        ...prevState,
+                        posts: prevState.posts.map(post => {
+                            if (post.id === id) {
+                                post.liked = true
+                                post.liked_count += 1
+                            }
+                            return post;
+                        })
+                    };
+                },
+            },
+        },
+    },
+}));
+
+export const unlikePostAsync = createAction('UNLIKE_POST', (id) => ({
+    request: {
+        url: `posts/${id}/unlike`,
+        method: "delete",
+    },
+    meta: {
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: id})
+
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: likePostAsync.toString(), payload: id})
+            toast.error(error.message);
+
+            return error
+        },
+        mutations: {
+            [getPostAsync.toString()]: {
+                updateData: (prevState) => {
+                    return {
+                        post: {
+                            ...prevState.post,
+                            liked: false,
+                            liked_count: prevState.post.liked_count - 1
+                        },
+                        postId: data.id,
+                    };
+                },
+            },
+            [getPostsFeedAsync.toString()]: {
+                updateData: (prevState) => {
+                    return {
+                        ...prevState,
+                        posts: prevState.posts.map(post => {
+                            if (post.id === id) {
+                                post.liked = false
+                                post.liked_count -= 1
+                            }
+                            return post;
+                        })
+                    };
+                },
+            },
+        },
+    },
+}));
+
+export const getUsersWhoLikedPostAsync = createAction('LIKES_POST', (id, page = 1) => ({
+    request: {
+        url: `posts/${id}/likes?limit=6&page=${page}`,
+    },
+    meta: {
+        requestKey: id + page,
+        cache: 60,
+        getData: (data) => {
+            return {
+                users: data.data,
+                total: data.meta.total,
+                perPage: data.meta.per_page,
+                currentPage: data.meta.current_page,
+            };
+        },
+    },
+}));

@@ -1,4 +1,11 @@
-import {createPostAsync, deletePostAsync, getPostsFeedAsync, updatePostAsync} from "./actions";
+import {
+    createPostAsync,
+    deletePostAsync,
+    getPostsFeedAsync,
+    likePostAsync,
+    unlikePostAsync,
+    updatePostAsync
+} from "./actions";
 
 const initialState = {
     preloadPosts: [],
@@ -53,6 +60,29 @@ export const postsReducer = (state = initialState, action) => {
         case createPostAsync.toString() + 'REMOVE_PRELOAD':
             return {...state, preloadPosts: []};
 
+        case likePostAsync.toString():
+            return {
+                ...state, posts: state.posts.map(post => {
+                        if (post.id === action.payload) {
+                            post.liked = true
+                            post.liked_count += 1
+                        }
+                        return post;
+                    }
+                )
+            }
+
+        case unlikePostAsync.toString():
+            return {
+                ...state, posts: state.posts.map(post => {
+                        if (post.id === action.payload) {
+                            post.liked = false
+                            post.liked_count -= 1
+                        }
+                        return post;
+                    }
+                )
+            }
 
         default:
             return state;

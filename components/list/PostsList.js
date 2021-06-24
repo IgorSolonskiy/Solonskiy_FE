@@ -3,7 +3,7 @@ import Post from "../post/Post";
 import {useSelector} from "react-redux";
 import PreloadPost from "../post/PreloadPost";
 
-export default function PostsList({onDelete, onChange}) {
+export default function PostsList({onDelete, onChange,onLike, onUnlike, onPaginationChange, page}) {
     const posts = useSelector(state => state.posts.posts);
     const preloadPosts = useSelector(state => state.posts.preloadPosts)
     const preload = preloadPosts.length ? preloadPosts.map(post => <PreloadPost
@@ -16,6 +16,10 @@ export default function PostsList({onDelete, onChange}) {
                                               post={post}
                                               onChange={onChange}
                                               onDelete={onDelete}
+                                              onLike={onLike}
+                                              onUnlike={onUnlike}
+                                              page={page}
+                                              onPaginateChange={onPaginationChange}
             />)}
         </ul>
     );
