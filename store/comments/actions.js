@@ -139,3 +139,75 @@ export const updateCommentAsync = createAction('UPDATE_COMMENT', (id, comment) =
         },
     },
 }));
+
+export const likeCommentAsync = createAction('LIKE_COMMENT', (id) => ({
+    request: {
+        url: `comments/${id}/like`,
+        method: "post",
+    },
+    meta: {
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: id})
+
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: unlikePostAsync.toString(), payload: id})
+            toast.error(error.message);
+
+            return error
+        },
+        mutations: {
+            [getCommentsAsync.toString()]: {
+                updateData: (prevState) => {
+                    return {
+                        ...prevState,
+                        comments: prevState.comments.map(comment => {
+                            if (comment.id === id) {
+                                comment.liked = true
+                                comment.liked_count -= 1
+                            }
+                            return comment;
+                        })
+                    };
+                },
+            },
+        },
+    },
+}));
+
+export const unlikeCommentAsync = createAction('UNLIKE_COMMENT', (id) => ({
+    request: {
+        url: `comments/${id}/unlike`,
+        method: "delete",
+    },
+    meta: {
+        onRequest: (request, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: id})
+
+            return request;
+        },
+        onError: (error, requestAction, store) => {
+            store.dispatch({type: likePostAsync.toString(), payload: id})
+            toast.error(error.message);
+
+            return error
+        },
+        mutations: {
+            [getCommentsAsync.toString()]: {
+                updateData: (prevState) => {
+                    return {
+                        ...prevState,
+                        comments: prevState.comments.map(comment => {
+                            if (comment.id === id) {
+                                comment.liked = false
+                                comment.liked_count -= 1
+                            }
+                            return comment;
+                        })
+                    };
+                },
+            },
+        },
+    },
+}));

@@ -65,7 +65,7 @@ export const postsReducer = (state = initialState, action) => {
                 ...state, posts: state.posts.map(post => {
                         if (post.id === action.payload) {
                             post.liked = true
-                            post.liked_count += 1
+                            post.likes_count += 1
                         }
                         return post;
                     }
@@ -77,7 +77,7 @@ export const postsReducer = (state = initialState, action) => {
                 ...state, posts: state.posts.map(post => {
                         if (post.id === action.payload) {
                             post.liked = false
-                            post.liked_count -= 1
+                            post.likes_count -= 1
                         }
                         return post;
                     }

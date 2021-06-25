@@ -11,7 +11,6 @@ import ProfileCard from "../../../components/profile/ProfileCard";
 import MainLayout from "../../../components/layout/MainLayout";
 import classNames from "classnames";
 
-
 export default function Follow({follow}) {
     const {data: {user: {username}}} = useQuery(getUser());
     const {query: {page = 1}} = useRouter();

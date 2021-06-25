@@ -9,9 +9,12 @@ import {
     createPostAsync,
     deletePostAsync,
     getPostsFeed,
-    getPostsFeedAsync, likePostAsync, unlikePostAsync,
+    getPostsFeedAsync,
+    likePostAsync,
+    unlikePostAsync,
     updatePostAsync,
 } from "../../store/posts/actions";
+import {useRouter} from "next/router";
 
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
@@ -21,20 +24,24 @@ import FollowMenu from "../../components/menu/FollowMenu";
 
 export default function Home({auth}) {
     const [cursor, setCursor] = useState('');
-    const [page, setPage] = useState(1);
     const [toasterShow, setToasterShow] = useState(false)
     const {data: {user}} = useQuery(getUser());
-    const {data: {nextCursor}} = useQuery(getPostsFeed(auth.user.username === user.username ? '' : user.username, cursor));
+    const {data: {nextCursor}} = useQuery(getPostsFeed(cursor));
+    const {query: {username}} = useRouter();
     const dispatch = useDispatch();
 
-    useEffect(() => setToasterShow(true))
+    useEffect(() => {
+        setToasterShow(true)
+        setCursor('')
+    }, [username])
 
     useEffect(() => {
         document.addEventListener("scroll", handleInfiniteScroll);
 
         return () => document.removeEventListener("scroll", handleInfiniteScroll);
     });
-    const handleUnlikePost = (deletedPost) => dispatch(unlikePostAsync(deletedPost.id));
+
+    const handleUnlikePost = (unlikedPost) => dispatch(unlikePostAsync(unlikedPost.id));
 
     const handleLikePost = (likedPost) => dispatch(likePostAsync(likedPost.id));
 
@@ -44,13 +51,13 @@ export default function Home({auth}) {
 
     const handleEditPost = (editPost, newPost) => dispatch(updatePostAsync(editPost.id, newPost, cursor));
 
-    const handlePaginateUsers =  pageNumber => setPage(pageNumber);
 
     const handleInfiniteScroll = async (e) => {
         const {scrollHeight, scrollTop} = e.target.documentElement;
 
         if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
-            setCursor(nextCursor)
+            await setCursor(nextCursor)
+            await dispatch(getPostsFeedAsync(nextCursor, auth.user.username === user.username ? '' : user.username))
         }
     };
 
@@ -62,7 +69,7 @@ export default function Home({auth}) {
             <UserProfile/>
             {profile}
             <PostsList onLike={handleLikePost} onUnlike={handleUnlikePost} onChange={handleEditPost}
-                       onDelete={handlePostDelete} onPaginationChange={handlePaginateUsers} page={page}/>
+                       onDelete={handlePostDelete}/>
         </MainLayout>
     );
 }
@@ -71,9 +78,10 @@ export const getServerSideProps = withRedux(
     withAuth(async (ctx, auth, {dispatch}) => {
             try {
                 const username = ctx.query.username === auth.user.username ? '' : ctx.query.username;
+                const cursor = '';
 
                 await Promise.all([
-                    dispatch(getPostsFeedAsync(username)),
+                    dispatch(getPostsFeedAsync(cursor,username)),
                     dispatch(getUserAsync(ctx.query.username)),
                 ]);
 

@@ -11,12 +11,21 @@ import CreateCommentForm from "../../components/forms/CreateCommentForm";
 import {useEffect, useState} from "react";
 import {getUser, getUserAsync} from "../../store/user/actions";
 import {
-    deletePostAsync, getPost, getPostAsync,
+    getPost,
+    deletePostAsync,
+    getPostAsync,
+    likePostAsync,
+    unlikePostAsync,
     updatePostAsync,
 } from "../../store/posts/actions";
 import {
+    getComments,
     createCommentAsync,
-    deleteCommentAsync, getComments, getCommentsAsync, updateCommentAsync,
+    deleteCommentAsync,
+    getCommentsAsync,
+    likeCommentAsync,
+    unlikeCommentAsync,
+    updateCommentAsync,
 } from "../../store/comments/actions";
 import {useQuery} from "@redux-requests/react";
 import {Toaster} from "react-hot-toast";
@@ -51,11 +60,19 @@ export default function Post() {
         router.push(`/users/${user.username}`);
     };
 
+    const handleUnlikePost = (unlikedPost) => dispatch(unlikePostAsync(unlikedPost.id));
+
+    const handleLikePost = (likedPost) => dispatch(likePostAsync(likedPost.id));
+
+    const handleUnlikeComment = (unlikedComment) => dispatch(unlikeCommentAsync(unlikedComment.id));
+
+    const handleLikeComment = (likedComment) => dispatch(likeCommentAsync(likedComment.id));
+
     const handleDeleteComment = (deletedComment) => dispatch(deleteCommentAsync(deletedComment));
 
-    const handleEditComment =  (comment, changeComment) =>  dispatch(updateCommentAsync(comment.id, changeComment));
+    const handleEditComment = (comment, changeComment) => dispatch(updateCommentAsync(comment.id, changeComment));
 
-    const handleEditPost =  (editPost, newPost) =>  dispatch(updatePostAsync(editPost.id, newPost));
+    const handleEditPost = (editPost, newPost) => dispatch(updatePostAsync(editPost.id, newPost));
 
     const handleCreateComment = (newComment) => dispatch(createCommentAsync(post.id, newComment));
 
@@ -65,11 +82,16 @@ export default function Post() {
             {toasterShow && <Toaster/>}
             <Posts onChange={handleEditPost}
                    post={post}
+                   onLike={handleLikePost}
+                   onUnlike={handleUnlikePost}
                    onDelete={handleDeletePost}/>
             <div className="w-100 d-flex mt-3 justify-content-center">
                 <CreateCommentForm onSubmit={handleCreateComment}/>
             </div>
-            <CommentsList onSubmit={handleEditComment}
+            <CommentsList
+                          onLike={handleLikeComment}
+                          onUnlike={handleUnlikeComment}
+                          onSubmit={handleEditComment}
                           onDelete={handleDeleteComment}/>
         </MainLayout>
     );

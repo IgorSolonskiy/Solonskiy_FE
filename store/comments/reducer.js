@@ -1,4 +1,10 @@
-import {createCommentAsync, deleteCommentAsync, getCommentsAsync, updateCommentAsync} from "./actions";
+import {
+    createCommentAsync,
+    deleteCommentAsync,
+    getCommentsAsync,
+    likeCommentAsync, unlikeCommentAsync,
+    updateCommentAsync
+} from "./actions";
 
 const initialState = {
     preloadComments: [],
@@ -52,6 +58,30 @@ export const commentsReducer = (state = initialState, action) => {
 
         case createCommentAsync.toString() + "REMOVE_PRELOAD":
             return {...state, preloadComments: []};
+
+        case likeCommentAsync.toString():
+            return {
+                ...state, comments: state.comments.map(comment => {
+                        if (comment.id === action.payload) {
+                            comment.liked = true
+                            comment.likes_count += 1
+                        }
+                        return comment;
+                    }
+                )
+            }
+
+        case unlikeCommentAsync.toString():
+            return {
+                ...state, comments: state.comments.map(comment => {
+                        if (comment.id === action.payload) {
+                            comment.liked = false
+                            comment.likes_count -= 1
+                        }
+                        return comment;
+                    }
+                )
+            }
 
 
         default:

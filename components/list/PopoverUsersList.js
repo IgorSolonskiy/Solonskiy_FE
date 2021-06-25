@@ -1,12 +1,10 @@
 import {Pagination} from "antd";
-import {useQuery} from "@redux-requests/react";
 
 import UserPopover from '../user/UserPopover';
 import Spinner from "../spinner/Spinner";
-import {getUsersWhoLikedPost} from "../../store/posts/actions";
 
-export default function PopoverList({post,onPaginationChange, page}) {
-    const {data: {users, total, perPage, currentPage}} = useQuery(getUsersWhoLikedPost(post.id, page));
+export default function PopoverUsersList({onPaginationChange, usersPaginateData}) {
+    const {users, total, perPage, currentPage} = usersPaginateData
 
     const paginateControll = perPage < total ?
         <Pagination current={currentPage} pageSize={perPage} total={total} onChange={onPaginationChange}
@@ -17,7 +15,7 @@ export default function PopoverList({post,onPaginationChange, page}) {
         :
         <>
             <div className='flex-grow-1 w-100'>
-                {users.map(user => <UserPopover  user={user} key={user.id}/>)}
+                {users.map(user => <UserPopover user={user} key={user.id}/>)}
             </div>
             {paginateControll}
         </>;

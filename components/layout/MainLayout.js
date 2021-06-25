@@ -8,12 +8,15 @@ import Btn from "../btn/Btn";
 
 export default function MainLayout({children}) {
     const {data: {profile}} = useQuery(getProfile());
+    const {query: {username}} = useRouter();
     const router = useRouter();
 
     const handleLogout = async () => {
         await Api.Users.logout();
         router.push("/login");
     };
+
+    const handleBackHome = () => profile.username === username ? window.scroll({top: '0px'}) : router.push(`/users/${profile.username}`)
 
     return (
         <div
@@ -22,9 +25,9 @@ export default function MainLayout({children}) {
                 className="d-flex align-items-start justify-content-between w-75 m-auto position-relative ">
                 <div style={{zIndex: 30, width: '100px'}}
                      className="mx-3 d-flex flex-column align-items-start position-fixed">
-                    <Link href={`/users/${profile.username}`} shallow={true}><span
-                        onClick={() => window.scroll({top: 0})}
-                        className="btn btn-outline-secondary mt-2">Home</span></Link>
+                   <span
+                       onClick={handleBackHome}
+                       className="btn btn-outline-secondary mt-2">Home</span>
                     <Link shallow={true} href={`/users?page=1`}><span
                         className="btn btn-outline-secondary mt-2">Users</span></Link>
                     <Link href="/profile" shallow={true} scroll={true}><span

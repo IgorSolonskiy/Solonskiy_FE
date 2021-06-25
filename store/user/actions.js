@@ -8,6 +8,16 @@ export const getUsers = (page = 1, searchName = '') => ({
     variables: [searchName, page]
 });
 
+export const getUsersByPostLiked = () => ({
+    type: getUsersByPostLikedAsync,
+    multiple: true,
+});
+
+export const getUsersByCommentLiked = () => ({
+    type: getUsersByCommentLikedAsync,
+    multiple: true,
+});
+
 export const getFollowings = (page = 1, username = '') => ({
     type: getFollowingAsync,
     requestKey: username + page,
@@ -59,7 +69,7 @@ export const getUserAsync = createAction('GET_USER', (username = '') => ({
     },
 }));
 
-export const followUserAsync = createAction('SET_FOLLOW', (username = '',requestKey= '') => ({
+export const followUserAsync = createAction('SET_FOLLOW', (username = '', requestKey = '') => ({
     request: {
         url: `users/${username}/follow`,
         method: "post",
@@ -119,7 +129,7 @@ export const getFollowersAsync = createAction('GET_FOLLOWERS', (username = '', p
     },
 }));
 
-export const unfollowUserAsync = createAction('DELETE_FOLLOW', (username = '',requestKey) => ({
+export const unfollowUserAsync = createAction('DELETE_FOLLOW', (username = '', requestKey) => ({
     request: {
         url: `users/${username}/unfollow`,
         method: "delete",
@@ -139,6 +149,38 @@ export const unfollowUserAsync = createAction('DELETE_FOLLOW', (username = '',re
                     };
                 },
             },
+        },
+    },
+}));
+
+export const getUsersByPostLikedAsync = createAction('LIKES_POST', (id, page = 1) => ({
+    request: {
+        url: `posts/${id}/likes?limit=6&page=${page}`,
+    },
+    meta: {
+        getData: (data) => {
+            return {
+                users: data.data,
+                total: data.meta.total,
+                perPage: data.meta.per_page,
+                currentPage: data.meta.current_page,
+            };
+        },
+    },
+}));
+
+export const getUsersByCommentLikedAsync = createAction('LIKES_COMMENT', (id, page = 1) => ({
+    request: {
+        url: `comments/${id}/likes?limit=6&page=${page}`,
+    },
+    meta: {
+        getData: (data) => {
+            return {
+                users: data.data,
+                total: data.meta.total,
+                perPage: data.meta.per_page,
+                currentPage: data.meta.current_page,
+            };
         },
     },
 }));

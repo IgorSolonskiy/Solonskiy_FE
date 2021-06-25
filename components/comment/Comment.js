@@ -2,17 +2,27 @@ import {Avatar} from "../image/Avatar";
 import {useState} from "react";
 import {getProfile} from "../../store/profile/actions";
 import {useQuery} from "@redux-requests/react";
+import {getPost} from "../../store/posts/actions";
+import {Button, Popover} from "antd";
+import {LikeOutlined} from "@ant-design/icons";
+import {getUsersByCommentLiked, getUsersByCommentLikedAsync} from "../../store/user/actions";
+import {useDispatch} from "react-redux";
 
 import Link from "next/link";
 import Btn from "../btn/Btn";
 import EditCommentForm from "../forms/EditCommentForm";
 import DynamicContent from "../parser/DynamicContent";
-import {getPost} from "../../store/posts/actions";
+import PopoverUsersList from "../list/PopoverUsersList";
+import classNames from "classnames";
 
-export default function Comment({comment, onDelete, onSubmit}) {
+export default function Comment({comment, onDelete, onSubmit, onLike, onUnlike}) {
+    const {data: usersPaginateData} = useQuery(getUsersByCommentLiked());
     const {data: {profile}} = useQuery(getProfile());
     const {data: {post}} = useQuery(getPost());
     const [editing, setEditing] = useState(false);
+    const dispatch = useDispatch();
+
+    const handlePaginateUsers = pageNumber => dispatch(getUsersByCommentLikedAsync(comment.id, pageNumber));
 
     const handleEditComment = (comment, changeComment) => {
         onSubmit(comment, changeComment);
@@ -32,19 +42,24 @@ export default function Comment({comment, onDelete, onSubmit}) {
         <Btn name="Change" type="button" onClick={() => setEditing(!editing)}
              classBtn="btn btn-outline-info btn-sm ms-3"/>;
 
+
     const controls = (profile.id === comment.author.id || post.author.id ===
         profile.id) ?
-        <div className="w-100 d-flex justify-content-end align-items-center">
+        <>
             {changeCommentButton}
             <Btn name="Delete"
                  type="button"
                  classBtn=" btn btn-outline-danger btn-sm ms-3"
                  onClick={() => onDelete(comment)}/>
-        </div>
+        </>
         : null;
 
+    const isLiked = classNames({
+        'text-info': comment.liked,
+    })
+
     return (
-        <li className="border card border-secondary list-group-item  mt-3">
+        <li className="d-flex align-items-center position-relative w-100 list-group-item list-group-item-action border m-2">
             <div className="w-100">
                 <div className=" ms-2 me-auto">
                     <div className="d-flex justify-content-center">
@@ -60,7 +75,19 @@ export default function Comment({comment, onDelete, onSubmit}) {
                     {content}
                 </div>
             </div>
-            {controls}
+            <div className="d-flex position-absolute align-items-center justify-content-center" style={{right: '10px'}}>
+                <Popover
+                    content={<PopoverUsersList usersPaginateData={usersPaginateData}
+                                               onPaginationChange={handlePaginateUsers}/>}
+                    placement="bottom" trigger="click">
+                    <Button onClick={() => handlePaginateUsers(1)}
+                            style={{padding: '4px 10px', borderRadius: '50%'}}>{comment.likes_count || 0}</Button>
+                </Popover>
+                <LikeOutlined onClick={() => comment.liked ? onUnlike(comment) : onLike(comment)}
+                              className={`mx-3 ${isLiked}`}
+                              style={{fontSize: '18px', cursor: 'pointer'}}/>
+                {controls}
+            </div>
         </li>
     );
 }

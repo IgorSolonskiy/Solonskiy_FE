@@ -5,17 +5,21 @@ import {getProfile} from "../../store/profile/actions";
 import {useQuery} from "@redux-requests/react";
 import {LikeOutlined} from '@ant-design/icons';
 import {Popover, Button} from 'antd';
+import {getUsersByPostLiked, getUsersByPostLikedAsync} from "../../store/user/actions";
+import {useDispatch} from "react-redux";
 
 import Btn from "../btn/Btn";
 import EditPostForm from "../forms/EditPostForm";
 import DynamicContent from "../parser/DynamicContent";
 import classNames from "classnames";
-import PopoverList from "../list/PopoverList";
+import PopoverUsersList from "../list/PopoverUsersList";
 
-export default function Post({post, onDelete, onChange, onLike, onUnlike, onPaginateChange, page}) {
+export default function Post({post, onDelete, onChange, onLike, onUnlike}) {
+    const {data: usersPaginateData} = useQuery(getUsersByPostLiked());
     const {data: {profile}} = useQuery(getProfile());
     const [editing, setEditing] = useState(false);
     const router = useRouter();
+    const dispatch = useDispatch();
     const showControls = profile.id === post.author.id;
 
     const handleEditPost = (editPost, newPost) => {
@@ -25,6 +29,8 @@ export default function Post({post, onDelete, onChange, onLike, onUnlike, onPagi
 
     const mentionedUsers = post.mentionedUsers.map(user => user.username);
     const hashtags = post.hashtags.map(tag => tag.name);
+
+    const handlePaginateUsers = pageNumber => dispatch(getUsersByPostLikedAsync(post.id, pageNumber));
 
     const content = editing ?
         <EditPostForm onSubmit={handleEditPost} post={post}/>
@@ -76,9 +82,11 @@ export default function Post({post, onDelete, onChange, onLike, onUnlike, onPagi
                 </div>
             </div>
             <div className="d-flex position-absolute end-0 align-items-center justify-content-center">
-                <Popover content={<PopoverList post={post} page={page} onPaginationChange={onPaginateChange}/>}
+                <Popover content={<PopoverUsersList usersPaginateData={usersPaginateData}
+                                                    onPaginationChange={handlePaginateUsers}/>}
                          placement="bottom" trigger="click">
-                    <Button style={{padding: '4px 10px', borderRadius: '50%'}}>{post.liked_count}</Button>
+                    <Button onClick={() => handlePaginateUsers(1)}
+                            style={{padding: '4px 10px', borderRadius: '50%'}}>{post.likes_count || 0}</Button>
                 </Popover>
                 <LikeOutlined onClick={() => post.liked ? onUnlike(post) : onLike(post)} className={`mx-3 ${isLiked}`}
                               style={{fontSize: '18px', cursor: 'pointer'}}/>

@@ -2,12 +2,10 @@ import {createAction} from "redux-smart-actions";
 import toast from "react-hot-toast";
 
 
-export const getPostsFeed = (username, cursor = '') => ({
-    type: getPostsFeedAsync,
+export const getPostsFeed = (cursor = '') => ({
+    type: getPostsFeedAsync.toString(),
     requestKey: cursor,
     multiple: true,
-    autoLoad: true,
-    variables: [username, cursor]
 });
 
 export const getPostsByTag = (tag, cursor = '') => ({
@@ -18,19 +16,11 @@ export const getPostsByTag = (tag, cursor = '') => ({
     variables: [tag, cursor]
 });
 
-export const getUsersWhoLikedPost = (id, page = 1) => ({
-    type: getUsersWhoLikedPostAsync,
-    requestKey: id + page,
-    multiple: true,
-    autoLoad: true,
-    variables: [id, page]
-});
-
 export const getPost = () => ({
     type: getPostAsync.toString(),
 });
 
-export const getPostsFeedAsync = createAction('GET_POSTS', (username, cursor = '') => ({
+export const getPostsFeedAsync = createAction('GET_POSTS', (cursor = '',username) => ({
     request: {
         url: !username ? `posts/feed?cursor=${cursor}` : `users/${username}/posts?cursor=${cursor}`,
     },
@@ -223,12 +213,12 @@ export const likePostAsync = createAction('LIKE_POST', (id) => ({
             [getPostAsync.toString()]: {
                 updateData: (prevState) => {
                     return {
+                        ...prevState,
                         post: {
                             ...prevState.post,
                             liked: true,
-                            liked_count: prevState.post.liked_count + 1
+                            likes_count: prevState.post.likes_count + 1
                         },
-                        postId: data.id,
                     };
                 },
             },
@@ -239,7 +229,7 @@ export const likePostAsync = createAction('LIKE_POST', (id) => ({
                         posts: prevState.posts.map(post => {
                             if (post.id === id) {
                                 post.liked = true
-                                post.liked_count += 1
+                                post.likes_count += 1
                             }
                             return post;
                         })
@@ -271,12 +261,12 @@ export const unlikePostAsync = createAction('UNLIKE_POST', (id) => ({
             [getPostAsync.toString()]: {
                 updateData: (prevState) => {
                     return {
+                        ...prevState,
                         post: {
                             ...prevState.post,
                             liked: false,
-                            liked_count: prevState.post.liked_count - 1
+                            likes_count: prevState.post.likes_count - 1
                         },
-                        postId: data.id,
                     };
                 },
             },
@@ -287,31 +277,13 @@ export const unlikePostAsync = createAction('UNLIKE_POST', (id) => ({
                         posts: prevState.posts.map(post => {
                             if (post.id === id) {
                                 post.liked = false
-                                post.liked_count -= 1
+                                post.likes_count -= 1
                             }
                             return post;
                         })
                     };
                 },
             },
-        },
-    },
-}));
-
-export const getUsersWhoLikedPostAsync = createAction('LIKES_POST', (id, page = 1) => ({
-    request: {
-        url: `posts/${id}/likes?limit=6&page=${page}`,
-    },
-    meta: {
-        requestKey: id + page,
-        cache: 60,
-        getData: (data) => {
-            return {
-                users: data.data,
-                total: data.meta.total,
-                perPage: data.meta.per_page,
-                currentPage: data.meta.current_page,
-            };
         },
     },
 }));
