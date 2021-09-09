@@ -1,8 +1,9 @@
 import {createAction} from "redux-smart-actions";
 import toast from "react-hot-toast";
 
-export const getPosts = (username, cursor = '') => ({
-    type: getPostsAsync,
+
+export const getPostsFeed = (username, cursor = '') => ({
+    type: getPostsFeedAsync,
     requestKey: cursor,
     multiple: true,
     autoLoad: true,
@@ -21,12 +22,17 @@ export const getPost = () => ({
     type: getPostAsync.toString(),
 });
 
-export const getPostsAsync = createAction('GET_POSTS', (username, cursor) => ({
+export const getPostsFeedAsync = createAction('GET_POSTS', (username, cursor = '') => ({
     request: {
-        url: `users/${username}/posts?cursor=${cursor}`,
+        url: !username ? `posts/feed?cursor=${cursor}` : `users/${username}/posts?cursor=${cursor}`,
     },
     meta: {
         requestKey: cursor,
+        onSuccess: (response, requestAction, store) => {
+            store.dispatch({type: requestAction.type, payload: response.data})
+
+            return response;
+        },
         getData: (data) => {
             return {
                 posts: data.data,
@@ -35,12 +41,7 @@ export const getPostsAsync = createAction('GET_POSTS', (username, cursor) => ({
                     : data.links.next,
             };
         },
-        onSuccess: (response, requestAction, store) => {
-            store.dispatch({type: requestAction.type, payload: response.data})
-
-            return response;
-        },
-    }
+    },
 }));
 
 export const getPostsByTagAsync = createAction('GET_POSTS', (tag, cursor = "") => ({
@@ -90,9 +91,9 @@ export const createPostAsync = createAction('CREATE_POST', (content) => ({
             return error
         },
         mutations: {
-            [getPostsAsync.toString()]: {
+            [getPostsFeedAsync.toString()]: {
                 updateData: (prevState, post) => {
-                    return prevState.cursor ? prevState : {
+                    return !post ? prevState : {
                         ...prevState,
                         posts: [...prevState.posts, post],
                     };
@@ -135,7 +136,7 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content:
         },
         onError: (error, requestAction, store) => {
             const state = store.getState();
-            const posts = state.requests.queries[getPostsAsync.toString()].data.posts;
+            const posts = state.requests.queries[getPostsFeedAsync.toString()].data.posts;
             const prevPost = posts.filter(post => post.id === id)
 
             store.dispatch({type: requestAction.type, payload: prevPost[0]})
@@ -144,7 +145,7 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content:
             return error
         },
         mutations: {
-            [getPostsAsync.toString()]: {
+            [getPostsFeedAsync.toString()]: {
                 updateData: (prevState, changedPost) => {
                     return !changedPost
                         ? prevState
@@ -163,30 +164,30 @@ export const updatePostAsync = createAction('UPDATE_POST', (id, post = {content:
     },
 }));
 
-export const deletePostAsync = createAction('DELETE_POST', (post) => ({
+export const deletePostAsync = createAction('DELETE_POST', (deletedPost) => ({
     request: {
-        url: `posts/${post.id}`,
+        url: `posts/${deletedPost.id}`,
         method: "delete",
     },
     meta: {
         onRequest: (request, requestAction, store) => {
-            store.dispatch({type: requestAction.type, payload: post.id})
+            store.dispatch({type: requestAction.type, payload: deletedPost.id})
 
             return request;
         },
         onError: (error, requestAction, store) => {
-            store.dispatch({type: createPostAsync.toString(), payload: post})
+            store.dispatch({type: createPostAsync.toString(), payload: deletedPost})
             toast.error(error.message);
 
             return error
         },
         mutations: {
-            [getPostsAsync.toString()]: {
-                updateData: (prevState) => {
-                    return {
+            [getPostsFeedAsync.toString()]: {
+                updateData: (prevState, currentData) => {
+                    return currentData === null ? {
                         ...prevState,
-                        posts: prevState.posts.filter(post => post.id !== post.id),
-                    };
+                        posts: prevState.posts.filter(post => post.id !== deletedPost.id),
+                    } : prevState;
                 },
             },
         },

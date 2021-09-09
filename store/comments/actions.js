@@ -87,11 +87,11 @@ export const deleteCommentAsync = createAction('DELETE_COMMENT', comment => ({
         },
         mutations: {
             getCommentsAsync: {
-                updateData: (prevState) => {
-                    return {
+                updateData: (prevState, currentData) => {
+                    return currentData === null ? {
                         ...prevState,
                         comments: prevState.comments.filter(comment => comment.id !== id),
-                    };
+                    } : prevState;
                 },
             },
         },

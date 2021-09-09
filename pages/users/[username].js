@@ -2,28 +2,22 @@ import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {useDispatch} from "react-redux";
 import {useEffect, useState} from "react";
+import {getUser, getUserAsync,} from "../../store/user/actions";
+import {useQuery} from "@redux-requests/react";
+import {Toaster} from "react-hot-toast";
+import {createPostAsync, deletePostAsync, getPostsFeed, getPostsFeedAsync, updatePostAsync,} from "../../store/posts/actions";
 
 import PostsList from "../../components/list/PostsList";
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import CreatePostForm from "../../components/forms/CreatePostForm";
-import {
-    createPostAsync, deletePostAsync, getPosts, getPostsAsync, updatePostAsync,
-} from "../../store/posts/actions";
-import {
-    getUser,
-    getUserAsync,
-} from "../../store/user/actions";
-import {useQuery} from "@redux-requests/react";
-import {useRouter} from "next/router";
-import {Toaster} from "react-hot-toast";
+import FollowMenu from "../../components/menu/FollowMenu";
 
 export default function Home({auth}) {
-    const {query: {cursor = ''}} = useRouter();
-    const {data: {user}} = useQuery(getUser());
-    const {data: {nextCursor}} = useQuery(getPosts(user.username, cursor));
+    const [cursor, setCursor] = useState('');
     const [toasterShow, setToasterShow] = useState(false)
-    const router = useRouter();
+    const {data: {user}} = useQuery(getUser());
+    const {data: {nextCursor}} = useQuery(getPostsFeed(auth.user.username === user.username ? '' : user.username, cursor));
     const dispatch = useDispatch();
 
     useEffect(() => setToasterShow(true))
@@ -44,13 +38,11 @@ export default function Home({auth}) {
         const {scrollHeight, scrollTop} = e.target.documentElement;
 
         if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
-            router.push(`/users/${user.username}${nextCursor ? `?cursor=${nextCursor}` : ''}`, undefined,
-                {shallow: true})
+            setCursor(nextCursor)
         }
     };
 
-    const profile = auth.user.id === user.id ? <CreatePostForm
-        onSubmit={handlePostCreate}/> : null;
+    const profile = auth.user.id === user.id ? <CreatePostForm onSubmit={handlePostCreate}/> : <FollowMenu/>;
 
     return (
         <MainLayout>
@@ -65,13 +57,16 @@ export default function Home({auth}) {
 export const getServerSideProps = withRedux(
     withAuth(async (ctx, auth, {dispatch}) => {
             try {
+                const username = ctx.query.username === auth.user.username ? '' : ctx.query.username;
+
                 await Promise.all([
-                    dispatch(getPostsAsync(ctx.query.username)),
+                    dispatch(getPostsFeedAsync(username)),
                     dispatch(getUserAsync(ctx.query.username)),
                 ]);
 
                 return {props: {}};
             } catch (e) {
+
                 return {
                     notFound: true,
                 };

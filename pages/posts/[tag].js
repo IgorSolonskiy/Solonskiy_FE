@@ -1,24 +1,19 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
 import {useDispatch} from "react-redux";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import {useQuery} from "@redux-requests/react";
+import {deletePostAsync, getPostsByTag, getPostsByTagAsync, updatePostAsync} from "../../store/posts/actions";
+import {getUserAsync} from "../../store/user/actions";
 import {Tag} from "antd";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import PostsList from "../../components/list/PostsList";
-import {
-    deletePostAsync, getPostsByTag,
-    getPostsByTagAsync, updatePostAsync,
-} from "../../store/posts/actions";
-import {getUserAsync} from "../../store/user/actions";
-import {useQuery} from "@redux-requests/react";
-import {useRouter} from "next/router";
 
 export default function PostsByTag({tag}) {
-    const router = useRouter();
     const dispatch = useDispatch();
-    const {query: {cursor = ''}} = useRouter();
+    const [cursor, setCursor] = useState('');
     const {data: {nextCursor}} = useQuery(getPostsByTag(tag, cursor));
 
     useEffect(() => {
@@ -34,9 +29,8 @@ export default function PostsByTag({tag}) {
     const handleInfiniteScroll = (e) => {
         const {scrollHeight, scrollTop} = e.target.documentElement;
 
-        if (scrollHeight <= (scrollTop + window.innerHeight) &&
-            nextCursor) {
-            router.push(`/posts/${tag}${nextCursor ? `?cursor=${nextCursor}` : ''}`, undefined, {shallow: true})
+        if (scrollHeight <= (scrollTop + window.innerHeight) && nextCursor) {
+            setCursor(nextCursor)
         }
     };
 

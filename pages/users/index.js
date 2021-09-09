@@ -1,26 +1,38 @@
 import {withAuth} from "../../hof/withAuth";
 import {withRedux} from "../../hof/withRedux";
-import {getUserAsync} from "../../store/user/actions";
 import {useRouter} from "next/router";
+import {useDispatch} from "react-redux";
+import {followUserAsync, getUserAsync, unfollowUserAsync,} from "../../store/user/actions";
 
 import MainLayout from "../../components/layout/MainLayout";
 import UserProfile from "../../components/user/UserProfile";
 import SearchForm from "../../components/forms/SearchForm";
 import UsersList from "../../components/list/UsersList";
+import {useEffect, useState} from "react";
 
 export default function Users() {
-    const {query: {username , page}} = useRouter();
+    const {query: {username = '', page = 1}} = useRouter();
+    const [requestKey, setRequestKey] = useState('');
+    const dispatch = useDispatch();
     const router = useRouter();
 
-    const handleSearchUsers = async (searchName) => router.push(`/users?page=1${searchName ? `&username=${searchName}` : ''}`,undefined,{shallow: true});
+    useEffect(() => setRequestKey(username + page), [username, page])
 
-    const handlePaginateUsers = async pageNumber => router.push(`/users?page=${pageNumber}${username ? `&username=${username}` : ''}`,undefined,{shallow:true});
+    const handleFollowUser = followUsername => dispatch(followUserAsync(followUsername, requestKey));
+
+    const handleUnfollowUser = unfollowUsername => dispatch(unfollowUserAsync(unfollowUsername, requestKey));
+
+    const handleSearchUsers = async (searchName) => router.push(`/users?page=1${searchName ? `&username=${searchName}` : ''}`, undefined, {shallow: true});
+
+    const handlePaginateUsers = async pageNumber => router.push(`/users?page=${pageNumber}${username ? `&username=${username}` : ''}`, undefined, {shallow: true});
 
     return (
         <MainLayout>
             <UserProfile/>
             <div className="d-flex w-100 h-100">
-                <UsersList searchName={username} page={page} onPaginationChange={handlePaginateUsers}/>
+                <UsersList searchName={username} onFollow={handleFollowUser}
+                           onUnfollow={handleUnfollowUser}
+                           onPaginationChange={handlePaginateUsers} page={page}/>
                 <div
                     className="d-flex flex-column align-items-start w-50 position-relative h-75 mx-3">
                     <SearchForm searchUser={username} onSubmit={handleSearchUsers}/>
